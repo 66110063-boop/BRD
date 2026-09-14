@@ -3,304 +3,277 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบตรวจสภาพรถยนต์ - Vehicle Inspection System (VIS)</title>
+  <title>ระบบตรวจสภาพรถยนต์ (ตรอ.) - Vehicle Inspection System (VIS)</title>
   
-  <!-- Typography Fonts: Prompt (Display/Headings), Sarabun (Body/Forms), JetBrains Mono (Outlier/Technical Data) -->
+  <!-- Typography Fonts: Prompt (Headings), Sarabun (Forms/Body), JetBrains Mono (Technical/Plate Numbers) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Prompt:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&family=Prompt:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- External Token Link -->
+  <!-- External Design Tokens -->
   <link rel="stylesheet" href="tokens.css">
   
-  <!-- Tailwind CSS CDN for Utility Classes -->
+  <!-- Tailwind CSS CDN for utility scaffolding -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    /* Hallmark · macrostructure: Workbench · theme: custom (vibe: "industrial vehicle inspection terminal, precision cobalt accent, high contrast") · genre: modern-minimal */
-    /* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 */
-    /* Hallmark · honest: pass (46) · chrome: pass (47) · tokens: pass (48) · responsive: pass (49) · icons: pass (30) · contrast: pass (40-41) · mobile: pass (34, 49, 50-57) */
-
-    /* ==================== EMBEDDED TOKENS (Self-contained fallback) ==================== */
+    /* Hallmark · macrostructure: Workbench · theme: senior-industrial (high contrast, generous touch targets, no cognitive clutter) */
     :root {
       --font-display: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-body: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
 
-      --text-2xs: 0.6875rem; /* 11px */
-      --text-xs: 0.75rem;    /* 12px */
-      --text-sm: 0.875rem;   /* 14px */
-      --text-base: 1rem;     /* 16px */
-      --text-md: 1.125rem;   /* 18px */
-      --text-lg: 1.25rem;    /* 20px */
-      --text-xl: 1.5rem;     /* 24px */
-      --text-2xl: 1.875rem;  /* 30px */
+      /* Senior-Friendly Scale: generous base sizes */
+      --text-xs: 0.8125rem;   /* 13px */
+      --text-sm: 0.9375rem;   /* 15px */
+      --text-base: 1.0625rem; /* 17px */
+      --text-lg: 1.25rem;     /* 20px */
+      --text-xl: 1.5rem;      /* 24px */
+      --text-2xl: 1.875rem;   /* 30px */
 
-      --lh-tight: 1.15;
-      --lh-normal: 1.45;
-      --lh-relaxed: 1.6;
-
-      --radius-xs: 0.25rem;
       --radius-sm: 0.375rem;
       --radius-md: 0.5rem;
       --radius-lg: 0.75rem;
       --radius-xl: 1rem;
-      --radius-full: 9999px;
 
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-      --dur-fast: 100ms;
-      --dur-base: 180ms;
+      /* High-Legibility Light Palette (OKLCH Tech Cobalt Hue 250) */
+      --color-paper: oklch(98% 0.005 250);
+      --color-paper-card: oklch(100% 0 0);
+      --color-paper-elevated: oklch(95.5% 0.008 250);
+      --color-paper-hover: oklch(93.5% 0.012 250);
 
-      /* Light Mode Palette (OKLCH Hue 250 - Tech Cobalt) */
-      --color-paper: oklch(98.5% 0.006 250);
-      --color-paper-card: oklch(100% 0.002 250);
-      --color-paper-elevated: oklch(96.8% 0.008 250);
-      --color-paper-hover: oklch(95.2% 0.010 250);
+      /* Deep sharp inks for senior eyes (WCAG AAA Contrast) */
+      --color-ink: oklch(16% 0.018 250);             /* Almost solid deep ink */
+      --color-ink-secondary: oklch(32% 0.015 250);   /* Clear dark grey */
+      --color-ink-muted: oklch(46% 0.012 250);       /* Readable medium grey */
 
-      --color-ink: oklch(18% 0.015 250);
-      --color-ink-secondary: oklch(38% 0.012 250);
-      --color-ink-muted: oklch(52% 0.010 250);
+      --color-rule: oklch(86% 0.010 250);
+      --color-rule-light: oklch(91% 0.006 250);
 
-      --color-rule: oklch(89% 0.008 250);
-      --color-rule-light: oklch(93% 0.006 250);
+      /* High-Visibility Accents */
+      --color-accent: oklch(46% 0.22 255);           /* Vibrant Cobalt Blue */
+      --color-accent-hover: oklch(40% 0.24 255);
+      --color-accent-ink: oklch(99% 0.005 250);
+      --color-accent-subtle: oklch(95% 0.04 255);
 
-      --color-accent: oklch(52% 0.21 254);
-      --color-accent-hover: oklch(46% 0.22 254);
-      --color-accent-active: oklch(42% 0.22 254);
-      --color-accent-subtle: oklch(95% 0.04 254);
-      --color-accent-ink: oklch(99% 0.002 250);
+      /* Semantic Status Indicators */
+      --color-pass: oklch(42% 0.18 145);             /* Rich Forest Green */
+      --color-pass-bg: oklch(95% 0.06 145);
+      --color-pass-border: oklch(82% 0.12 145);
 
-      --color-focus: oklch(52% 0.21 254);
+      --color-fail: oklch(48% 0.23 25);              /* Vivid Crimson Red */
+      --color-fail-bg: oklch(95% 0.07 25);
+      --color-fail-border: oklch(80% 0.15 25);
 
-      --color-pass: oklch(52% 0.16 148);
-      --color-pass-bg: oklch(96.5% 0.035 148);
-      --color-pass-border: oklch(85% 0.08 148);
+      --color-testing: oklch(50% 0.18 245);          /* Dynamic Cyan/Blue */
+      --color-testing-bg: oklch(94% 0.06 245);
+      --color-testing-border: oklch(82% 0.12 245);
 
-      --color-fail: oklch(54% 0.21 27);
-      --color-fail-bg: oklch(96.5% 0.045 27);
-      --color-fail-border: oklch(85% 0.10 27);
-
-      --color-testing: oklch(58% 0.18 245);
-      --color-testing-bg: oklch(96.5% 0.04 245);
-      --color-testing-border: oklch(86% 0.08 245);
-
-      --color-warning: oklch(65% 0.18 75);
-      --color-warning-bg: oklch(97% 0.04 75);
-      --color-warning-border: oklch(85% 0.09 75);
+      --color-warning: oklch(55% 0.18 65);           /* Alert Amber */
+      --color-warning-bg: oklch(95% 0.07 65);
+      --color-warning-border: oklch(82% 0.12 65);
     }
 
     .dark {
       --color-paper: oklch(14% 0.012 250);
-      --color-paper-card: oklch(17.5% 0.014 250);
-      --color-paper-elevated: oklch(21% 0.016 250);
-      --color-paper-hover: oklch(24% 0.018 250);
+      --color-paper-card: oklch(18% 0.015 250);
+      --color-paper-elevated: oklch(22% 0.018 250);
+      --color-paper-hover: oklch(26% 0.022 250);
 
-      --color-ink: oklch(95% 0.006 250);
-      --color-ink-secondary: oklch(78% 0.010 250);
-      --color-ink-muted: oklch(62% 0.008 250);
+      --color-ink: oklch(97% 0.005 250);
+      --color-ink-secondary: oklch(82% 0.010 250);
+      --color-ink-muted: oklch(65% 0.012 250);
 
-      --color-rule: oklch(27% 0.014 250);
-      --color-rule-light: oklch(22% 0.012 250);
+      --color-rule: oklch(30% 0.015 250);
+      --color-rule-light: oklch(24% 0.012 250);
 
-      --color-accent: oklch(60% 0.19 254);
-      --color-accent-hover: oklch(65% 0.19 254);
-      --color-accent-active: oklch(55% 0.19 254);
-      --color-accent-subtle: oklch(24% 0.06 254);
-      --color-accent-ink: oklch(99% 0.002 250);
+      --color-accent: oklch(65% 0.22 255);
+      --color-accent-hover: oklch(70% 0.22 255);
+      --color-accent-ink: oklch(12% 0.015 250);
+      --color-accent-subtle: oklch(25% 0.06 255);
 
-      --color-focus: oklch(62% 0.20 254);
+      --color-pass: oklch(75% 0.16 145);
+      --color-pass-bg: oklch(22% 0.06 145);
+      --color-pass-border: oklch(35% 0.10 145);
 
-      --color-pass: oklch(68% 0.16 148);
-      --color-pass-bg: oklch(20% 0.04 148);
-      --color-pass-border: oklch(34% 0.08 148);
+      --color-fail: oklch(75% 0.20 25);
+      --color-fail-bg: oklch(24% 0.08 25);
+      --color-fail-border: oklch(38% 0.12 25);
 
-      --color-fail: oklch(66% 0.19 27);
-      --color-fail-bg: oklch(21% 0.05 27);
-      --color-fail-border: oklch(36% 0.09 27);
+      --color-testing: oklch(75% 0.16 245);
+      --color-testing-bg: oklch(23% 0.07 245);
+      --color-testing-border: oklch(36% 0.10 245);
 
-      --color-testing: oklch(68% 0.17 245);
-      --color-testing-bg: oklch(22% 0.05 245);
-      --color-testing-border: oklch(36% 0.09 245);
-
-      --color-warning: oklch(75% 0.16 75);
-      --color-warning-bg: oklch(24% 0.05 75);
-      --color-warning-border: oklch(40% 0.09 75);
+      --color-warning: oklch(78% 0.16 65);
+      --color-warning-bg: oklch(24% 0.08 65);
+      --color-warning-border: oklch(38% 0.12 65);
     }
 
-    html, body {
-      overflow-x: clip;
+    body {
+      font-family: var(--font-body);
       background-color: var(--color-paper);
       color: var(--color-ink);
-      font-family: var(--font-body);
-      line-height: var(--lh-normal);
+      overflow-x: clip;
       -webkit-font-smoothing: antialiased;
     }
 
-    .dark body {
-      font-weight: 350;
-    }
-
-    h1, h2, h3, h4, h5, h6, .font-heading {
+    h1, h2, h3, h4, .font-heading {
       font-family: var(--font-display);
-      font-style: normal;
-      line-height: var(--lh-tight);
     }
 
-    .tabular-nums, .font-mono, [data-tabular] {
+    .font-mono {
       font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
+      font-feature-settings: 'tnum' on, 'zero' on;
     }
 
-    .btn, button, .nav-link {
-      white-space: nowrap;
-    }
-
-    :focus-visible {
-      outline: 2px solid var(--color-focus) !important;
-      outline-offset: 1px !important;
-      transition: none !important;
-    }
-
+    /* Senior-Friendly Large Inputs & Selects */
     .vis-input {
       background-color: var(--color-paper-card);
+      border: 1.5px solid var(--color-rule);
       color: var(--color-ink);
-      border: 1px solid var(--color-rule);
+      height: 48px;
+      font-size: 1.0625rem; /* 17px */
       border-radius: var(--radius-md);
-      transition: border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
-      height: 40px;
-    }
-    .vis-input:hover {
-      border-color: var(--color-ink-secondary);
+      padding: 0 1rem;
+      transition: border-color 150ms ease, box-shadow 150ms ease;
     }
     .vis-input:focus {
+      outline: none;
       border-color: var(--color-accent);
-      outline: 2px solid var(--color-focus);
-      outline-offset: 1px;
-    }
-    .vis-input:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      background-color: var(--color-paper-elevated);
+      box-shadow: 0 0 0 3px var(--color-accent-subtle);
     }
 
-    .btn-primary {
-      background-color: var(--color-accent);
-      color: var(--color-accent-ink);
-      font-family: var(--font-display);
-      font-weight: 600;
-      border: 1px solid transparent;
-      border-radius: var(--radius-md);
-      transition: background-color var(--dur-fast) var(--ease-out), transform 80ms var(--ease-out);
-    }
-    .btn-primary:hover {
-      background-color: var(--color-accent-hover);
-    }
-    .btn-primary:active {
-      background-color: var(--color-accent-active);
-      transform: translateY(1px);
-    }
-
-    .btn-secondary {
+    /* Extra-large license plate input for fast visual confirmation */
+    .vis-input-plate {
+      height: 56px;
+      font-size: 1.5rem; /* 24px */
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      border: 2px solid var(--color-accent);
       background-color: var(--color-paper-card);
       color: var(--color-ink);
-      border: 1px solid var(--color-rule);
-      font-family: var(--font-display);
-      font-weight: 500;
-      border-radius: var(--radius-md);
-      transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
     }
-    .btn-secondary:hover {
+    .vis-input-plate:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px var(--color-accent-subtle);
+    }
+
+    /* Senior Big-Touch Buttons */
+    .vis-btn-primary {
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+      height: 52px;
+      font-size: 1.125rem; /* 18px */
+      font-weight: 700;
+      border-radius: var(--radius-md);
+      transition: background-color 120ms ease, transform 100ms ease;
+    }
+    .vis-btn-primary:hover {
+      background-color: var(--color-accent-hover);
+    }
+    .vis-btn-primary:active {
+      transform: scale(0.99);
+    }
+
+    .vis-btn-secondary {
+      background-color: var(--color-paper-elevated);
+      color: var(--color-ink);
+      border: 1.5px solid var(--color-rule);
+      height: 52px;
+      font-size: 1.0625rem; /* 17px */
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      transition: background-color 120ms ease;
+    }
+    .vis-btn-secondary:hover {
       background-color: var(--color-paper-hover);
       border-color: var(--color-ink-secondary);
     }
 
-    .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-rule); border-radius: var(--radius-full); }
+    /* Custom high-visibility scrollbar */
+    .senior-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+    .senior-scrollbar::-webkit-scrollbar-track {
+      background: var(--color-paper-elevated);
+      border-radius: 4px;
+    }
+    .senior-scrollbar::-webkit-scrollbar-thumb {
+      background: var(--color-rule);
+      border-radius: 4px;
+    }
+    .senior-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: var(--color-ink-muted);
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col transition-colors duration-150">
+<body class="h-full flex flex-col antialiased">
 
-  <!-- ==================== HEADER (Station Identity & 9 Hardware Monitored) ==================== -->
-  <header class="sticky top-0 z-30 border-b" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
-    <div class="px-4 py-2.5 flex items-center justify-between gap-4 max-w-[1920px] mx-auto w-full">
+  <!-- ==================== CLEAN SENIOR-FRIENDLY HEADER ==================== -->
+  <header class="border-b shadow-xs sticky top-0 z-30" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
+    <div class="max-w-[1680px] mx-auto px-4 py-2.5 flex items-center justify-between gap-4">
       
-      <!-- Brand & Lane Identity -->
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-white shadow-xs" style="background-color: var(--color-accent);">
-          <i data-lucide="shield-check" class="w-5 h-5" aria-hidden="true"></i>
+      <!-- Brand & Station Identity -->
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-white shadow-xs" style="background-color: var(--color-accent);">
+          <i data-lucide="shield-check" class="w-6 h-6" aria-hidden="true"></i>
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <span class="font-bold text-base tracking-tight" style="color: var(--color-ink);">ระบบตรวจสภาพรถยนต์</span>
-            <span class="px-2 py-0.5 rounded text-[11px] font-semibold" style="background-color: var(--color-accent-subtle); color: var(--color-accent); border: 1px solid var(--color-rule);">
-              ช่องตรวจที่ 01 (Lane 1)
-            </span>
+            <h1 class="font-heading font-bold text-lg tracking-tight" style="color: var(--color-ink);">ระบบตรวจสภาพรถยนต์ (ตรอ.)</h1>
+            <span class="px-2.5 py-0.5 rounded-md text-xs font-bold font-mono" style="background-color: var(--color-accent-subtle); color: var(--color-accent);">ช่องตรวจที่ 01</span>
           </div>
-          <p class="text-[11px] mt-0.5 font-mono" style="color: var(--color-ink-muted);">
-            ตรอ. มั่นคงเจริญยนต์ • TCP/IP: 192.168.1.120:3201
-          </p>
+          <p class="text-xs font-medium" style="color: var(--color-ink-muted);">ตรอ. มั่นคงเจริญยนต์ • เชื่อมต่อสถานีกลาง ขส. พร้อมส่งข้อมูล</p>
         </div>
       </div>
 
-      <!-- Hardware Device Status Chips (8 Online, 1 Offline/Warning - Realistic Scenario) -->
-      <div class="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[11px]" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-        <span class="font-medium mr-1 flex items-center gap-1" style="color: var(--color-ink-muted);">
-          <i data-lucide="cpu" class="w-3.5 h-3.5" aria-hidden="true"></i> เครื่องมือ (8/9):
-        </span>
-        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border" style="background-color: var(--color-pass-bg); color: var(--color-pass); border-color: var(--color-pass-border);">
-          <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--color-pass);"></span>ห้ามล้อ
-        </span>
-        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border" style="background-color: var(--color-pass-bg); color: var(--color-pass); border-color: var(--color-pass-border);">
-          <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--color-pass);"></span>ศูนย์ล้อ
-        </span>
-        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border" style="background-color: var(--color-pass-bg); color: var(--color-pass); border-color: var(--color-pass-border);">
-          <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--color-pass);"></span>โคมไฟ
-        </span>
-        <!-- Device 4: Simulated Disconnection/Fault (Real-world requirement) -->
-        <span onclick="toggleSmokeDeviceStatus()" title="คลิกเพื่อสลับสถานะจำลอง: สายสัญญาณหลุด หรือเชื่อมต่อสำเร็จ" class="cursor-pointer inline-flex items-center gap-1 px-1.5 py-0.5 rounded border" id="smoke-status-chip" style="background-color: var(--color-warning-bg); color: var(--color-warning); border-color: var(--color-warning-border);">
-          <span class="w-1.5 h-1.5 rounded-full animate-ping" style="background-color: var(--color-warning);"></span>ควันดำ (COM3 หลุด) ⚠️
-        </span>
-        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border" style="background-color: var(--color-pass-bg); color: var(--color-pass); border-color: var(--color-pass-border);">
-          <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--color-pass);"></span>วิเคราะห์ก๊าซ
-        </span>
-        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border" style="background-color: var(--color-pass-bg); color: var(--color-pass); border-color: var(--color-pass-border);">
-          <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--color-pass);"></span>เสียง
-        </span>
-        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border" style="background-color: var(--color-pass-bg); color: var(--color-pass); border-color: var(--color-pass-border);">
-          <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--color-pass);"></span>รอบเครื่อง
-        </span>
-        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border" style="background-color: var(--color-pass-bg); color: var(--color-pass); border-color: var(--color-pass-border);">
-          <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--color-pass);"></span>ความเร็ว
-        </span>
-        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border" style="background-color: var(--color-pass-bg); color: var(--color-pass); border-color: var(--color-pass-border);">
-          <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--color-pass);"></span>เครื่องชั่ง
-        </span>
+      <!-- CENTER: Master Hardware Status Capsule (Clean & Uncluttered) -->
+      <div class="hidden md:flex items-center gap-2.5">
+        <button type="button" onclick="openHardwareDrawer()" 
+          class="flex items-center gap-2.5 px-4 py-2 rounded-lg border text-sm font-semibold transition-all hover:shadow-xs" 
+          style="background-color: var(--color-paper-elevated); border-color: var(--color-rule); color: var(--color-ink);"
+          title="คลิกเพื่อดูสถานะเครื่องตรวจทั้ง 9 รายการอย่างละเอียด">
+          <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>เครื่องมือทดสอบ: <strong class="text-emerald-700 dark:text-emerald-400">8/9 พร้อมตรวจ</strong></span>
+          <span class="text-xs px-2 py-0.5 rounded font-mono font-medium" style="background-color: var(--color-paper-card); color: var(--color-ink-secondary);">ดูรายละเอียด ↗</span>
+        </button>
+
+        <!-- Offline Warning Chip (Clickable to toggle for demo) -->
+        <button type="button" onclick="toggleSmokeDeviceStatus()" id="smoke-status-chip"
+          class="flex items-center gap-2 px-3.5 py-2 rounded-lg border text-xs font-bold transition-all" 
+          style="background-color: var(--color-warning-bg); color: var(--color-warning); border-color: var(--color-warning-border);"
+          title="คลิกเพื่อจำลองสลับ ออนไลน์/ออฟไลน์">
+          <span class="w-2.5 h-2.5 rounded-full animate-ping" style="background-color: var(--color-warning);"></span>
+          <span>ควันดำ (COM3 หลุด) ⚠️</span>
+        </button>
       </div>
 
-      <!-- Right Controls: Live Clock & Profile -->
+      <!-- RIGHT: Clock, Theme, Inspector Profile -->
       <div class="flex items-center gap-3">
-        <div class="hidden sm:flex flex-col text-right">
-          <span id="live-clock" class="text-xs font-semibold font-mono tracking-wider" style="color: var(--color-ink);">12:45:00</span>
+        <!-- Live Clock (Big & Readable) -->
+        <div class="hidden sm:flex flex-col text-right font-mono pr-2">
+          <span id="live-clock" class="text-base font-bold tracking-tight" style="color: var(--color-ink);">13:30:54</span>
           <span class="text-[11px]" style="color: var(--color-ink-muted);">14 ก.ย. 2569</span>
         </div>
 
-        <!-- Dark/Light Mode Button -->
-        <button id="theme-toggle" class="p-2 rounded-lg border transition-colors" style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink-secondary);" title="สลับโหมดการแสดงผล">
-          <i data-lucide="moon" class="w-4 h-4 hidden dark:block" aria-hidden="true"></i>
-          <i data-lucide="sun" class="w-4 h-4 block dark:hidden" aria-hidden="true"></i>
+        <!-- Dark Mode Toggle (Large touch target) -->
+        <button id="theme-toggle" type="button" aria-label="สลับโหมดมืด/สว่าง"
+          class="w-10 h-10 rounded-lg border flex items-center justify-center transition-colors"
+          style="background-color: var(--color-paper-elevated); border-color: var(--color-rule); color: var(--color-ink);">
+          <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+          <i data-lucide="sun" class="w-5 h-5 hidden dark:block text-amber-400"></i>
         </button>
 
-        <!-- Inspector Pill -->
-        <div class="flex items-center gap-2 pl-3 border-l" style="border-color: var(--color-rule);">
-          <div class="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs" style="background-color: var(--color-accent-subtle); color: var(--color-accent);">
+        <!-- Inspector Badge -->
+        <div class="flex items-center gap-2.5 pl-2 border-l" style="border-color: var(--color-rule);">
+          <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs" style="background-color: var(--color-accent-subtle); color: var(--color-accent);">
             ชต
           </div>
-          <div class="hidden md:block text-left text-xs">
-            <div class="font-semibold leading-tight" style="color: var(--color-ink);">สมชาย ตรวจการ</div>
-            <div class="text-[10px]" style="color: var(--color-ink-muted);">ผู้ตรวจสอบประจำเลน</div>
+          <div class="hidden lg:block leading-tight text-left">
+            <div class="font-bold text-xs" style="color: var(--color-ink);">สมชาย ตรวจการ</div>
+            <div class="text-[11px]" style="color: var(--color-ink-muted);">ผู้ตรวจสภาพประจำเลน</div>
           </div>
         </div>
       </div>
@@ -308,72 +281,78 @@
     </div>
   </header>
 
-  <!-- ==================== MAIN WORKBENCH LAYOUT ==================== -->
-  <main class="flex-1 p-3 md:p-4 max-w-[1920px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-4">
-    
-    <!-- ==================== LEFT COLUMN: REGISTRATION (BRD 2.1) ==================== -->
+  <!-- ==================== MAIN WORKBENCH (7:5 SPLIT) ==================== -->
+  <main class="flex-1 max-w-[1680px] w-full mx-auto p-4 md:p-5 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+    <!-- ==================== LEFT COLUMN (7 COLS): BIG-TOUCH REGISTRATION FORM ==================== -->
     <section class="lg:col-span-7 flex flex-col">
-      <div class="rounded-xl border shadow-xs flex flex-col h-full overflow-hidden" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
+      <div class="rounded-xl border shadow-xs overflow-hidden" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
         
-        <!-- Header -->
-        <div class="px-5 py-3 border-b flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-          <div class="flex items-center gap-2.5">
-            <i data-lucide="clipboard-pen" class="w-4 h-4" style="color: var(--color-accent);" aria-hidden="true"></i>
-            <div>
-              <h2 class="font-bold text-sm tracking-tight" style="color: var(--color-ink);">ลงทะเบียนตรวจสภาพรถ (Vehicle Registration)</h2>
-              <p class="text-[11px]" style="color: var(--color-ink-muted);">กรอกข้อมูลเพื่อสร้างประวัติและส่งรถเข้าสู่ช่องตรวจสภาพ</p>
-            </div>
+        <!-- Form Header with Action Bar -->
+        <div class="p-4 border-b flex flex-wrap items-center justify-between gap-3" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+          <div>
+            <h2 class="font-heading font-bold text-lg" style="color: var(--color-ink);">ลงทะเบียนตรวจสภาพรถ (Vehicle Registration)</h2>
+            <p class="text-xs" style="color: var(--color-ink-muted);">รองรับเครื่องยิงบาร์โค้ด USB • กด <kbd class="px-1.5 py-0.5 rounded bg-white dark:bg-zinc-800 border font-mono text-[11px]">F4</kbd> ล้างฟอร์ม • กด <kbd class="px-1.5 py-0.5 rounded bg-white dark:bg-zinc-800 border font-mono text-[11px]">F9</kbd> บันทึกส่งตรวจ</p>
           </div>
-          <div class="flex items-center gap-3">
-            <span class="text-[11px] flex items-center gap-1 font-mono px-2 py-0.5 rounded border" style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink-secondary);" title="สามารถใช้เครื่องยิงบาร์โค้ด USB สแกนเล่มทะเบียนหรือใบนำตรวจได้ทันที">
-              <i data-lucide="qr-code" class="w-3.5 h-3.5" style="color: var(--color-accent);"></i> USB Scanner Ready
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold" style="background-color: var(--color-accent-subtle); color: var(--color-accent);">
+              <i data-lucide="scan-barcode" class="w-3.5 h-3.5"></i> บาร์โค้ดพร้อมใช้
             </span>
-            <button type="button" onclick="loadLegacyExample()" class="text-xs font-semibold flex items-center gap-1 hover:underline" style="color: var(--color-accent);">
-              <i data-lucide="history" class="w-3.5 h-3.5" aria-hidden="true"></i> โหลดตัวอย่างเดิม (15-5461)
+            <button type="button" onclick="loadLegacyExample()" class="text-xs px-3 py-1.5 rounded-md border font-semibold hover:underline" style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink);">
+              โหลดตัวอย่าง (15-5461)
             </button>
           </div>
         </div>
 
         <!-- Form Body -->
-        <form id="reg-form" class="p-5 space-y-5 flex-1 overflow-y-auto custom-scrollbar" onsubmit="return false;">
+        <form id="reg-form" onsubmit="event.preventDefault(); saveRegistration();" class="p-5 space-y-6">
           
-          <!-- Section 1: ข้อมูลป้ายทะเบียน และ ประเภทรถ (Type-First Hierarchy) -->
-          <div>
-            <div class="flex items-center justify-between pb-2 mb-3 border-b" style="border-color: var(--color-rule-light);">
-              <span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5" style="color: var(--color-ink);">
-                <span class="w-1.5 h-3 rounded-full" style="background-color: var(--color-accent);"></span>
-                หมวดที่ 1: ทะเบียน และประเภทรถ (กำหนดรูปแบบการตรวจ)
-              </span>
-              <span class="text-[11px]" style="color: var(--color-ink-muted);"><span class="text-red-500 font-bold">*</span> จำเป็นต้องกรอก</span>
+          <!-- Validation Alert -->
+          <div id="form-alert" class="hidden p-3.5 rounded-lg border text-sm font-semibold flex items-center gap-2.5" style="background-color: var(--color-fail-bg); color: var(--color-fail); border-color: var(--color-fail-border);">
+            <i data-lucide="alert-circle" class="w-5 h-5 flex-shrink-0"></i>
+            <span id="form-alert-msg">กรุณากรอกเลขทะเบียนรถ และเลือกชนิดเชื้อเพลิงให้ครบถ้วน</span>
+          </div>
+
+          <!-- ==================== หมวดที่ 1: เลขทะเบียน และ ประเภทรถ ==================== -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between border-b pb-2" style="border-color: var(--color-rule-light);">
+              <h3 class="font-heading font-bold text-base flex items-center gap-2" style="color: var(--color-ink);">
+                <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs text-white" style="background-color: var(--color-accent);">1</span>
+                ข้อมูลทะเบียน และประเภทรถตาม ขส.
+              </h3>
+              <span class="text-xs font-medium text-rose-500">* จำเป็นต้องระบุ</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
-              <!-- เลขทะเบียน (Mandatory + Autofocus + Uppercase + Scanner Enter Listener) -->
-              <div class="md:col-span-4">
-                <label class="block text-xs font-semibold mb-1" style="color: var(--color-ink-secondary);">
-                  เลขทะเบียนรถ <span class="text-red-500">*</span>
+            <!-- Primary Row: License Plate, Province, Vehicle Type -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3.5">
+              
+              <!-- License Plate Input (Super Prominent 24px) -->
+              <div class="sm:col-span-5 space-y-1">
+                <label for="license_plate" class="block text-sm font-bold" style="color: var(--color-ink);">
+                  เลขทะเบียนรถ <span class="text-rose-500">*</span>
                 </label>
                 <div class="relative">
                   <input type="text" id="license_plate" autofocus placeholder="เช่น 15-5461 หรือ 1กข 1234"
-                    class="vis-input w-full px-3 text-sm font-bold uppercase tracking-wide placeholder:font-normal placeholder:text-xs"
-                    style="text-transform: uppercase;">
-                  <span class="absolute right-2.5 top-2.5 text-[10px] font-mono px-1 rounded border" style="background-color: var(--color-paper-elevated); color: var(--color-ink-muted); border-color: var(--color-rule);">TH</span>
+                    class="vis-input vis-input-plate w-full pl-3.5 pr-12 font-mono uppercase"
+                    title="ป้อนเลขทะเบียน หรือ ยิงบาร์โค้ด แล้วกด Enter">
+                  <div class="absolute right-2.5 top-3.5 px-2 py-0.5 rounded font-mono text-xs font-bold bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-200">
+                    TH
+                  </div>
                 </div>
-                <div class="flex items-center gap-1 mt-1 text-[10px]" style="color: var(--color-ink-muted);">
+                <div class="flex items-center gap-2 text-xs" style="color: var(--color-ink-muted);">
                   <span>ตัวอย่าง:</span>
-                  <button type="button" onclick="setPlateHint('1กข 5678')" class="underline hover:text-blue-500">1กข 5678 (นั่ง)</button>
+                  <button type="button" onclick="setPlateHint('15-5461')" class="underline hover:text-blue-600 font-mono font-bold">15-5461</button>
                   <span>•</span>
-                  <button type="button" onclick="setPlateHint('15-5461')" class="underline hover:text-blue-500">15-5461 (โดยสาร)</button>
+                  <button type="button" onclick="setPlateHint('1กข 5678')" class="underline hover:text-blue-600 font-mono font-bold">1กข 5678</button>
                 </div>
               </div>
 
-              <!-- จังหวัด (Mandatory) -->
-              <div class="md:col-span-3">
-                <label class="block text-xs font-semibold mb-1" style="color: var(--color-ink-secondary);">
-                  จังหวัดที่จดทะเบียน <span class="text-red-500">*</span>
+              <!-- Province -->
+              <div class="sm:col-span-3 space-y-1">
+                <label for="province" class="block text-sm font-bold" style="color: var(--color-ink);">
+                  จังหวัด <span class="text-rose-500">*</span>
                 </label>
-                <select id="province" class="vis-input w-full px-2.5 text-xs font-medium">
-                  <option value="">-- เลือกจังหวัด --</option>
+                <select id="province" class="vis-input w-full font-medium">
                   <option value="กรุงเทพมหานคร" selected>กรุงเทพมหานคร</option>
                   <option value="นนทบุรี">นนทบุรี</option>
                   <option value="ปทุมธานี">ปทุมธานี</option>
@@ -381,80 +360,86 @@
                   <option value="ชลบุรี">ชลบุรี</option>
                   <option value="นครราชสีมา">นครราชสีมา</option>
                   <option value="เชียงใหม่">เชียงใหม่</option>
+                  <option value="ขอนแก่น">ขอนแก่น</option>
                   <option value="สงขลา">สงขลา</option>
                 </select>
               </div>
 
-              <!-- ประเภทรถอ้างอิง (Moved BEFORE Brand per feedback) -->
-              <div class="md:col-span-5">
-                <label class="block text-xs font-semibold mb-1" style="color: var(--color-ink-secondary);">
-                  ประเภทรถอ้างอิง / ประเภทย่อย <span class="text-red-500">*</span>
+              <!-- Vehicle Type (DLT Category) -->
+              <div class="sm:col-span-4 space-y-1">
+                <label for="vehicle_type_id" class="block text-sm font-bold" style="color: var(--color-ink);">
+                  ประเภทรถ (ขส.) <span class="text-rose-500">*</span>
                 </label>
-                <div class="grid grid-cols-2 gap-2">
-                  <select id="vehicle_type_id" onchange="onVehicleTypeChanged()" class="vis-input w-full px-2 text-xs font-medium">
-                    <option value="รถโดยสาร" selected>รถโดยสาร</option>
-                    <option value="รถยนต์นั่งส่วนบุคคล">รถนั่งส่วนบุคคล</option>
-                    <option value="รถบรรทุก">รถบรรทุก</option>
-                    <option value="รถจักรยานยนต์">รถจักรยานยนต์</option>
-                  </select>
-                  <select id="vehicle_sub_type" class="vis-input w-full px-2 text-xs font-medium">
-                    <option value="รถโดยสารประจำทาง" selected>ประจำทาง</option>
-                    <option value="รถโดยสารไม่ประจำทาง">ไม่ประจำทาง</option>
-                    <option value="รย.1">รย.1 (ไม่เกิน 7 คน)</option>
-                    <option value="รย.2">รย.2 (เกิน 7 คน)</option>
-                  </select>
-                </div>
+                <select id="vehicle_type_id" onchange="onVehicleTypeChanged()" class="vis-input w-full font-medium">
+                  <option value="รถโดยสาร" selected>รถโดยสาร (ตาม พ.ร.บ. ขนส่ง)</option>
+                  <option value="รย.1">รย.1 รถยนต์นั่งส่วนบุคคลไม่เกิน 7 คน</option>
+                  <option value="รย.2">รย.2 รถยนต์นั่งส่วนบุคคลเกิน 7 คน</option>
+                  <option value="รย.3">รย.3 รถบรรทุกส่วนบุคคล</option>
+                  <option value="รถบรรทุก">รถบรรทุก (ตาม พ.ร.บ. ขนส่ง)</option>
+                </select>
               </div>
+            </div>
 
-              <!-- ชนิดเชื้อเพลิง (Mandatory - Restrained Segmented Buttons) -->
-              <div class="md:col-span-12">
-                <label class="block text-xs font-semibold mb-1" style="color: var(--color-ink-secondary);">
-                  ชนิดเชื้อเพลิง <span class="text-red-500">*</span>
-                  <span class="text-[11px] font-normal" style="color: var(--color-ink-muted);">(เลือกระบบเชื้อเพลิงเพื่อกำหนดชุดตรวจมลพิษ ควันดำ หรือ ก๊าซ)</span>
+            <!-- Sub Type (Dynamic) -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3.5">
+              <div class="sm:col-span-12 space-y-1">
+                <label for="sub_type" class="block text-sm font-bold" style="color: var(--color-ink);">
+                  ประเภทย่อย / ลักษณะการใช้งาน
                 </label>
-                <div class="grid grid-cols-4 gap-2" id="fuel-selector">
-                  <button type="button" onclick="setFuel('ดีเซล')" data-fuel="ดีเซล"
-                    class="fuel-opt py-2 px-1 text-xs font-semibold rounded-md border text-center transition-all flex items-center justify-center gap-1.5"
-                    style="background-color: var(--color-accent-subtle); color: var(--color-accent); border-color: var(--color-accent);">
-                    <i data-lucide="fuel" class="w-3.5 h-3.5"></i> ดีเซล (ตรวจควันดำ)
-                  </button>
-                  <button type="button" onclick="setFuel('เบนซิน')" data-fuel="เบนซิน"
-                    class="fuel-opt py-2 px-1 text-xs font-medium rounded-md border text-center transition-all flex items-center justify-center gap-1.5"
-                    style="background-color: var(--color-paper-card); color: var(--color-ink-secondary); border-color: var(--color-rule);">
-                    <i data-lucide="zap" class="w-3.5 h-3.5"></i> เบนซิน (ตรวจก๊าซ)
-                  </button>
-                  <button type="button" onclick="setFuel('ก๊าซ (LPG/NGV)')" data-fuel="ก๊าซ (LPG/NGV)"
-                    class="fuel-opt py-2 px-1 text-xs font-medium rounded-md border text-center transition-all flex items-center justify-center gap-1.5"
-                    style="background-color: var(--color-paper-card); color: var(--color-ink-secondary); border-color: var(--color-rule);">
-                    <i data-lucide="flame" class="w-3.5 h-3.5"></i> ก๊าซ (LPG/NGV)
-                  </button>
-                  <button type="button" onclick="setFuel('ไฟฟ้า (EV)')" data-fuel="ไฟฟ้า (EV)"
-                    class="fuel-opt py-2 px-1 text-xs font-medium rounded-md border text-center transition-all flex items-center justify-center gap-1.5"
-                    style="background-color: var(--color-paper-card); color: var(--color-ink-secondary); border-color: var(--color-rule);">
-                    <i data-lucide="battery-charging" class="w-3.5 h-3.5"></i> ไฟฟ้า EV (ข้ามมลพิษ)
-                  </button>
-                </div>
-                <input type="hidden" id="fuel_type_id" value="ดีเซล">
+                <select id="sub_type" class="vis-input w-full font-medium">
+                  <option value="ประจำทาง" selected>ประจำทาง (มาตรฐาน 1 ก - รถปรับอากาศพิเศษ)</option>
+                  <option value="ไม่ประจำทาง">ไม่ประจำทาง (รถทัวร์นำเที่ยว/รับจ้าง)</option>
+                  <option value="ส่วนบุคคล">ส่วนบุคคล</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Senior Big-Touch Fuel Selector -->
+            <div class="space-y-1.5 pt-1">
+              <label class="block text-sm font-bold" style="color: var(--color-ink);">
+                ชนิดเชื้อเพลิง <span class="text-rose-500">*</span> <span class="text-xs font-normal" style="color: var(--color-ink-muted);">(ระบบจะเลือกชุดตรวจควันดำ หรือ ก๊าซอัตโนมัติ)</span>
+              </label>
+              <input type="hidden" id="fuel_type_id" value="ดีเซล">
+              
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <button type="button" onclick="setFuel('ดีเซล')" id="btn-fuel-diesel"
+                  class="h-12 px-3 rounded-lg border flex items-center justify-center gap-2 font-bold text-base transition-all shadow-xs"
+                  style="background-color: var(--color-accent); color: var(--color-accent-ink); border-color: var(--color-accent);">
+                  <i data-lucide="fuel" class="w-5 h-5"></i> ดีเซล (ควันดำ)
+                </button>
+                <button type="button" onclick="setFuel('เบนซิน')" id="btn-fuel-gasoline"
+                  class="h-12 px-3 rounded-lg border flex items-center justify-center gap-2 font-semibold text-base transition-all"
+                  style="background-color: var(--color-paper-card); color: var(--color-ink); border-color: var(--color-rule);">
+                  <i data-lucide="zap" class="w-5 h-5"></i> เบนซิน (ก๊าซ)
+                </button>
+                <button type="button" onclick="setFuel('ก๊าซ (LPG/NGV)')" id="btn-fuel-gas"
+                  class="h-12 px-3 rounded-lg border flex items-center justify-center gap-2 font-semibold text-base transition-all"
+                  style="background-color: var(--color-paper-card); color: var(--color-ink); border-color: var(--color-rule);">
+                  <i data-lucide="gauge" class="w-5 h-5"></i> ก๊าซ (LPG/NGV)
+                </button>
+                <button type="button" onclick="setFuel('ไฟฟ้า EV')" id="btn-fuel-ev"
+                  class="h-12 px-3 rounded-lg border flex items-center justify-center gap-2 font-semibold text-base transition-all"
+                  style="background-color: var(--color-paper-card); color: var(--color-ink); border-color: var(--color-rule);">
+                  <i data-lucide="battery-charging" class="w-5 h-5"></i> ไฟฟ้า EV
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- Section 2: ข้อมูลตัวรถ และ สเปกทางเทคนิค (Brand, Model, VIN, Axles) -->
-          <div>
-            <div class="flex items-center justify-between pb-2 mb-3 border-b" style="border-color: var(--color-rule-light);">
-              <span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5" style="color: var(--color-ink);">
-                <span class="w-1.5 h-3 rounded-full" style="background-color: var(--color-accent);"></span>
-                หมวดที่ 2: สเปกตัวรถ และตำแหน่งเบรกมือ
-              </span>
+          <!-- ==================== หมวดที่ 2: สเปกตัวถัง และ เพลาล้อ ==================== -->
+          <div class="space-y-4 pt-3 border-t" style="border-color: var(--color-rule-light);">
+            <div class="flex items-center justify-between pb-1">
+              <h3 class="font-heading font-bold text-base flex items-center gap-2" style="color: var(--color-ink);">
+                <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs text-white" style="background-color: var(--color-accent);">2</span>
+                ข้อมูลตัวถัง ยี่ห้อ รุ่น และเพลาล้อ
+              </h3>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
-              <!-- ยี่ห้อรถ (Master Data) -->
-              <div class="md:col-span-3">
-                <label class="block text-xs font-medium mb-1" style="color: var(--color-ink-secondary);">
-                  ยี่ห้อรถ (Brand)
-                </label>
-                <select id="brand" onchange="onBrandSelected()" class="vis-input w-full px-2.5 text-xs font-medium">
+            <!-- Brand, Model, VIN, Reg Date -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3.5">
+              <div class="sm:col-span-3 space-y-1">
+                <label for="brand" class="block text-sm font-bold" style="color: var(--color-ink);">ยี่ห้อรถ (Brand)</label>
+                <select id="brand" onchange="onBrandSelected()" class="vis-input w-full font-medium">
                   <option value="TOYOTA" selected>TOYOTA (โตโยต้า)</option>
                   <option value="ISUZU">ISUZU (อีซูซุ)</option>
                   <option value="HONDA">HONDA (ฮอนด้า)</option>
@@ -464,12 +449,9 @@
                 </select>
               </div>
 
-              <!-- รุ่นรถ (Cascading) -->
-              <div class="md:col-span-3">
-                <label class="block text-xs font-medium mb-1" style="color: var(--color-ink-secondary);">
-                  รุ่นรถ (Model)
-                </label>
-                <select id="model" class="vis-input w-full px-2.5 text-xs font-medium">
+              <div class="sm:col-span-3 space-y-1">
+                <label for="model" class="block text-sm font-bold" style="color: var(--color-ink);">รุ่นรถ (Model)</label>
+                <select id="model" class="vis-input w-full font-medium">
                   <option value="Camry" selected>Camry</option>
                   <option value="Corolla Altis">Corolla Altis</option>
                   <option value="Yaris">Yaris</option>
@@ -478,122 +460,93 @@
                 </select>
               </div>
 
-              <!-- เลขตัวถัง VIN (Optional) -->
-              <div class="md:col-span-3">
-                <label class="block text-xs font-medium mb-1" style="color: var(--color-ink-secondary);">
-                  เลขตัวถัง (Chassis No. / VIN)
-                </label>
-                <input type="text" id="chassis_no" placeholder="เช่น MP1TFR86JCT182907"
-                  class="vis-input w-full px-3 text-xs font-mono placeholder:text-xs">
+              <div class="sm:col-span-3 space-y-1">
+                <label for="chassis_no" class="block text-sm font-bold" style="color: var(--color-ink);">เลขคัสซี (VIN)</label>
+                <input type="text" id="chassis_no" value="MP1TFR86JCT182907" placeholder="เช่น MP1TFR..."
+                  class="vis-input w-full font-mono uppercase text-sm">
               </div>
 
-              <!-- วันที่จดทะเบียน -->
-              <div class="md:col-span-3">
-                <label class="block text-xs font-medium mb-1" style="color: var(--color-ink-secondary);">
-                  วันที่จดทะเบียนรถ
-                </label>
-                <input type="date" id="vehicle_registration_date" value="2020-09-03" class="vis-input w-full px-3 text-xs font-medium">
+              <div class="sm:col-span-3 space-y-1">
+                <label for="vehicle_registration_date" class="block text-sm font-bold" style="color: var(--color-ink);">วันที่จดทะเบียน</label>
+                <input type="date" id="vehicle_registration_date" value="2020-03-09"
+                  class="vis-input w-full text-sm">
               </div>
+            </div>
 
-              <!-- จำนวนเพลา & เบรกมือ (Mandatory - Direct Physical Selector) -->
-              <div class="md:col-span-12">
-                <label class="block text-xs font-semibold mb-1.5" style="color: var(--color-ink-secondary);">
-                  จำนวนเพลา และตำแหน่งเบรกมือ <span class="text-red-500">*</span>
-                </label>
-                
-                <div class="p-3 rounded-lg border flex flex-wrap items-center justify-between gap-4" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-                  <!-- จำนวนเพลา -->
-                  <div class="flex items-center gap-2">
-                    <span class="text-xs font-medium" style="color: var(--color-ink-secondary);">จำนวนเพลา:</span>
-                    <div class="inline-flex rounded-md border" style="border-color: var(--color-rule);">
-                      <button type="button" onclick="setAxle(2)" id="axle-2" class="px-3 py-1.5 text-xs font-bold rounded-l-md" style="background-color: var(--color-accent); color: var(--color-accent-ink);">2 เพลา</button>
-                      <button type="button" onclick="setAxle(3)" id="axle-3" class="px-3 py-1.5 text-xs font-medium border-l" style="background-color: var(--color-paper-card); color: var(--color-ink); border-color: var(--color-rule);">3 เพลา</button>
-                      <button type="button" onclick="setAxle(4)" id="axle-4" class="px-3 py-1.5 text-xs font-medium border-l rounded-r-md" style="background-color: var(--color-paper-card); color: var(--color-ink); border-color: var(--color-rule);">4 เพลา</button>
-                    </div>
-                  </div>
-
-                  <!-- ตำแหน่งเบรกมือ -->
-                  <div class="flex items-center gap-2" id="handbrake-axles">
-                    <span class="text-xs font-medium" style="color: var(--color-ink-secondary);">ตำแหน่งเบรกมือ:</span>
-                    <label class="cursor-pointer flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
-                      <input type="checkbox" name="brake_pos" value="1" class="rounded"> เพลา 1 (หน้า)
-                    </label>
-                    <label class="cursor-pointer flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-semibold" style="background-color: var(--color-accent-subtle); border-color: var(--color-accent); color: var(--color-accent);">
-                      <input type="checkbox" name="brake_pos" value="2" checked class="rounded"> เพลา 2 (หลัง) [เบรกมือ 🅿️]
-                    </label>
-                  </div>
+            <!-- Axle & Handbrake Configuration (Clean & Large) -->
+            <div class="p-3.5 rounded-lg border flex flex-wrap items-center justify-between gap-4" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-bold" style="color: var(--color-ink);">จำนวนเพลาล้อ:</span>
+                <div class="inline-flex rounded-lg border p-1" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
+                  <button type="button" onclick="setAxle(2)" id="axle-2" class="px-4 py-1.5 text-sm font-bold rounded-md transition-all" style="background-color: var(--color-accent); color: var(--color-accent-ink);">2 เพลา</button>
+                  <button type="button" onclick="setAxle(3)" id="axle-3" class="px-4 py-1.5 text-sm font-semibold rounded-md transition-all" style="color: var(--color-ink);">3 เพลา</button>
+                  <button type="button" onclick="setAxle(4)" id="axle-4" class="px-4 py-1.5 text-sm font-semibold rounded-md transition-all" style="color: var(--color-ink);">4 เพลา</button>
                 </div>
+              </div>
+
+              <div class="flex items-center gap-2" id="handbrake-axles">
+                <!-- Dynamically populated checkboxes -->
               </div>
             </div>
           </div>
 
-          <!-- Section 3: การออกเอกสารและผู้ตรวจ -->
-          <div>
-            <div class="flex items-center justify-between pb-2 mb-3 border-b" style="border-color: var(--color-rule-light);">
-              <span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5" style="color: var(--color-ink);">
-                <span class="w-1.5 h-3 rounded-full" style="background-color: var(--color-accent);"></span>
-                หมวดที่ 3: แบบฟอร์มการพิมพ์ และการตรวจพินิจ
-              </span>
+          <!-- ==================== หมวดที่ 3: แบบฟอร์มการพิมพ์ และ ผู้ตรวจสภาพ (ครบ 100%) ==================== -->
+          <div class="space-y-4 pt-3 border-t" style="border-color: var(--color-rule-light);">
+            <div class="flex items-center justify-between pb-1">
+              <h3 class="font-heading font-bold text-base flex items-center gap-2" style="color: var(--color-ink);">
+                <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs text-white" style="background-color: var(--color-accent);">3</span>
+                แบบฟอร์มการพิมพ์ และผู้รับผิดชอบการตรวจ
+              </h3>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
-              <!-- รูปแบบพิมพ์ -->
-              <div class="md:col-span-5">
-                <label class="block text-xs font-semibold mb-1" style="color: var(--color-ink-secondary);">
-                  รูปแบบการพิมพ์ใบตรวจสภาพ <span class="text-red-500">*</span>
-                </label>
-                <select id="print_format_id" class="vis-input w-full px-2.5 text-xs font-medium">
-                  <option value="1">1. แบบมาตรฐาน ตรอ. (กระดาษ A4)</option>
-                  <option value="2" selected>2. แบบรถโดยสาร / รถบรรทุก (ขส.)</option>
-                  <option value="3">3. แบบรถจักรยานยนต์</option>
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3.5">
+              <div class="sm:col-span-4 space-y-1">
+                <label for="print_format_id" class="block text-sm font-bold" style="color: var(--color-ink);">รูปแบบการพิมพ์ใบตรวจสภาพ</label>
+                <select id="print_format_id" class="vis-input w-full font-medium">
+                  <option value="2. แบบรถโดยสาร / รถบรรทุก (ขส.)" selected>2. แบบรถโดยสาร / รถบรรทุก (A4 ขส.)</option>
+                  <option value="1. แบบรถยนต์ทั่วไป (รย.1, 2, 3)">1. แบบรถยนต์ทั่วไป (A4 มาตรฐาน)</option>
+                  <option value="3. สลิปผลย่อความร้อน (80mm)">3. สลิปผลย่อความร้อน (80mm)</option>
                 </select>
               </div>
 
-              <!-- รายการตรวจพินิจ -->
-              <div class="md:col-span-4">
-                <label class="block text-xs font-medium mb-1" style="color: var(--color-ink-secondary);">
-                  ชุดตรวจพินิจรอบคัน
-                </label>
-                <select id="visual_checklist" class="vis-input w-full px-2.5 text-xs font-medium">
-                  <option value="รถโดยสาร">ชุดมาตรฐาน: รถโดยสาร (ฉบับเต็ม)</option>
-                  <option value="รถนั่งส่วนบุคคล">ชุดมาตรฐาน: รถนั่งส่วนบุคคล</option>
+              <div class="sm:col-span-4 space-y-1">
+                <label for="visual_checklist_id" class="block text-sm font-bold" style="color: var(--color-ink);">ชุดตรวจพินิจรอบคัน</label>
+                <select id="visual_checklist_id" class="vis-input w-full font-medium">
+                  <option value="ชุดมาตรฐาน: รถโดยสาร (ฉบับเต็ม)" selected>ชุดมาตรฐาน: รถโดยสาร (ฉบับเต็ม)</option>
+                  <option value="ชุดมาตรฐาน: รถยนต์นั่ง">ชุดมาตรฐาน: รถยนต์นั่ง</option>
                 </select>
               </div>
 
-              <!-- ตรวจครั้งที่ & ผู้ตรวจสอบ -->
-              <div class="md:col-span-3 grid grid-cols-2 gap-2">
-                <div>
-                  <label class="block text-xs font-medium mb-1" style="color: var(--color-ink-secondary);">รอบที่</label>
-                  <input type="number" id="inspection_round" value="1" min="1" max="10" class="vis-input w-full text-center text-xs font-mono font-bold">
-                </div>
-                <div>
-                  <label class="block text-xs font-medium mb-1" style="color: var(--color-ink-secondary);">ผู้ตรวจ</label>
-                  <select id="inspector_user_id" class="vis-input w-full px-1 text-xs font-medium">
-                    <option value="somchai">สมชาย</option>
-                    <option value="wichai">วิชัย</option>
-                  </select>
-                </div>
+              <div class="sm:col-span-2 space-y-1">
+                <label for="inspection_round" class="block text-sm font-bold" style="color: var(--color-ink);">รอบที่ตรวจ</label>
+                <input type="number" id="inspection_round" value="1" min="1" max="5"
+                  class="vis-input w-full font-mono text-center font-bold text-base">
+              </div>
+
+              <div class="sm:col-span-2 space-y-1">
+                <label for="inspector_user_id" class="block text-sm font-bold" style="color: var(--color-ink);">ผู้ตรวจสภาพ</label>
+                <select id="inspector_user_id" class="vis-input w-full font-medium text-sm">
+                  <option value="EMP-0412 (นายสมชาย ตรวจการ)" selected>สมชาย (หน.เลน)</option>
+                  <option value="EMP-0205 (นายประสิทธิ์)">ประสิทธิ์</option>
+                </select>
               </div>
             </div>
           </div>
 
-          <!-- Alert validation (hidden) -->
-          <div id="form-alert" class="hidden p-3 rounded-lg border text-xs flex items-center gap-2" style="background-color: var(--color-fail-bg); color: var(--color-fail); border-color: var(--color-fail-border);">
-            <i data-lucide="alert-circle" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
-            <span id="form-alert-msg">กรุณาระบุฟิลด์บังคับให้ครบถ้วน</span>
-          </div>
-
-          <!-- Form Action Bar (CTA) -->
-          <div class="pt-3 border-t flex flex-wrap items-center justify-between gap-3" style="border-color: var(--color-rule);">
-            <button type="button" onclick="clearForm()" class="btn-secondary px-3.5 py-2 text-xs font-medium flex items-center gap-1.5" title="กด F4 เพื่อล้างฟอร์ม">
-              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5" aria-hidden="true"></i> ล้างฟอร์ม [F4]
+          <!-- ==================== SENIOR BIG ACTION BUTTONS ==================== -->
+          <div class="pt-4 border-t flex flex-wrap items-center justify-between gap-3" style="border-color: var(--color-rule);">
+            <button type="button" onclick="clearForm()" class="vis-btn-secondary px-5 flex items-center gap-2">
+              <i data-lucide="rotate-ccw" class="w-5 h-5"></i> ล้างฟอร์ม [F4]
             </button>
-            <div class="flex items-center gap-2">
-              <button type="button" onclick="showTicketPreview()" class="btn-secondary px-3.5 py-2 text-xs font-semibold flex items-center gap-1.5">
-                <i data-lucide="printer" class="w-3.5 h-3.5" aria-hidden="true"></i> พิมพ์ใบนำตรวจ
+
+            <div class="flex items-center gap-3">
+              <button type="button" onclick="showTicketPreview()" class="vis-btn-secondary px-5 flex items-center gap-2">
+                <i data-lucide="printer" class="w-5 h-5"></i> พิมพ์ใบนำตรวจ
               </button>
-              <button type="button" onclick="saveRegistration()" class="btn-primary px-5 py-2 text-xs font-semibold flex items-center gap-2" title="กด F9 หรือ Enter เพื่อบันทึก">
-                <i data-lucide="arrow-right-circle" class="w-4 h-4" aria-hidden="true"></i> บันทึกและส่งเข้าช่องตรวจ [F9]
+
+              <button type="submit" class="vis-btn-primary px-7 flex items-center gap-2.5 shadow-md">
+                <i data-lucide="arrow-right-circle" class="w-6 h-6"></i>
+                <span>บันทึกและส่งเข้าช่องตรวจ [F9]</span>
               </button>
             </div>
           </div>
@@ -602,51 +555,57 @@
       </div>
     </section>
 
-    <!-- ==================== RIGHT COLUMN: QUEUE & HARDWARE MONITOR ==================== -->
+    <!-- ==================== RIGHT COLUMN (5 COLS): SENIOR-FRIENDLY QUEUE MONITOR ==================== -->
     <section class="lg:col-span-5 flex flex-col">
-      <div class="rounded-xl border shadow-xs flex flex-col h-full overflow-hidden" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
+      <div class="rounded-xl border shadow-xs flex flex-col overflow-hidden" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
         
-        <!-- Queue Header -->
-        <div class="p-3.5 border-b space-y-2.5" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+        <!-- Queue Header with High-Contrast Search & Filters -->
+        <div class="p-4 border-b space-y-3" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <i data-lucide="list-ordered" class="w-4 h-4" style="color: var(--color-accent);" aria-hidden="true"></i>
-              <h3 class="font-bold text-sm tracking-tight" style="color: var(--color-ink);">คิวตรวจสภาพ & ผลเรียลไทม์ (Lane Monitor)</h3>
+              <i data-lucide="list-ordered" class="w-5 h-5" style="color: var(--color-accent);" aria-hidden="true"></i>
+              <h3 class="font-heading font-bold text-base" style="color: var(--color-ink);">คิวตรวจสภาพ & ผลเรียลไทม์ (Lane Monitor)</h3>
             </div>
-            <button onclick="renderQueueList()" class="text-[11px] flex items-center gap-1 hover:underline font-mono" style="color: var(--color-ink-muted);">
-              <i data-lucide="refresh-cw" class="w-3.5 h-3.5" aria-hidden="true"></i> รีเฟรช
+            <button onclick="renderQueueList()" class="text-xs flex items-center gap-1.5 font-bold hover:underline" style="color: var(--color-accent);">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> รีเฟรชคิว
             </button>
           </div>
 
-          <!-- Search & Status Filter (Barcode Scanner Enabled) -->
-          <div class="flex items-center gap-2">
-            <div class="relative flex-1">
-              <i data-lucide="search" class="w-3.5 h-3.5 absolute left-2.5 top-2.5" style="color: var(--color-ink-muted);" aria-hidden="true"></i>
-              <input type="text" id="queue-search" oninput="renderQueueList()" placeholder="ค้นหาทะเบียน, คัสซี หรือยิง Barcode..."
-                class="vis-input w-full pl-8 pr-7 text-xs">
-              <i data-lucide="barcode" class="w-3.5 h-3.5 absolute right-2.5 top-2.5 opacity-60" style="color: var(--color-accent);" title="ยิง Barcode/QR แล้วกด Enter เพื่อเปิดผลตรวจทันที"></i>
-            </div>
-            <div class="flex items-center gap-1 text-[11px]">
-              <button onclick="setQueueFilter('all')" id="qf-all" class="px-2 py-1 rounded font-medium" style="background-color: var(--color-accent); color: var(--color-accent-ink);">ทั้งหมด (6)</button>
-              <button onclick="setQueueFilter('testing')" id="qf-testing" class="px-2 py-1 rounded font-medium border" style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink-secondary);">ตรวจอยู่ (1)</button>
-              <button onclick="setQueueFilter('passed')" id="qf-passed" class="px-2 py-1 rounded font-medium border" style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink-secondary);">ผ่าน (4)</button>
-            </div>
+          <!-- Barcode Search Input -->
+          <div class="relative">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3.5" style="color: var(--color-ink-muted);"></i>
+            <input type="text" id="queue-search" oninput="renderQueueList()" 
+              placeholder="ค้นหาทะเบียน, คัสซี หรือยิง Barcode แล้วกด Enter..."
+              class="vis-input w-full pl-10 pr-10 text-sm">
+            <i data-lucide="scan-barcode" class="w-4 h-4 absolute right-3 top-3.5 text-blue-600 dark:text-blue-400" title="ยิงบาร์โค้ดเพื่อเปิดผลตรวจทันที"></i>
+          </div>
+
+          <!-- Status Filter Tabs (Large Touch) -->
+          <div class="grid grid-cols-4 gap-1.5 text-xs font-bold">
+            <button onclick="setQueueFilter('all')" id="qf-all" class="py-2 rounded-md transition-all" 
+              style="background-color: var(--color-accent); color: var(--color-accent-ink);">ทั้งหมด (6)</button>
+            <button onclick="setQueueFilter('testing')" id="qf-testing" class="py-2 rounded-md border transition-all" 
+              style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink);">กำลังตรวจ (1)</button>
+            <button onclick="setQueueFilter('passed')" id="qf-passed" class="py-2 rounded-md border transition-all" 
+              style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink);">ผ่าน (4)</button>
+            <button onclick="setQueueFilter('failed')" id="qf-failed" class="py-2 rounded-md border transition-all" 
+              style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink);">ตกเกณฑ์ (1)</button>
           </div>
         </div>
 
-        <!-- Queue Cards List -->
-        <div id="queue-items" class="p-3 space-y-2.5 flex-1 overflow-y-auto custom-scrollbar">
+        <!-- Queue Cards List (Clean, High-Legibility, No 24 mini-boxes) -->
+        <div id="queue-items" class="p-4 space-y-3.5 max-h-[720px] overflow-y-auto senior-scrollbar">
           <!-- Populated by JavaScript -->
         </div>
 
-        <!-- Queue Status Summary Footer -->
-        <div class="px-4 py-2 border-t flex items-center justify-between text-[11px]" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule); color: var(--color-ink-muted);">
+        <!-- Queue Legend Footer -->
+        <div class="px-4 py-3 border-t flex flex-wrap items-center justify-between text-xs font-semibold" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule); color: var(--color-ink-muted);">
           <div class="flex items-center gap-3">
-            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full" style="background-color: var(--color-testing);"></span> ตรวจอยู่</span>
-            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full" style="background-color: var(--color-pass);"></span> ผ่านเกณฑ์</span>
-            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full" style="background-color: var(--color-fail);"></span> ตกเกณฑ์</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background-color: var(--color-testing);"></span> ตรวจอยู่</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background-color: var(--color-pass);"></span> ผ่านเกณฑ์</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background-color: var(--color-fail);"></span> ตกเกณฑ์</span>
           </div>
-          <span class="font-mono">เกณฑ์ ขส. ปี 2569</span>
+          <span>เกณฑ์มาตรฐาน กรมการขนส่งทางบก (ขส.)</span>
         </div>
 
       </div>
@@ -654,160 +613,282 @@
 
   </main>
 
-  <!-- ==================== MODAL: SUPERVISOR EDIT OVERRIDE (BRD ข้อ 4.2) ==================== -->
-  <div id="supervisor-modal" class="fixed inset-0 z-50 backdrop-blur-xs hidden items-center justify-center p-4" style="background-color: rgba(15, 23, 42, 0.65);">
-    <div class="rounded-xl max-w-md w-full border shadow-2xl overflow-hidden flex flex-col" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
-      <div class="px-4 py-3 border-b flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-        <div class="flex items-center gap-2">
-          <i data-lucide="shield-alert" class="w-4 h-4 text-amber-500" aria-hidden="true"></i>
-          <span class="text-xs font-bold" style="color: var(--color-ink);">ขออนุมัติแก้ไขข้อมูลหลังบันทึกผลตรวจ (BRD 4.2)</span>
+  <!-- ==================== MODAL: HARDWARE DIAGNOSTICS (9 DEVICES) ==================== -->
+  <div id="hardware-modal" class="fixed inset-0 z-50 backdrop-blur-xs hidden items-center justify-center p-4" style="background-color: rgba(15, 23, 42, 0.7);">
+    <div class="rounded-xl max-w-2xl w-full border shadow-2xl overflow-hidden flex flex-col" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
+      <div class="px-5 py-3.5 border-b flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="cpu" class="w-5 h-5" style="color: var(--color-accent);"></i>
+          <h3 class="font-heading font-bold text-base" style="color: var(--color-ink);">สถานะเครื่องมือทดสอบฮาร์ดแวร์ประจำเลน (9 รายการ)</h3>
         </div>
-        <button onclick="closeSupervisorModal()" style="color: var(--color-ink-muted);"><i data-lucide="x" class="w-4 h-4"></i></button>
+        <button onclick="closeHardwareDrawer()" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-zinc-200 dark:hover:bg-zinc-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
       </div>
-      <div class="p-5 text-xs space-y-3.5">
-        <div class="p-3 rounded-lg border flex items-start gap-2.5" style="background-color: var(--color-warning-bg); border-color: var(--color-warning-border); color: var(--color-ink);">
-          <i data-lucide="lock" class="w-4 h-4 shrink-0 text-amber-600 mt-0.5" aria-hidden="true"></i>
-          <div>
-            <span class="font-bold">ข้อมูลถูกล็อกตามข้อกำหนด BRD 4.2</span>
-            <p class="text-[11px] mt-0.5" style="color: var(--color-ink-secondary);">
-              รถทะเบียน <strong id="sup-target-plate" class="font-mono font-bold">15-5461</strong> ได้เริ่มกระบวนการตรวจแล้ว การแก้ไขข้อมูลต้องได้รับอนุมัติจากหัวหน้าสถานตรวจสภาพและมีบันทึกประวัติ (Audit Trail)
-            </p>
+
+      <div class="p-5 space-y-3.5 overflow-y-auto max-h-[70vh]">
+        <p class="text-xs" style="color: var(--color-ink-muted);">สถานะการเชื่อมต่อพอร์ต Serial / TCP / USB เข้ากับคอมพิวเตอร์ประจำช่องตรวจสภาพ</p>
+        
+        <div class="grid grid-cols-1 gap-2.5 text-sm">
+          <div class="p-3 rounded-lg border flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+              <div>
+                <div class="font-bold">1. เครื่องทดสอบความเร็ว (Speedometer)</div>
+                <div class="text-xs font-mono" style="color: var(--color-ink-muted);">Port: COM1 (9600-8-N-1) • ค่าล่าสุด: 40.0 km/h</div>
+              </div>
+            </div>
+            <span class="px-2 py-1 rounded text-xs font-bold" style="background-color: var(--color-pass-bg); color: var(--color-pass);">Online (ปกติ)</span>
+          </div>
+
+          <div class="p-3 rounded-lg border flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+              <div>
+                <div class="font-bold">2. เครื่องทดสอบโคมไฟหน้า (Headlight Tester)</div>
+                <div class="text-xs font-mono" style="color: var(--color-ink-muted);">Port: COM2 (19200-8-N-1) • ค่าล่าสุด: 28,000 cd</div>
+              </div>
+            </div>
+            <span class="px-2 py-1 rounded text-xs font-bold" style="background-color: var(--color-pass-bg); color: var(--color-pass);">Online (ปกติ)</span>
+          </div>
+
+          <div class="p-3 rounded-lg border flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+              <div>
+                <div class="font-bold">3. เครื่องทดสอบห้ามล้อ (Brake Tester)</div>
+                <div class="text-xs font-mono" style="color: var(--color-ink-muted);">Network: TCP/IP 192.168.1.150:4001 • ค่าล่าสุด: 64%</div>
+              </div>
+            </div>
+            <span class="px-2 py-1 rounded text-xs font-bold" style="background-color: var(--color-pass-bg); color: var(--color-pass);">Online (ปกติ)</span>
+          </div>
+
+          <div class="p-3 rounded-lg border flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+              <div>
+                <div class="font-bold">4. เครื่องทดสอบศูนย์ล้อ (Sideslip Tester)</div>
+                <div class="text-xs font-mono" style="color: var(--color-ink-muted);">Port: COM4 (9600-8-N-1) • ค่าล่าสุด: -1.2 m/km</div>
+              </div>
+            </div>
+            <span class="px-2 py-1 rounded text-xs font-bold" style="background-color: var(--color-pass-bg); color: var(--color-pass);">Online (ปกติ)</span>
+          </div>
+
+          <div class="p-3 rounded-lg border flex items-center justify-between" style="background-color: var(--color-warning-bg); border-color: var(--color-warning-border);">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 rounded-full animate-ping" style="background-color: var(--color-warning);"></span>
+              <div>
+                <div class="font-bold" style="color: var(--color-warning);">5. เครื่องวัดควันดำ (Smoke Opacimeter)</div>
+                <div class="text-xs font-mono" style="color: var(--color-warning);">Port: COM3 • สายหลุด หรือไม่มีไฟเลี้ยง (Disconnected)</div>
+              </div>
+            </div>
+            <button onclick="toggleSmokeDeviceStatus(); closeHardwareDrawer();" class="px-2.5 py-1 rounded text-xs font-bold border hover:bg-white" style="background-color: var(--color-paper-card); border-color: var(--color-warning-border); color: var(--color-warning);">
+              คลิกเพื่อเชื่อมต่อใหม่
+            </button>
+          </div>
+
+          <div class="p-3 rounded-lg border flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+              <div>
+                <div class="font-bold">6. เครื่องวิเคราะห์ก๊าซ (Gas Analyzer CO/HC)</div>
+                <div class="text-xs font-mono" style="color: var(--color-ink-muted);">Port: COM5 (9600-8-N-1) • สแตนด์บาย</div>
+              </div>
+            </div>
+            <span class="px-2 py-1 rounded text-xs font-bold" style="background-color: var(--color-pass-bg); color: var(--color-pass);">Online (ปกติ)</span>
+          </div>
+
+          <div class="p-3 rounded-lg border flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+              <div>
+                <div class="font-bold">7. เครื่องวัดระดับเสียง (Sound Level Meter)</div>
+                <div class="text-xs font-mono" style="color: var(--color-ink-muted);">Interface: USB HID • ค่าล่าสุด: 79.1 dB</div>
+              </div>
+            </div>
+            <span class="px-2 py-1 rounded text-xs font-bold" style="background-color: var(--color-pass-bg); color: var(--color-pass);">Online (ปกติ)</span>
+          </div>
+
+          <div class="p-3 rounded-lg border flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+              <div>
+                <div class="font-bold">8. เครื่องวัดรอบเครื่องยนต์ & ชั่งน้ำหนัก (RPM & Scale)</div>
+                <div class="text-xs font-mono" style="color: var(--color-ink-muted);">Interface: Bluetooth / COM6 • สแตนด์บาย</div>
+              </div>
+            </div>
+            <span class="px-2 py-1 rounded text-xs font-bold" style="background-color: var(--color-pass-bg); color: var(--color-pass);">Online (ปกติ)</span>
+          </div>
+
+          <div class="p-3 rounded-lg border flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+              <div>
+                <div class="font-bold">9. กล้องอ่านป้ายทะเบียน (LPR Camera)</div>
+                <div class="text-xs font-mono" style="color: var(--color-ink-muted);">RTSP Stream: 192.168.1.108:554 • ภาพชัดเจน</div>
+              </div>
+            </div>
+            <span class="px-2 py-1 rounded text-xs font-bold" style="background-color: var(--color-pass-bg); color: var(--color-pass);">Online (ปกติ)</span>
           </div>
         </div>
+      </div>
 
-        <div>
-          <label class="block text-xs font-semibold mb-1" style="color: var(--color-ink-secondary);">
-            รหัสผ่านหัวหน้าสถานตรวจ (Supervisor PIN) <span class="text-red-500">*</span>
-          </label>
-          <input type="password" id="sup-pin" placeholder="ป้อน PIN 4-6 หลัก..." maxlength="6"
-            class="vis-input w-full px-3 text-center text-base tracking-widest font-mono font-bold">
+      <div class="px-5 py-3 border-t flex justify-end" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+        <button onclick="closeHardwareDrawer()" class="px-5 py-2 rounded-lg font-bold text-sm border" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: SUPERVISOR EDIT OVERRIDE (BRD ข้อ 4.2) ==================== -->
+  <div id="supervisor-modal" class="fixed inset-0 z-50 backdrop-blur-xs hidden items-center justify-center p-4" style="background-color: rgba(15, 23, 42, 0.7);">
+    <div class="rounded-xl max-w-md w-full border shadow-2xl overflow-hidden flex flex-col" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
+      <div class="px-5 py-3.5 border-b flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+        <div class="flex items-center gap-2">
+          <i data-lucide="shield-alert" class="w-5 h-5 text-amber-500"></i>
+          <h3 class="font-heading font-bold text-base" style="color: var(--color-ink);">ขอสิทธิ์แก้ไขข้อมูลที่ตรวจแล้ว (BRD ข้อ 4.2)</h3>
+        </div>
+        <button onclick="closeSupervisorModal()" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-zinc-200 dark:hover:bg-zinc-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4">
+        <div class="p-3.5 rounded-lg border text-sm" style="background-color: var(--color-warning-bg); color: var(--color-warning); border-color: var(--color-warning-border);">
+          <strong>🔒 ข้อมูลถูกล็อก:</strong> รถทะเบียน <span id="sup-target-plate" class="font-bold font-mono">15-5461</span> มีการบันทึกผลการตรวจในเลนแล้ว การแก้ไขข้อมูลต้องได้รับอนุมัติจากหัวหน้างานเท่านั้น
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold mb-1" style="color: var(--color-ink-secondary);">
-            เหตุผลความจำเป็นในการแก้ไข (Audit Reason) <span class="text-red-500">*</span>
-          </label>
-          <select id="sup-reason" class="vis-input w-full px-2 text-xs font-medium">
-            <option value="1">เจ้าหน้าที่คีย์เลขตัวถัง/ทะเบียนคลาดเคลื่อน</option>
-            <option value="2">ลูกค้าแจ้งเปลี่ยนชนิดเชื้อเพลิงหลังส่งตรวจ</option>
-            <option value="3">ช่างตรวจพบจำนวนเพลาจริงไม่ตรงกับใบคู่มือ</option>
-            <option value="4">ขอยกเลิกคิวเพื่อคืนเงินค่าบริการ</option>
+        <div class="space-y-1">
+          <label for="sup-pin" class="block text-sm font-bold">รหัส PIN หัวหน้างาน (Supervisor PIN) *</label>
+          <input type="password" id="sup-pin" placeholder="ป้อนรหัส PIN 4-6 หลัก..." maxlength="6"
+            class="vis-input w-full font-mono text-center text-xl font-bold tracking-widest">
+        </div>
+
+        <div class="space-y-1">
+          <label for="sup-reason" class="block text-sm font-bold">เหตุผลความจำเป็นในการแก้ไข *</label>
+          <select id="sup-reason" class="vis-input w-full font-medium text-sm">
+            <option value="1">พิมพ์เลขคัสซี / เลขตัวถังผิดจากเล่มทะเบียน</option>
+            <option value="2">เปลี่ยนชนิดเชื้อเพลิงตามเอกสารดัดแปลง</option>
+            <option value="3">แก้ไขจำนวนเพลา หรือตำแหน่งเบรกมือ</option>
+            <option value="4">เปลี่ยนประเภทรถ ขส. ให้ตรงตามเล่ม</option>
           </select>
         </div>
       </div>
-      <div class="px-4 py-2.5 border-t flex justify-end gap-2" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-        <button onclick="closeSupervisorModal()" class="btn-secondary px-3.5 py-1.5 text-xs">ยกเลิก</button>
-        <button onclick="submitSupervisorOverride()" class="btn-primary px-4 py-1.5 text-xs flex items-center gap-1.5">
-          <i data-lucide="unlock" class="w-3.5 h-3.5"></i> ยืนยันปลดล็อกแก้ไข
+
+      <div class="px-5 py-3.5 border-t flex items-center justify-end gap-2.5" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+        <button type="button" onclick="closeSupervisorModal()" class="px-4 py-2 rounded-lg font-semibold text-sm border" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
+          ยกเลิก
+        </button>
+        <button type="button" onclick="submitSupervisorOverride()" class="px-5 py-2 rounded-lg font-bold text-sm text-white" style="background-color: var(--color-accent);">
+          อนุมัติปลดล็อกแก้ไข
         </button>
       </div>
     </div>
   </div>
 
-  <!-- ==================== MODAL: 9 EQUIPMENT RESULTS DETAIL ==================== -->
-  <div id="detail-modal" class="fixed inset-0 z-50 backdrop-blur-xs hidden items-center justify-center p-4" style="background-color: rgba(15, 23, 42, 0.65);">
-    <div class="rounded-xl max-w-2xl w-full border shadow-2xl overflow-hidden flex flex-col max-h-[90vh]" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
-      
-      <!-- Modal Header -->
-      <div class="px-5 py-3 border-b flex items-center justify-between text-white" style="background-color: var(--color-accent);">
-        <div class="flex items-center gap-2">
-          <i data-lucide="file-bar-chart-2" class="w-4 h-4" aria-hidden="true"></i>
-          <div>
-            <h4 class="font-bold text-sm leading-none" id="m-title">ผลตรวจสภาพรถ: 15-5461 (กรุงเทพมหานคร)</h4>
-            <p class="text-[11px] opacity-85 mt-0.5" id="m-subtitle">TOYOTA Camry • ดีเซล • ตรวจครั้งที่ 1</p>
-          </div>
+  <!-- ==================== MODAL: INSPECTION DETAILS (6 TESTS & 9 HARDWARE) ==================== -->
+  <div id="detail-modal" class="fixed inset-0 z-50 backdrop-blur-xs hidden items-center justify-center p-4" style="background-color: rgba(15, 23, 42, 0.7);">
+    <div class="rounded-xl max-w-3xl w-full border shadow-2xl overflow-hidden flex flex-col" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
+      <div class="px-5 py-4 border-b flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+        <div>
+          <h3 id="m-title" class="font-heading font-bold text-lg" style="color: var(--color-ink);">ผลตรวจสภาพรถ: 15-5461 (กรุงเทพมหานคร)</h3>
+          <p id="m-subtitle" class="text-xs font-mono" style="color: var(--color-ink-muted);">TOYOTA Camry • ดีเซล • รอบตรวจที่ 1 • 12:42 น.</p>
         </div>
-        <button onclick="closeDetailModal()" class="p-1 hover:bg-black/10 rounded transition-colors text-white" title="ปิด">
-          <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
+        <button onclick="closeDetailModal()" class="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-zinc-200 dark:hover:bg-zinc-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <!-- Modal Body (9 Hardware Results) -->
-      <div class="p-4 md:p-5 space-y-4 overflow-y-auto custom-scrollbar flex-1">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5" id="m-grid">
+      <div class="p-5 space-y-4 overflow-y-auto max-h-[75vh]">
+        <h4 class="text-sm font-bold flex items-center gap-2" style="color: var(--color-ink);">
+          <i data-lucide="check-square" class="w-4 h-4 text-blue-600"></i> ค่าผลการทดสอบจริงจากอุปกรณ์ตรวจทั้ง 6 รายการ
+        </h4>
+
+        <!-- High-legibility 6 test grid -->
+        <div id="m-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
           <!-- Populated by JS -->
         </div>
 
-        <!-- Visual Check Section -->
-        <div class="p-3.5 rounded-lg border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-          <div class="flex items-center justify-between mb-1.5">
-            <span class="text-xs font-bold flex items-center gap-1.5" style="color: var(--color-ink);">
-              <i data-lucide="eye" class="w-3.5 h-3.5" style="color: var(--color-accent);" aria-hidden="true"></i>
-              การตรวจพินิจรอบคัน (Visual Inspection)
-            </span>
-            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border" style="background-color: var(--color-pass-bg); color: var(--color-pass); border-color: var(--color-pass-border);">
-              ผ่าน 24/24 ข้อ
-            </span>
+        <!-- Visual checklist summary -->
+        <div class="p-3.5 rounded-lg border text-sm" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+          <div class="font-bold mb-1">ผลการตรวจพินิจรอบคัน (24 รายการ ขส.):</div>
+          <div class="text-xs" style="color: var(--color-ink-secondary);">
+            ✓ สภาพตัวถัง คัสซี ยาง และอุปกรณ์ส่องสว่าง ตรวจสอบแล้วผ่านเกณฑ์มาตรฐาน ไม่มีการดัดแปลงสภาพผิดกฎหมาย
           </div>
-          <p class="text-[11px]" style="color: var(--color-ink-muted);">
-            สภาพตัวถัง, คานคัสซี, ยางและล้อ, ระบบบังคับเลี้ยว, กระจกนิรภัย, เข็มขัดนิรภัย และอุปกรณ์ดับเพลิง อยู่ในสภาพสมบูรณ์
-          </p>
         </div>
       </div>
 
-      <!-- Modal Footer -->
-      <div class="px-5 py-3 border-t flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-        <div class="text-xs">
-          ผลสรุปรวม: <strong class="font-bold" style="color: var(--color-pass);">✓ ผ่านการตรวจสภาพ (PASS)</strong>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="closeDetailModal()" class="btn-secondary px-3 py-1.5 text-xs">ปิด</button>
-          <button onclick="window.print()" class="btn-primary px-4 py-1.5 text-xs flex items-center gap-1.5">
-            <i data-lucide="printer" class="w-3.5 h-3.5" aria-hidden="true"></i> พิมพ์ใบรับรอง
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ==================== MODAL: PRINT PREVIEW ==================== -->
-  <div id="ticket-modal" class="fixed inset-0 z-50 backdrop-blur-xs hidden items-center justify-center p-4" style="background-color: rgba(15, 23, 42, 0.65);">
-    <div class="rounded-xl max-w-md w-full border shadow-2xl overflow-hidden flex flex-col" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
-      <div class="px-4 py-3 border-b flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-        <span class="text-xs font-bold" style="color: var(--color-ink);">พรีวิวใบนำตรวจสภาพรถ (Inspection Pass)</span>
-        <button onclick="closeTicketModal()" style="color: var(--color-ink-muted);"><i data-lucide="x" class="w-4 h-4"></i></button>
-      </div>
-      <div class="p-5 font-sans text-xs space-y-3">
-        <div class="border p-4 rounded-lg space-y-2.5 text-center" style="border-color: var(--color-rule);">
-          <div class="border-b pb-2">
-            <h5 class="font-bold text-sm">ใบนำตรวจสภาพรถยนต์</h5>
-            <p class="text-[10px]" style="color: var(--color-ink-muted);">สถานตรวจสภาพรถเอกชน (ตรอ.) • ช่องตรวจที่ 1</p>
-          </div>
-          <div class="grid grid-cols-2 gap-2 text-left text-xs pt-1">
-            <div><strong>ทะเบียน:</strong> <span id="t-plate" class="font-mono font-bold">15-5461</span></div>
-            <div><strong>จังหวัด:</strong> <span id="t-prov">กทม.</span></div>
-            <div><strong>ยี่ห้อ/รุ่น:</strong> <span id="t-brand">TOYOTA Camry</span></div>
-            <div><strong>เชื้อเพลิง:</strong> <span id="t-fuel">ดีเซล</span></div>
-            <div class="col-span-2"><strong>เลขตัวถัง:</strong> <span id="t-vin" class="font-mono text-[11px]">MP1TFR86JCT182907</span></div>
-          </div>
-          <div class="border-t pt-2 mt-2">
-            <div class="h-9 flex items-center justify-center font-mono tracking-widest text-xs rounded border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-              *VIS-155461-20260914*
-            </div>
-            <p class="text-[10px] mt-1" style="color: var(--color-ink-muted);">โปรดยื่นเอกสารนี้แก่ช่างประจำช่องตรวจ</p>
-          </div>
-        </div>
-      </div>
-      <div class="px-4 py-2.5 border-t flex justify-end gap-2" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-        <button onclick="closeTicketModal()" class="btn-secondary px-3 py-1.5 text-xs">ปิด</button>
-        <button onclick="alert('สั่งพิมพ์ใบนำตรวจแล้ว'); closeTicketModal();" class="btn-primary px-4 py-1.5 text-xs flex items-center gap-1">
-          <i data-lucide="printer" class="w-3.5 h-3.5"></i> สั่งพิมพ์ทันที
+      <div class="px-5 py-3.5 border-t flex items-center justify-between" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+        <button type="button" onclick="closeDetailModal()" class="px-5 py-2.5 rounded-lg font-bold text-sm border" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
+          ปิดหน้าต่าง
+        </button>
+        <button type="button" onclick="window.print()" class="px-5 py-2.5 rounded-lg font-bold text-sm text-white flex items-center gap-2" style="background-color: var(--color-accent);">
+          <i data-lucide="printer" class="w-4 h-4"></i> พิมพ์ใบรับรองการตรวจ (A4)
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Toast Notification (Silent, no celebratory noise) -->
-  <div id="vis-toast" class="fixed bottom-4 right-4 z-50 px-4 py-2.5 rounded-lg shadow-lg border text-xs font-medium flex items-center gap-2 transform translate-y-16 opacity-0 transition-all duration-180" style="background-color: var(--color-paper-card); color: var(--color-ink); border-color: var(--color-rule);">
-    <i data-lucide="check-circle" class="w-4 h-4" style="color: var(--color-pass);" aria-hidden="true"></i>
-    <span id="vis-toast-text">บันทึกข้อมูลเรียบร้อย</span>
+  <!-- ==================== MODAL: TICKET PREVIEW & PRINT ==================== -->
+  <div id="ticket-modal" class="fixed inset-0 z-50 backdrop-blur-xs hidden items-center justify-center p-4" style="background-color: rgba(15, 23, 42, 0.7);">
+    <div class="rounded-xl max-w-sm w-full border shadow-2xl overflow-hidden flex flex-col p-5 space-y-4 text-center" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
+      <div class="w-12 h-12 rounded-full mx-auto flex items-center justify-center text-white" style="background-color: var(--color-pass);">
+        <i data-lucide="check" class="w-6 h-6"></i>
+      </div>
+      <div>
+        <h3 class="font-heading font-bold text-lg">ลงทะเบียนสำเร็จ!</h3>
+        <p class="text-xs" style="color: var(--color-ink-muted);">ข้อมูลถูกส่งต่อไปยังคอมพิวเตอร์ประจำเลนตรวจแล้ว</p>
+      </div>
+
+      <!-- Ticket Slip Card -->
+      <div class="p-4 rounded-lg border border-dashed font-mono text-left space-y-2 text-sm" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+        <div class="text-center font-bold text-base pb-1 border-b border-dashed" style="border-color: var(--color-rule);">
+          บัตรคิวตรวจสภาพ (ตรอ.)
+        </div>
+        <div class="flex justify-between">
+          <span style="color: var(--color-ink-muted);">ทะเบียน:</span>
+          <span class="font-bold text-base" id="t-plate">15-5461</span>
+        </div>
+        <div class="flex justify-between">
+          <span style="color: var(--color-ink-muted);">จังหวัด:</span>
+          <span id="t-prov">กรุงเทพมหานคร</span>
+        </div>
+        <div class="flex justify-between">
+          <span style="color: var(--color-ink-muted);">ยี่ห้อ/รุ่น:</span>
+          <span id="t-brand">TOYOTA Camry</span>
+        </div>
+        <div class="flex justify-between">
+          <span style="color: var(--color-ink-muted);">เชื้อเพลิง:</span>
+          <span id="t-fuel">ดีเซล</span>
+        </div>
+        <div class="flex justify-between text-xs pt-1 border-t border-dashed" style="border-color: var(--color-rule);">
+          <span style="color: var(--color-ink-muted);">เลขคัสซี:</span>
+          <span id="t-vin">MP1TFR86JCT182907</span>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <button type="button" onclick="closeTicketModal()" class="flex-1 py-2.5 rounded-lg border font-bold text-sm" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
+          ปิด [Esc]
+        </button>
+        <button type="button" onclick="window.print()" class="flex-1 py-2.5 rounded-lg font-bold text-sm text-white flex items-center justify-center gap-1.5" style="background-color: var(--color-accent);">
+          <i data-lucide="printer" class="w-4 h-4"></i> พิมพ์บัตรคิว
+        </button>
+      </div>
+    </div>
   </div>
 
-  <!-- ==================== JAVASCRIPT ==================== -->
-  <script>
-    lucide.createIcons();
+  <!-- Toast Notification -->
+  <div id="vis-toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="px-5 py-3 rounded-xl border shadow-xl flex items-center gap-3 text-sm font-bold" style="background-color: var(--color-ink); color: var(--color-paper); border-color: var(--color-rule);">
+      <i data-lucide="bell" class="w-5 h-5 text-amber-400"></i>
+      <span id="vis-toast-text">แจ้งเตือน</span>
+    </div>
+  </div>
 
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
     // Live Clock
     function updateClock() {
       const now = new Date();
@@ -828,6 +909,16 @@
       input.focus();
     }
 
+    // Hardware Drawer Modal
+    function openHardwareDrawer() {
+      document.getElementById('hardware-modal').classList.remove('hidden');
+      document.getElementById('hardware-modal').classList.add('flex');
+    }
+    function closeHardwareDrawer() {
+      document.getElementById('hardware-modal').classList.add('hidden');
+      document.getElementById('hardware-modal').classList.remove('flex');
+    }
+
     // Toggle simulated offline smoke meter
     let isSmokeOffline = true;
     function toggleSmokeDeviceStatus() {
@@ -837,13 +928,13 @@
         chip.style.backgroundColor = 'var(--color-warning-bg)';
         chip.style.color = 'var(--color-warning)';
         chip.style.borderColor = 'var(--color-warning-border)';
-        chip.innerHTML = `<span class="w-1.5 h-1.5 rounded-full animate-ping" style="background-color: var(--color-warning);"></span>ควันดำ (COM3 หลุด) ⚠️`;
-        showToast('จำลองสถานะ: เครื่องวัดควันดำ ออฟไลน์ (สาย COM หลุด)');
+        chip.innerHTML = `<span class="w-2.5 h-2.5 rounded-full animate-ping" style="background-color: var(--color-warning);"></span><span>ควันดำ (COM3 หลุด) ⚠️</span>`;
+        showToast('จำลองสถานะ: เครื่องวัดควันดำ ออฟไลน์ (COM3 หลุด)');
       } else {
         chip.style.backgroundColor = 'var(--color-pass-bg)';
         chip.style.color = 'var(--color-pass)';
         chip.style.borderColor = 'var(--color-pass-border)';
-        chip.innerHTML = `<span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--color-pass);"></span>ควันดำ (Online)`;
+        chip.innerHTML = `<span class="w-2.5 h-2.5 rounded-full" style="background-color: var(--color-pass);"></span><span>ควันดำ (Online ปกติ)</span>`;
         showToast('จำลองสถานะ: เครื่องวัดควันดำ ออนไลน์ พร้อมใช้งานแล้ว');
       }
     }
@@ -870,46 +961,55 @@
       });
     }
 
+    // Vehicle Type Changed -> cascades print formats & sub types
     function onVehicleTypeChanged() {
-      const type = document.getElementById('vehicle_type_id').value;
-      const subType = document.getElementById('vehicle_sub_type');
-      const printFmt = document.getElementById('print_format_id');
-      subType.innerHTML = '';
+      const vtype = document.getElementById('vehicle_type_id').value;
+      const printFormat = document.getElementById('print_format_id');
+      const subType = document.getElementById('sub_type');
       
-      if (type === 'รถโดยสาร') {
-        subType.innerHTML = `<option value="รถโดยสารประจำทาง" selected>ประจำทาง</option><option value="รถโดยสารไม่ประจำทาง">ไม่ประจำทาง</option>`;
-        printFmt.value = "2";
-      } else if (type === 'รถยนต์นั่งส่วนบุคคล') {
-        subType.innerHTML = `<option value="รย.1" selected>รย.1 (ไม่เกิน 7 คน)</option><option value="รย.2">รย.2 (เกิน 7 คน)</option>`;
-        printFmt.value = "1";
-      } else if (type === 'รถบรรทุก') {
-        subType.innerHTML = `<option value="รถบรรทุกส่วนบุคคล" selected>รถบรรทุกส่วนบุคคล</option><option value="รถบรรทุกไม่ประจำทาง">รถบรรทุกไม่ประจำทาง</option>`;
-        printFmt.value = "2";
-      } else if (type === 'รถจักรยานยนต์') {
-        subType.innerHTML = `<option value="รถจักรยานยนต์ส่วนบุคคล" selected>รย.12</option>`;
-        printFmt.value = "3";
+      if (vtype.includes('รถโดยสาร') || vtype.includes('รถบรรทุก')) {
+        printFormat.value = '2. แบบรถโดยสาร / รถบรรทุก (ขส.)';
+        subType.innerHTML = `
+          <option value="ประจำทาง">ประจำทาง (มาตรฐาน 1 ก - ปรับอากาศพิเศษ)</option>
+          <option value="ไม่ประจำทาง">ไม่ประจำทาง (ทัวร์นำเที่ยว/รับจ้าง)</option>
+          <option value="ส่วนบุคคล">ส่วนบุคคล</option>
+        `;
+      } else {
+        printFormat.value = '1. แบบรถยนต์ทั่วไป (รย.1, 2, 3)';
+        subType.innerHTML = `
+          <option value="ส่วนบุคคล">ส่วนบุคคล</option>
+          <option value="รับจ้าง">รับจ้าง (สาธารณะ)</option>
+        `;
       }
     }
 
-    // Fuel Selection
+    // Fuel Selector
+    const fuelList = [
+      { id: 'ดีเซล', btnId: 'btn-fuel-diesel' },
+      { id: 'เบนซิน', btnId: 'btn-fuel-gasoline' },
+      { id: 'ก๊าซ (LPG/NGV)', btnId: 'btn-fuel-gas' },
+      { id: 'ไฟฟ้า EV', btnId: 'btn-fuel-ev' }
+    ];
+
     function setFuel(fuel) {
       document.getElementById('fuel_type_id').value = fuel;
-      document.querySelectorAll('#fuel-selector .fuel-opt').forEach(btn => {
-        if (btn.dataset.fuel === fuel) {
-          btn.style.backgroundColor = 'var(--color-accent-subtle)';
-          btn.style.color = 'var(--color-accent)';
+      fuelList.forEach(item => {
+        const btn = document.getElementById(item.btnId);
+        if (item.id === fuel) {
+          btn.style.backgroundColor = 'var(--color-accent)';
+          btn.style.color = 'var(--color-accent-ink)';
           btn.style.borderColor = 'var(--color-accent)';
-          btn.classList.add('font-semibold');
+          btn.classList.add('font-bold');
         } else {
           btn.style.backgroundColor = 'var(--color-paper-card)';
-          btn.style.color = 'var(--color-ink-secondary)';
+          btn.style.color = 'var(--color-ink)';
           btn.style.borderColor = 'var(--color-rule)';
-          btn.classList.remove('font-semibold');
+          btn.classList.remove('font-bold');
         }
       });
     }
 
-    // Axle Count
+    // Axle Count & Handbrake
     let currentAxleCount = 2;
     function setAxle(count) {
       currentAxleCount = count;
@@ -927,20 +1027,20 @@
       });
 
       const container = document.getElementById('handbrake-axles');
-      container.innerHTML = `<span class="text-xs font-medium" style="color: var(--color-ink-secondary);">ตำแหน่งเบรกมือ:</span>`;
+      container.innerHTML = `<span class="text-sm font-bold" style="color: var(--color-ink);">ตำแหน่งเบรกมือ:</span>`;
       for (let i = 1; i <= count; i++) {
         const isDefault = (i === 2);
         const label = document.createElement('label');
-        label.className = `cursor-pointer flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs ${isDefault ? 'font-semibold' : ''}`;
+        label.className = `cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-sm font-semibold transition-all`;
         label.style.backgroundColor = isDefault ? 'var(--color-accent-subtle)' : 'var(--color-paper-card)';
         label.style.borderColor = isDefault ? 'var(--color-accent)' : 'var(--color-rule)';
         label.style.color = isDefault ? 'var(--color-accent)' : 'var(--color-ink)';
-        label.innerHTML = `<input type="checkbox" name="brake_pos" value="${i}" ${isDefault ? 'checked' : ''} class="rounded"> เพลา ${i} ${isDefault ? '[เบรกมือ 🅿️]' : ''}`;
+        label.innerHTML = `<input type="checkbox" name="brake_pos" value="${i}" ${isDefault ? 'checked' : ''} class="w-4 h-4 rounded text-blue-600"> เพลา ${i} ${isDefault ? '[เบรกมือ 🅿️]' : ''}`;
         container.appendChild(label);
       }
     }
 
-    // Queue Data with BRD 4 Edit Permissions
+    // ==================== QUEUE DATA & SENIOR-FRIENDLY CARDS ====================
     let queue = [
       {
         plate: '15-5461',
@@ -949,15 +1049,20 @@
         model: 'Camry',
         fuel: 'ดีเซล',
         vin: 'MP1TFR86JCT182907',
+        axles: 2,
         round: 1,
         status: 'testing',
         time: '12:42',
+        currentTest: 'กำลังทดสอบศูนย์ล้อ (Sideslip)',
+        testedCount: 3,
+        totalCount: 6,
+        failReason: null,
         tests: {
-          speed: { label: 'ความเร็ว', val: '40 km/h', status: 'pass' },
-          sound: { label: 'เสียง', val: '82.4 dB', status: 'pass' },
-          smoke: { label: 'ควันดำ', val: '18% ทึบแสง', status: 'pass' },
+          speed: { label: 'ความเร็ว', val: '40 km/h (ผ่าน)', status: 'pass' },
+          sound: { label: 'เสียง', val: '82.4 dB (ผ่าน)', status: 'pass' },
+          smoke: { label: 'ควันดำ', val: '18% ทึบแสง (ผ่าน)', status: 'pass' },
           slip: { label: 'ศูนย์ล้อ', val: '+2.1 m/km', status: 'testing' },
-          brake: { label: 'ห้ามล้อ', val: 'รอเข้าแท่น', status: 'waiting' },
+          brake: { label: 'ห้ามล้อ', val: 'รอเข้าแท่นทดสอบ', status: 'waiting' },
           light: { label: 'ไฟหน้า', val: 'รอดำเนินการ', status: 'waiting' }
         }
       },
@@ -968,9 +1073,14 @@
         model: 'Civic',
         fuel: 'เบนซิน',
         vin: 'MRHFC16800912',
+        axles: 2,
         round: 1,
         status: 'waiting',
         time: '12:50',
+        currentTest: 'อยู่ในคิวรอเข้าแท่นทดสอบ',
+        testedCount: 0,
+        totalCount: 6,
+        failReason: null,
         tests: {
           speed: { label: 'ความเร็ว', val: 'รอตรวจ', status: 'waiting' },
           sound: { label: 'เสียง', val: 'รอตรวจ', status: 'waiting' },
@@ -987,16 +1097,21 @@
         model: 'D-Max',
         fuel: 'ดีเซล',
         vin: 'MP1TFR54JDT44321',
+        axles: 2,
         round: 1,
         status: 'passed',
         time: '12:30',
+        currentTest: 'ตรวจผ่านเกณฑ์มาตรฐาน ขส. ครบทุกรายการ',
+        testedCount: 6,
+        totalCount: 6,
+        failReason: null,
         tests: {
           speed: { label: 'ความเร็ว', val: '40 km/h', status: 'pass' },
-          sound: { label: 'เสียง', val: '79.1 dB', status: 'pass' },
-          smoke: { label: 'ควันดำ', val: '22% ทึบแสง', status: 'pass' },
-          slip: { label: 'ศูนย์ล้อ', val: '-1.2 m/km', status: 'pass' },
-          brake: { label: 'ห้ามล้อ', val: '64% (ผ่าน)', status: 'pass' },
-          light: { label: 'ไฟหน้า', val: '28,000 cd', status: 'pass' }
+          sound: { label: 'เสียง', val: '79.1 dB (เกณฑ์ ≤ 100 dB)', status: 'pass' },
+          smoke: { label: 'ควันดำ', val: '22% ทึบแสง (เกณฑ์ ≤ 45%)', status: 'pass' },
+          slip: { label: 'ศูนย์ล้อ', val: '-1.2 m/km (เกณฑ์ ±5 m/km)', status: 'pass' },
+          brake: { label: 'ห้ามล้อ', val: '64% ประสิทธิภาพรวม (เกณฑ์ > 50%)', status: 'pass' },
+          light: { label: 'ไฟหน้า', val: '28,000 cd (เกณฑ์ > 19,000 cd)', status: 'pass' }
         }
       },
       {
@@ -1006,22 +1121,28 @@
         model: 'D-Max',
         fuel: 'ดีเซล',
         vin: 'MP1TFR999201',
+        axles: 2,
         round: 2,
         status: 'failed',
         time: '12:15',
+        currentTest: 'ตกเกณฑ์การตรวจสภาพ',
+        testedCount: 6,
+        totalCount: 6,
+        failReason: 'ควันดำ 58% ทึบแสง (เกินเกณฑ์มาตรฐาน ขส. 45%)',
         tests: {
-          speed: { label: 'ความเร็ว', val: '40 km/h', status: 'pass' },
-          sound: { label: 'เสียง', val: '83.0 dB', status: 'pass' },
-          smoke: { label: 'ควันดำ', val: '58% (ตกเกณฑ์ > 45%)', status: 'fail' },
-          slip: { label: 'ศูนย์ล้อ', val: '+1.0 m/km', status: 'pass' },
+          speed: { label: 'ความเร็ว', val: '40 km/h (ผ่าน)', status: 'pass' },
+          sound: { label: 'เสียง', val: '83.0 dB (ผ่าน)', status: 'pass' },
+          smoke: { label: 'ควันดำ', val: '58% ทึบแสง (ตกเกณฑ์ > 45%)', status: 'fail' },
+          slip: { label: 'ศูนย์ล้อ', val: '+1.0 m/km (ผ่าน)', status: 'pass' },
           brake: { label: 'ห้ามล้อ', val: '55% (ผ่าน)', status: 'pass' },
-          light: { label: 'ไฟหน้า', val: '25,000 cd', status: 'pass' }
+          light: { label: 'ไฟหน้า', val: '25,000 cd (ผ่าน)', status: 'pass' }
         }
       }
     ];
 
     let currentQueueFilter = 'all';
 
+    // Render Queue Cards for Senior Eyes
     function renderQueueList() {
       const container = document.getElementById('queue-items');
       const q = document.getElementById('queue-search').value.trim().toLowerCase();
@@ -1034,77 +1155,124 @@
       });
 
       if (items.length === 0) {
-        container.innerHTML = `<div class="p-8 text-center text-xs" style="color: var(--color-ink-muted);">ไม่พบข้อมูลในคิวตรวจ</div>`;
+        container.innerHTML = `
+          <div class="py-12 text-center text-sm" style="color: var(--color-ink-muted);">
+            <i data-lucide="inbox" class="w-10 h-10 mx-auto mb-2 opacity-40"></i>
+            ไม่พบคิวตรวจสภาพที่ตรงกับคำค้นหา
+          </div>
+        `;
+        lucide.createIcons();
         return;
       }
 
       items.forEach(c => {
         const card = document.createElement('div');
-        card.className = "p-3 rounded-lg border transition-all";
-        card.style.backgroundColor = c.status === 'testing' ? 'var(--color-testing-bg)' : 'var(--color-paper-card)';
-        card.style.borderColor = c.status === 'testing' ? 'var(--color-testing-border)' : 'var(--color-rule)';
+        card.className = "p-4 rounded-xl border transition-all hover:shadow-md space-y-3.5";
+        card.style.backgroundColor = "var(--color-paper-card)";
+        card.style.borderColor = "var(--color-rule)";
 
-        let badgeStyle = `background-color: var(--color-pass-bg); color: var(--color-pass); border-color: var(--color-pass-border);`;
-        let badgeIcon = `<i data-lucide="check" class="w-3 h-3"></i> ตรวจผ่าน`;
-        
+        // Status styling
+        let statusBadge = '';
+        let statusBanner = '';
+        let actionButtons = '';
+
         if (c.status === 'testing') {
-          badgeStyle = `background-color: var(--color-testing-bg); color: var(--color-testing); border-color: var(--color-testing-border);`;
-          badgeIcon = `<span class="w-1.5 h-1.5 rounded-full animate-ping" style="background-color: var(--color-testing);"></span> กำลังตรวจ`;
+          statusBadge = `<span class="px-3 py-1 rounded-md text-xs font-bold" style="background-color: var(--color-testing-bg); color: var(--color-testing); border: 1px solid var(--color-testing-border);">⏳ กำลังตรวจ</span>`;
+          statusBanner = `
+            <div class="p-3 rounded-lg border space-y-2" style="background-color: var(--color-testing-bg); border-color: var(--color-testing-border); color: var(--color-testing);">
+              <div class="flex items-center justify-between text-sm font-bold">
+                <span>⏳ ${c.currentTest}</span>
+                <span class="font-mono text-xs font-semibold">${c.testedCount}/${c.totalCount} รายการ</span>
+              </div>
+              <div class="w-full bg-blue-200 dark:bg-blue-900/50 rounded-full h-2 overflow-hidden">
+                <div class="h-2 rounded-full transition-all duration-500" style="width: ${(c.testedCount / c.totalCount) * 100}%; background-color: var(--color-testing);"></div>
+              </div>
+            </div>
+          `;
+          actionButtons = `
+            <button onclick="requestSupervisorEdit('${c.plate}')" class="px-3 py-1.5 rounded-lg border text-xs font-bold flex items-center gap-1.5" style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink-secondary);" title="ต้องใช้รหัส PIN หัวหน้างาน">
+              <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-500"></i> ล็อก (ขอแก้)
+            </button>
+          `;
+        } else if (c.status === 'passed') {
+          statusBadge = `<span class="px-3 py-1 rounded-md text-xs font-bold" style="background-color: var(--color-pass-bg); color: var(--color-pass); border: 1px solid var(--color-pass-border);">✓ ตรวจผ่าน</span>`;
+          statusBanner = `
+            <div class="p-3 rounded-lg border text-sm font-bold flex items-center gap-2" style="background-color: var(--color-pass-bg); border-color: var(--color-pass-border); color: var(--color-pass);">
+              <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0"></i>
+              <span>ผ่านเกณฑ์มาตรฐาน ขส. ครบถ้วน (พร้อมออกใบรับรอง)</span>
+            </div>
+          `;
+          actionButtons = `
+            <button onclick="requestSupervisorEdit('${c.plate}')" class="px-3 py-1.5 rounded-lg border text-xs font-bold flex items-center gap-1.5" style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink-secondary);" title="ต้องใช้รหัส PIN หัวหน้างาน">
+              <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-500"></i> ล็อก (ขอแก้)
+            </button>
+          `;
         } else if (c.status === 'failed') {
-          badgeStyle = `background-color: var(--color-fail-bg); color: var(--color-fail); border-color: var(--color-fail-border);`;
-          badgeIcon = `<i data-lucide="x" class="w-3 h-3"></i> ตกเกณฑ์`;
-        } else if (c.status === 'waiting') {
-          badgeStyle = `background-color: var(--color-paper-elevated); color: var(--color-ink-secondary); border-color: var(--color-rule);`;
-          badgeIcon = `<i data-lucide="clock" class="w-3 h-3"></i> รอตรวจ`;
-        }
-
-        let editActionHtml = '';
-        if (c.status === 'waiting') {
-          editActionHtml = `
-            <button onclick="event.stopPropagation(); quickEditCar('${c.plate}')" class="px-2 py-0.5 rounded text-[10px] font-semibold border flex items-center gap-1 hover:bg-blue-50" style="color: var(--color-accent); border-color: var(--color-accent);" title="แก้ไขข้อมูลได้ทันที (BRD 4.1)">
-              <i data-lucide="edit-3" class="w-3 h-3"></i> แก้ไข (Auto)
+          statusBadge = `<span class="px-3 py-1 rounded-md text-xs font-bold" style="background-color: var(--color-fail-bg); color: var(--color-fail); border: 1px solid var(--color-fail-border);">✕ ตกเกณฑ์</span>`;
+          statusBanner = `
+            <div class="p-3 rounded-lg border text-sm font-bold flex items-center gap-2" style="background-color: var(--color-fail-bg); border-color: var(--color-fail-border); color: var(--color-fail);">
+              <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0 text-red-600"></i>
+              <span>ตกเกณฑ์: ${c.failReason || 'มีรายการไม่ผ่านเกณฑ์ ขส.'}</span>
+            </div>
+          `;
+          actionButtons = `
+            <button onclick="requestSupervisorEdit('${c.plate}')" class="px-3 py-1.5 rounded-lg border text-xs font-bold flex items-center gap-1.5" style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink-secondary);" title="ต้องใช้รหัส PIN หัวหน้างาน">
+              <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-500"></i> ล็อก (ขอแก้)
             </button>
           `;
         } else {
-          editActionHtml = `
-            <button onclick="event.stopPropagation(); requestSupervisorEdit('${c.plate}')" class="px-2 py-0.5 rounded text-[10px] font-semibold border flex items-center gap-1 hover:bg-amber-50" style="color: var(--color-warning); border-color: var(--color-warning-border);" title="ล็อกข้อมูลตาม BRD 4.2 - ต้องขอสิทธิ์หัวหน้า">
-              <i data-lucide="lock" class="w-3 h-3"></i> ล็อก 🔒 ขอแก้
+          // Waiting
+          statusBadge = `<span class="px-3 py-1 rounded-md text-xs font-bold" style="background-color: var(--color-paper-elevated); color: var(--color-ink); border: 1px solid var(--color-rule);">📋 รอตรวจ</span>`;
+          statusBanner = `
+            <div class="p-2.5 rounded-lg border text-xs font-medium flex items-center gap-2" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule); color: var(--color-ink-secondary);">
+              <i data-lucide="clock" class="w-4 h-4 text-zinc-500"></i>
+              <span>อยู่ในคิวรอเข้าแท่นตรวจ (ลำดับถัดไป)</span>
+            </div>
+          `;
+          actionButtons = `
+            <button onclick="quickEditCar('${c.plate}')" class="px-3 py-1.5 rounded-lg border text-xs font-bold flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:underline" style="background-color: var(--color-accent-subtle); border-color: var(--color-accent);">
+              <i data-lucide="edit-2" class="w-3.5 h-3.5"></i> แก้ไข (Auto)
             </button>
           `;
         }
 
         card.innerHTML = `
-          <div class="flex items-center justify-between mb-1.5 cursor-pointer" onclick="openDetailModalByPlate('${c.plate}')">
+          <!-- Top Row: Big Plate & Status Badge -->
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-baseline gap-2.5">
+              <span class="font-mono font-bold text-xl tracking-wider" style="color: var(--color-ink);">${c.plate}</span>
+              <span class="text-sm font-semibold" style="color: var(--color-ink-secondary);">${c.province}</span>
+              <span class="text-xs px-2 py-0.5 rounded font-mono font-bold" style="background-color: var(--color-paper-elevated); color: var(--color-ink-muted);">รอบ ${c.round}</span>
+            </div>
             <div class="flex items-center gap-2">
-              <span class="font-mono font-bold text-xs px-2 py-0.5 rounded border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule); color: var(--color-ink);">
-                ${c.plate}
-              </span>
-              <span class="text-xs font-medium" style="color: var(--color-ink-secondary);">${c.province}</span>
-              <span class="text-[10px] px-1 rounded border font-mono" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule); color: var(--color-ink-muted);">รอบ ${c.round}</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-              ${editActionHtml}
-              <span class="text-[11px] font-semibold px-2 py-0.5 rounded border inline-flex items-center gap-1" style="${badgeStyle}">
-                ${badgeIcon}
-              </span>
+              ${statusBadge}
+              <span class="font-mono text-xs font-medium" style="color: var(--color-ink-muted);">${c.time} น.</span>
             </div>
           </div>
 
-          <div class="text-xs flex items-center justify-between mb-2 cursor-pointer" onclick="openDetailModalByPlate('${c.plate}')" style="color: var(--color-ink-secondary);">
-            <span>${c.brand} ${c.model} • ${c.fuel}</span>
-            <span class="font-mono text-[11px]" style="color: var(--color-ink-muted);">${c.time} น.</span>
+          <!-- Middle Row: Car Specs -->
+          <div class="text-sm font-medium flex items-center gap-2" style="color: var(--color-ink-secondary);">
+            <span>${c.brand} ${c.model}</span>
+            <span>•</span>
+            <span class="font-bold">${c.fuel}</span>
+            <span>•</span>
+            <span class="text-xs font-mono opacity-80">VIN: ${c.vin}</span>
           </div>
 
-          <!-- Micro hardware tags -->
-          <div class="grid grid-cols-6 gap-1 pt-2 border-t text-[10px] text-center font-mono" style="border-color: var(--color-rule-light);">
-            <div class="p-1 rounded border ${c.tests.speed.status === 'pass' ? 'font-medium' : ''}">เร็ว: ${c.tests.speed.status === 'pass' ? '✓' : c.tests.speed.status === 'waiting' ? '—' : '...'}</div>
-            <div class="p-1 rounded border ${c.tests.sound.status === 'pass' ? 'font-medium' : ''}">เสียง: ${c.tests.sound.status === 'pass' ? '✓' : c.tests.sound.status === 'waiting' ? '—' : '...'}</div>
-            <div class="p-1 rounded border" style="${c.tests.smoke.status === 'fail' ? 'color: var(--color-fail); background-color: var(--color-fail-bg); font-weight: bold;' : ''}">ควัน: ${c.tests.smoke.status === 'fail' ? '✕' : c.tests.smoke.status === 'waiting' ? '—' : '✓'}</div>
-            <div class="p-1 rounded border">ศูนย์: ${c.tests.slip.status === 'pass' ? '✓' : c.tests.slip.status === 'testing' ? '⏳' : '—'}</div>
-            <div class="p-1 rounded border">เบรก: ${c.tests.brake.status === 'pass' ? '✓' : '—'}</div>
-            <div class="p-1 rounded border">ไฟ: ${c.tests.light.status === 'pass' ? '✓' : '—'}</div>
+          <!-- Senior Status Banner -->
+          ${statusBanner}
+
+          <!-- Bottom Action Buttons -->
+          <div class="flex items-center justify-between pt-2 border-t" style="border-color: var(--color-rule-light);">
+            <button onclick="openDetailModalByPlate('${c.plate}')" class="px-3.5 py-1.5 rounded-lg border text-xs font-bold flex items-center gap-1.5 hover:bg-blue-50 dark:hover:bg-zinc-800 transition-all" style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-accent);">
+              <i data-lucide="file-text" class="w-4 h-4"></i> ดูผลตรวจ 6 รายการละเอียด
+            </button>
+            <div class="flex items-center gap-2">
+              ${actionButtons}
+            </div>
           </div>
         `;
+
         container.appendChild(card);
       });
 
@@ -1113,22 +1281,22 @@
 
     function setQueueFilter(f) {
       currentQueueFilter = f;
-      ['all', 'testing', 'passed'].forEach(id => {
+      ['all', 'testing', 'passed', 'failed'].forEach(id => {
         const el = document.getElementById(`qf-${id}`);
         if (id === f) {
           el.style.backgroundColor = 'var(--color-accent)';
           el.style.color = 'var(--color-accent-ink)';
-          el.style.borderColor = 'transparent';
+          el.style.borderColor = 'var(--color-accent)';
         } else {
           el.style.backgroundColor = 'var(--color-paper-card)';
-          el.style.color = 'var(--color-ink-secondary)';
+          el.style.color = 'var(--color-ink)';
           el.style.borderColor = 'var(--color-rule)';
         }
       });
       renderQueueList();
     }
 
-    // Quick edit before test (BRD 4.1 Auto)
+    // Quick Edit (BRD 4.1 Auto)
     function quickEditCar(plate) {
       const car = queue.find(x => x.plate === plate);
       if (!car) return;
@@ -1145,7 +1313,7 @@
       showToast(`ดึงข้อมูลรถ ${plate} มาแก้ไขบนฟอร์มแล้ว (BRD 4.1 Auto)`);
     }
 
-    // Request supervisor override edit (BRD 4.2 Manual)
+    // Supervisor Override (BRD 4.2 Manual)
     let pendingPlateForSupervisor = '';
     function requestSupervisorEdit(plate) {
       pendingPlateForSupervisor = plate;
@@ -1173,7 +1341,7 @@
       showToast(`หัวหน้าอนุมัติการแก้ไขรถ ${pendingPlateForSupervisor} แล้ว (เหตุผล: ${reason})`);
     }
 
-    // Load original legacy example (15-5461)
+    // Load original example
     function loadLegacyExample() {
       document.getElementById('license_plate').value = '15-5461';
       document.getElementById('province').value = 'กรุงเทพมหานคร';
@@ -1184,8 +1352,9 @@
       document.getElementById('model').value = 'Camry';
       document.getElementById('chassis_no').value = 'MP1TFR86JCT182907';
       setFuel('ดีเซล');
+      setAxle(2);
       document.getElementById('license_plate').focus();
-      showToast('โหลดข้อมูลตัวอย่างเดิม (15-5461) สำเร็จ');
+      showToast('โหลดข้อมูลตัวอย่าง (15-5461) สำเร็จ');
     }
 
     function clearForm() {
@@ -1194,10 +1363,10 @@
       document.getElementById('form-alert').classList.add('hidden');
       const plateInput = document.getElementById('license_plate');
       plateInput.focus();
-      showToast('ล้างข้อมูลฟอร์มแล้ว เคอร์เซอร์พร้อมพิมพ์ต่อทันที [F4]');
+      showToast('ล้างฟอร์มแล้ว เคอร์เซอร์พร้อมพิมพ์ต่อทันที [F4]');
     }
 
-    // Save & Register (Maps directly to vehicle_registration_transactions in BRD 6)
+    // Save Registration (Maps 1:1 to vehicle_registration_transactions in BRD 6)
     function saveRegistration() {
       const plate = document.getElementById('license_plate').value.trim();
       const province = document.getElementById('province').value;
@@ -1218,7 +1387,7 @@
       }
       alertEl.classList.add('hidden');
 
-      // Exact mapping to BRD Section 6 Table: vehicle_registration_transactions
+      // Exact mapping to BRD Section 6
       const transactionPayload = {
         id: Date.now(),
         license_plate: plate,
@@ -1251,11 +1420,15 @@
         round: round,
         status: 'waiting',
         time: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+        currentTest: 'อยู่ในคิวรอเข้าแท่นทดสอบ',
+        testedCount: 0,
+        totalCount: 6,
+        failReason: null,
         tests: {
           speed: { label: 'ความเร็ว', val: 'รอตรวจ', status: 'waiting' },
           sound: { label: 'เสียง', val: 'รอตรวจ', status: 'waiting' },
           smoke: { label: 'ควันดำ', val: fuel === 'ดีเซล' ? 'รอตรวจ' : '—', status: 'waiting' },
-          slip: { label: 'ศูนย์ล้อ', val: 'รอเข้าแท่น', status: 'waiting' },
+          slip: { label: 'ศูนย์ล้อ', val: 'รอตรวจ', status: 'waiting' },
           brake: { label: 'ห้ามล้อ', val: 'รอตรวจ', status: 'waiting' },
           light: { label: 'ไฟหน้า', val: 'รอตรวจ', status: 'waiting' }
         }
@@ -1263,11 +1436,11 @@
 
       queue.unshift(newEntry);
       renderQueueList();
-      showToast(`บันทึกรถ ${plate} เข้าสู่ฐานข้อมูลและส่งต่อไปยังช่องตรวจสำเร็จ`);
+      showToast(`บันทึกรถ ${plate} เข้าสู่ระบบและส่งต่อไปยังช่องตรวจสำเร็จ`);
       showTicketPreview();
     }
 
-    // Modals
+    // Ticket Preview Modal
     function showTicketPreview() {
       document.getElementById('t-plate').innerText = document.getElementById('license_plate').value || '15-5461';
       document.getElementById('t-prov').innerText = document.getElementById('province').value || 'กทม.';
@@ -1285,6 +1458,7 @@
       document.getElementById('license_plate').focus();
     }
 
+    // Detail Modal (6 Tests & 9 Hardware)
     function openDetailModalByPlate(plate) {
       const c = queue.find(x => x.plate === plate);
       if (c) openDetailModal(c);
@@ -1296,37 +1470,37 @@
 
       const grid = document.getElementById('m-grid');
       grid.innerHTML = `
-        <div class="p-3 rounded-lg border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-          <div class="text-[11px]" style="color: var(--color-ink-muted);">1. เครื่องทดสอบห้ามล้อ (Brake)</div>
-          <div class="text-sm font-bold font-mono mt-1">${c.tests.brake.val}</div>
-          <div class="text-[10px] mt-0.5" style="color: var(--color-pass);">เกณฑ์มาตรฐาน > 50%</div>
+        <div class="p-4 rounded-xl border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+          <div class="text-xs font-bold" style="color: var(--color-ink-muted);">1. เครื่องทดสอบห้ามล้อ (Brake Tester)</div>
+          <div class="text-lg font-bold font-mono mt-1">${c.tests.brake.val}</div>
+          <div class="text-xs mt-1 font-semibold" style="color: var(--color-pass);">เกณฑ์มาตรฐาน ขส. > 50%</div>
         </div>
-        <div class="p-3 rounded-lg border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-          <div class="text-[11px]" style="color: var(--color-ink-muted);">2. เครื่องทดสอบศูนย์ล้อ (Sideslip)</div>
-          <div class="text-sm font-bold font-mono mt-1">${c.tests.slip.val}</div>
-          <div class="text-[10px] mt-0.5" style="color: var(--color-pass);">เกณฑ์มาตรฐาน ±5 m/km</div>
+        <div class="p-4 rounded-xl border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+          <div class="text-xs font-bold" style="color: var(--color-ink-muted);">2. เครื่องทดสอบศูนย์ล้อ (Sideslip Tester)</div>
+          <div class="text-lg font-bold font-mono mt-1">${c.tests.slip.val}</div>
+          <div class="text-xs mt-1 font-semibold" style="color: var(--color-pass);">เกณฑ์มาตรฐาน ขส. ±5 m/km</div>
         </div>
-        <div class="p-3 rounded-lg border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-          <div class="text-[11px]" style="color: var(--color-ink-muted);">3. เครื่องทดสอบโคมไฟหน้า</div>
-          <div class="text-sm font-bold font-mono mt-1">${c.tests.light.val}</div>
-          <div class="text-[10px] mt-0.5" style="color: var(--color-pass);">ความเข้ม > 19,000 cd</div>
+        <div class="p-4 rounded-xl border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+          <div class="text-xs font-bold" style="color: var(--color-ink-muted);">3. เครื่องทดสอบโคมไฟหน้า (Headlight)</div>
+          <div class="text-lg font-bold font-mono mt-1">${c.tests.light.val}</div>
+          <div class="text-xs mt-1 font-semibold" style="color: var(--color-pass);">ความเข้ม > 19,000 cd (มุมเอียงไม่เกินเกณฑ์)</div>
         </div>
-        <div class="p-3 rounded-lg border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-          <div class="text-[11px]" style="color: var(--color-ink-muted);">4. ควันดำ (ดีเซล) / ก๊าซ</div>
-          <div class="text-sm font-bold font-mono mt-1" style="${c.tests.smoke.status === 'fail' ? 'color: var(--color-fail);' : ''}">${c.tests.smoke.val}</div>
-          <div class="text-[10px] mt-0.5 font-semibold" style="color: ${c.tests.smoke.status === 'fail' ? 'var(--color-fail)' : 'var(--color-pass)'};">
-            ${c.tests.smoke.status === 'fail' ? '✕ เกินเกณฑ์มาตรฐาน 45%' : '✓ อยู่ในเกณฑ์มาตรฐาน'}
+        <div class="p-4 rounded-xl border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+          <div class="text-xs font-bold" style="color: var(--color-ink-muted);">4. ควันดำ (ดีเซล) / ก๊าซไอเสีย (CO/HC)</div>
+          <div class="text-lg font-bold font-mono mt-1" style="${c.tests.smoke.status === 'fail' ? 'color: var(--color-fail);' : ''}">${c.tests.smoke.val}</div>
+          <div class="text-xs mt-1 font-bold" style="color: ${c.tests.smoke.status === 'fail' ? 'var(--color-fail)' : 'var(--color-pass)'};">
+            ${c.tests.smoke.status === 'fail' ? '✕ เกินเกณฑ์มาตรฐาน 45% (ตกเกณฑ์)' : '✓ อยู่ในเกณฑ์มาตรฐาน ขส.'}
           </div>
         </div>
-        <div class="p-3 rounded-lg border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-          <div class="text-[11px]" style="color: var(--color-ink-muted);">5. ระดับเสียงท่อไอเสีย</div>
-          <div class="text-sm font-bold font-mono mt-1">${c.tests.sound.val}</div>
-          <div class="text-[10px] mt-0.5" style="color: var(--color-pass);">เกณฑ์ไม่เกิน 100 dB</div>
+        <div class="p-4 rounded-xl border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+          <div class="text-xs font-bold" style="color: var(--color-ink-muted);">5. ระดับเสียงท่อไอเสีย (Sound Level)</div>
+          <div class="text-lg font-bold font-mono mt-1">${c.tests.sound.val}</div>
+          <div class="text-xs mt-1 font-semibold" style="color: var(--color-pass);">เกณฑ์มาตรฐาน ขส. ไม่เกิน 100 dB</div>
         </div>
-        <div class="p-3 rounded-lg border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
-          <div class="text-[11px]" style="color: var(--color-ink-muted);">6. ความเร็ว & รอบเครื่องยนต์</div>
-          <div class="text-sm font-bold font-mono mt-1">${c.tests.speed.val}</div>
-          <div class="text-[10px] mt-0.5" style="color: var(--color-pass);">รอบปกติ 2,200 RPM</div>
+        <div class="p-4 rounded-xl border" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+          <div class="text-xs font-bold" style="color: var(--color-ink-muted);">6. ความเร็ว & รอบเครื่องยนต์ (Speed & RPM)</div>
+          <div class="text-lg font-bold font-mono mt-1">${c.tests.speed.val}</div>
+          <div class="text-xs mt-1 font-semibold" style="color: var(--color-pass);">ความเร็วเที่ยงตรง ±10% ที่ 40 km/h</div>
         </div>
       `;
 
@@ -1343,21 +1517,19 @@
     function showToast(msg) {
       const toast = document.getElementById('vis-toast');
       document.getElementById('vis-toast-text').innerText = msg;
-      toast.classList.remove('translate-y-16', 'opacity-0');
+      toast.classList.remove('translate-y-20', 'opacity-0');
       setTimeout(() => {
-        toast.classList.add('translate-y-16', 'opacity-0');
+        toast.classList.add('translate-y-20', 'opacity-0');
       }, 2500);
     }
 
-    // ==================== BARCODE / QR SCANNER & KEYBOARD HANDLERS ====================
-    // USB Scanners act as HID keyboards terminating with Enter
+    // ==================== USB BARCODE SCANNER & KEYBOARD SHORTCUTS ====================
     document.getElementById('license_plate').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
         const plateVal = e.target.value.trim();
         if (!plateVal) return;
-        
-        // If province & fuel are selected, auto save & dispatch
+
         const prov = document.getElementById('province').value;
         const fuel = document.getElementById('fuel_type_id').value;
         if (prov && fuel) {
@@ -1370,7 +1542,6 @@
       }
     });
 
-    // Barcode Search in Queue
     document.getElementById('queue-search').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -1393,7 +1564,7 @@
       }
     });
 
-    // Global Shortcuts: F4 = Clear & Focus, F9 = Save
+    // Global Key Listener: F4 (Clear), F9 (Save)
     window.addEventListener('keydown', (e) => {
       if (e.key === 'F4') {
         e.preventDefault();
@@ -1404,9 +1575,11 @@
       }
     });
 
-    // Init
-    renderQueueList();
+    // Initialize UI
+    setAxle(2);
+    setFuel('ดีเซล');
     onBrandSelected();
+    renderQueueList();
   </script>
 </body>
 </html>
