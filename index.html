@@ -17,8 +17,14 @@
   <!-- External Design Tokens -->
   <link rel="stylesheet" href="tokens.css">
   
-  <!-- Tailwind Console Advisory Suppressor (Eliminates dev advisory banner in standalone demo) -->
+  <!-- Tailwind Configuration & Console Suppressor -->
   <script>
+    // 1. Force class-based dark mode so OS dark mode does not cause dark: classes to activate unexpectedly
+    window.tailwind = {
+      darkMode: 'class'
+    };
+
+    // 2. Suppress cdn.tailwindcss.com development advisory banner
     (function() {
       const _warn = console.warn;
       console.warn = function(...args) {
@@ -383,11 +389,6 @@
                     TH
                   </div>
                 </div>
-                <div class="flex items-center gap-1.5 text-xs pt-0.5" style="color: var(--color-ink-muted);">
-                  <span>ตัวอย่างด่วน:</span>
-                  <button type="button" onclick="setPlateHint('15-5461')" class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 hover:bg-blue-100 dark:hover:bg-blue-900/50 hover:text-blue-600 font-mono font-bold transition-colors">15-5461</button>
-                  <button type="button" onclick="setPlateHint('1กข 5678')" class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 hover:bg-blue-100 dark:hover:bg-blue-900/50 hover:text-blue-600 font-mono font-bold transition-colors">1กข 5678</button>
-                </div>
               </div>
 
               <!-- Province -->
@@ -668,7 +669,7 @@
           <i data-lucide="cpu" class="w-5 h-5" style="color: var(--color-accent);"></i>
           <h3 class="font-heading font-bold text-base" style="color: var(--color-ink);">สถานะเครื่องมือทดสอบฮาร์ดแวร์ประจำเลน (9 รายการ)</h3>
         </div>
-        <button onclick="closeHardwareDrawer()" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-zinc-200 dark:hover:bg-zinc-700">
+        <button onclick="closeHardwareDrawer()" class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors" style="color: var(--color-ink); background-color: var(--color-paper-elevated);">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -796,7 +797,7 @@
           <i data-lucide="shield-alert" class="w-5 h-5 text-amber-500"></i>
           <h3 class="font-heading font-bold text-base" style="color: var(--color-ink);">ขอสิทธิ์แก้ไขข้อมูลที่ตรวจแล้ว (BRD ข้อ 4.2)</h3>
         </div>
-        <button onclick="closeSupervisorModal()" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-zinc-200 dark:hover:bg-zinc-700">
+        <button onclick="closeSupervisorModal()" class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors" style="color: var(--color-ink); background-color: var(--color-paper-elevated);">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -842,7 +843,7 @@
           <h3 id="m-title" class="font-heading font-bold text-lg" style="color: var(--color-ink);">ผลตรวจสภาพรถ: 15-5461 (กรุงเทพมหานคร)</h3>
           <p id="m-subtitle" class="text-xs font-mono" style="color: var(--color-ink-muted);">TOYOTA Camry • ดีเซล • รอบตรวจที่ 1 • 12:42 น.</p>
         </div>
-        <button onclick="closeDetailModal()" class="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-zinc-200 dark:hover:bg-zinc-700">
+        <button onclick="closeDetailModal()" class="w-9 h-9 rounded-lg flex items-center justify-center transition-colors" style="color: var(--color-ink); background-color: var(--color-paper-elevated);">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
