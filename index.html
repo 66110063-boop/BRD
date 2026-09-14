@@ -706,8 +706,8 @@
 
       <!-- Scrollable Matrix Table (10 Columns matching Legacy ReMo) -->
       <div class="flex-1 overflow-auto senior-scrollbar">
-        <table class="w-full matrix-table border-collapse">
-          <thead class="sticky top-0 z-10 shadow-xs">
+        <table class="w-full matrix-table">
+          <thead class="sticky top-0 z-10">
             <tr>
               <th class="w-20">สถานะตรวจ</th>
               <th class="w-36 text-left pl-3">เลขทะเบียนรถ</th>
@@ -1250,7 +1250,7 @@
           <td>${renderCell(c.tests.brake)}</td>
           <td>${renderCell(c.tests.visual)}</td>
           <td>${renderCell(c.tests.light)}</td>
-          <td>${actionHtml}</td>
+          <td class="text-center">${actionHtml}</td>
         `;
 
         // Click row to select and sync with Digital Plate Billboard
