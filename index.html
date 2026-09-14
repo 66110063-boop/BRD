@@ -116,10 +116,10 @@
       background-color: var(--color-paper-card);
       border: 1.5px solid var(--color-rule);
       color: var(--color-ink);
-      height: 38px;
-      font-size: 0.9375rem; /* 15px */
-      border-radius: 4px;
-      padding: 0 0.65rem;
+      height: 42px; /* Ergonomic 42px for senior operators */
+      font-size: 0.95rem; /* 15.2px */
+      border-radius: 6px;
+      padding: 0 0.75rem;
       transition: border-color 150ms ease, box-shadow 150ms ease;
     }
     .vis-gov-input:focus {
@@ -130,9 +130,9 @@
 
     /* Prominent Plate Input */
     .vis-plate-input {
-      height: 42px;
-      font-size: 1.1875rem; /* 19px */
-      font-weight: 700;
+      height: 44px;
+      font-size: 1.25rem; /* 20px */
+      font-weight: 800;
       letter-spacing: 0.05em;
       border: 2px solid var(--color-accent);
     }
@@ -266,163 +266,219 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         
         <!-- LEFT: REGISTRATION INPUT FIELDS (8 COLS) -->
-        <form id="reg-form" onsubmit="event.preventDefault(); saveRegistration();" class="lg:col-span-8 space-y-2.5">
+        <form id="reg-form" onsubmit="event.preventDefault(); saveRegistration();" class="lg:col-span-8 flex flex-col justify-between space-y-2.5">
           
-          <!-- Row 1: License Plate, Province, Round -->
-          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
-            <div class="sm:col-span-5 flex items-center gap-2">
-              <label for="license_plate" class="text-sm font-bold text-red-600 whitespace-nowrap min-w-[95px]">
-                เลขทะเบียนรถ *
-              </label>
-              <input type="text" id="license_plate" autofocus value="15-5461" placeholder="15-5461"
-                oninput="onPlateInputChanged(this.value)"
-                class="vis-gov-input vis-plate-input flex-1 font-mono uppercase font-bold"
-                title="ป้อนเลขทะเบียน หรือ ยิงบาร์โค้ด แล้วกด Enter">
+          <!-- CHUNK 1: ข้อมูลยานพาหนะหลัก (Vehicle Identity) -->
+          <div class="p-2.5 rounded-md border space-y-2" style="background-color: var(--color-paper); border-color: var(--color-rule-light);">
+            <div class="flex items-center justify-between pb-0.5">
+              <span class="text-xs font-bold flex items-center gap-1.5" style="color: var(--color-ink);">
+                <i data-lucide="car" class="w-3.5 h-3.5 text-blue-600"></i>
+                <span>1. ข้อมูลยานพาหนะหลัก</span>
+              </span>
+              <span class="text-[11px] text-zinc-500">จับคู่ตามเล่มทะเบียนรถ</span>
             </div>
 
-            <div class="sm:col-span-4 flex items-center gap-2">
-              <label for="province" class="text-sm font-bold text-red-600 whitespace-nowrap min-w-[55px]">
-                จังหวัด *
-              </label>
-              <select id="province" onchange="onProvinceChanged(this.value)" class="vis-gov-input flex-1 font-medium">
-                <option value="กรุงเทพมหานคร" selected>กรุงเทพมหานคร</option>
-                <option value="นนทบุรี">นนทบุรี</option>
-                <option value="ปทุมธานี">ปทุมธานี</option>
-                <option value="สมุทรปราการ">สมุทรปราการ</option>
-                <option value="ชลบุรี">ชลบุรี</option>
-                <option value="นครราชสีมา">นครราชสีมา</option>
-                <option value="เชียงใหม่">เชียงใหม่</option>
-                <option value="ขอนแก่น">ขอนแก่น</option>
-              </select>
+            <!-- Row 1: License Plate, Province, Round -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
+              <div class="sm:col-span-5 flex items-center gap-2">
+                <label for="license_plate" class="text-xs font-bold whitespace-nowrap min-w-[95px]" style="color: var(--color-ink);">
+                  เลขทะเบียนรถ <span class="text-red-500 font-bold ml-0.5" title="จำเป็นต้องระบุ">*</span>
+                </label>
+                <input type="text" id="license_plate" autofocus value="15-5461" placeholder="15-5461"
+                  oninput="onPlateInputChanged(this.value)"
+                  class="vis-gov-input vis-plate-input flex-1 font-mono uppercase font-bold"
+                  title="ป้อนเลขทะเบียน หรือ ยิงบาร์โค้ด แล้วกด Enter">
+              </div>
+
+              <div class="sm:col-span-4 flex items-center gap-2">
+                <label for="province" class="text-xs font-bold whitespace-nowrap min-w-[50px]" style="color: var(--color-ink);">
+                  จังหวัด <span class="text-red-500 font-bold ml-0.5" title="จำเป็นต้องระบุ">*</span>
+                </label>
+                <select id="province" onchange="onProvinceChanged(this.value)" class="vis-gov-input flex-1 font-semibold text-xs">
+                  <option value="กรุงเทพมหานคร" selected>กรุงเทพมหานคร</option>
+                  <option value="นนทบุรี">นนทบุรี</option>
+                  <option value="ปทุมธานี">ปทุมธานี</option>
+                  <option value="สมุทรปราการ">สมุทรปราการ</option>
+                  <option value="ชลบุรี">ชลบุรี</option>
+                  <option value="นครราชสีมา">นครราชสีมา</option>
+                  <option value="เชียงใหม่">เชียงใหม่</option>
+                  <option value="ขอนแก่น">ขอนแก่น</option>
+                </select>
+              </div>
+
+              <div class="sm:col-span-3 flex items-center justify-end gap-1.5">
+                <label for="inspection_round" class="text-xs font-bold whitespace-nowrap" style="color: var(--color-ink);">ตรวจครั้งที่:</label>
+                <input type="number" id="inspection_round" value="1" min="1" max="5"
+                  class="vis-gov-input w-16 font-mono text-center font-bold text-xs">
+              </div>
             </div>
 
-            <div class="sm:col-span-3 flex items-center justify-end gap-2">
-              <label for="inspection_round" class="text-xs font-bold whitespace-nowrap">ตรวจสภาพครั้งที่:</label>
-              <input type="number" id="inspection_round" value="1" min="1" max="5"
-                class="vis-gov-input w-16 font-mono text-center font-bold">
-            </div>
-          </div>
+            <!-- Row 2: Chassis No (VIN), Brand, Model, Reg Date -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
+              <div class="sm:col-span-5 flex items-center gap-2">
+                <label for="chassis_no" class="text-xs font-bold whitespace-nowrap min-w-[95px]" style="color: var(--color-ink);">เลขคัสซี (VIN):</label>
+                <input type="text" id="chassis_no" value="MP1TFR86JCT182907"
+                  class="vis-gov-input flex-1 font-mono uppercase text-xs font-semibold">
+              </div>
 
-          <!-- Row 2: Chassis No (VIN), Brand, Model -->
-          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
-            <div class="sm:col-span-6 flex items-center gap-2">
-              <label for="chassis_no" class="text-xs font-bold whitespace-nowrap min-w-[95px]">เลขคัสซี (VIN):</label>
-              <input type="text" id="chassis_no" value="MP1TFR86JCT182907"
-                class="vis-gov-input flex-1 font-mono uppercase text-xs font-semibold">
-            </div>
+              <div class="sm:col-span-4 flex items-center gap-1.5">
+                <label for="brand" class="text-xs font-bold whitespace-nowrap min-w-[50px]" style="color: var(--color-ink);">ยี่ห้อ/รุ่น:</label>
+                <select id="brand" onchange="onBrandSelected()" class="vis-gov-input w-1/2 font-medium text-xs">
+                  <option value="TOYOTA" selected>TOYOTA</option>
+                  <option value="ISUZU">ISUZU</option>
+                  <option value="HONDA">HONDA</option>
+                  <option value="MITSUBISHI">MITSUBISHI</option>
+                  <option value="HINO">HINO</option>
+                  <option value="BYD">BYD</option>
+                </select>
+                <select id="model" class="vis-gov-input w-1/2 font-medium text-xs">
+                  <option value="Camry" selected>Camry</option>
+                  <option value="Corolla Altis">Corolla Altis</option>
+                  <option value="Yaris">Yaris</option>
+                  <option value="Hilux Revo">Hilux Revo</option>
+                  <option value="Commuter">Commuter</option>
+                </select>
+              </div>
 
-            <div class="sm:col-span-6 flex items-center gap-2">
-              <label for="brand" class="text-xs font-bold whitespace-nowrap min-w-[55px]">ยี่ห้อ/รุ่น:</label>
-              <select id="brand" onchange="onBrandSelected()" class="vis-gov-input w-1/2 font-medium">
-                <option value="TOYOTA" selected>TOYOTA</option>
-                <option value="ISUZU">ISUZU</option>
-                <option value="HONDA">HONDA</option>
-                <option value="MITSUBISHI">MITSUBISHI</option>
-                <option value="HINO">HINO</option>
-                <option value="BYD">BYD</option>
-              </select>
-              <select id="model" class="vis-gov-input w-1/2 font-medium">
-                <option value="Camry" selected>Camry</option>
-                <option value="Corolla Altis">Corolla Altis</option>
-                <option value="Yaris">Yaris</option>
-                <option value="Hilux Revo">Hilux Revo</option>
-                <option value="Commuter">Commuter</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Row 3: Reg Date, Axle Count & Handbrake Position -->
-          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
-            <div class="sm:col-span-5 flex items-center gap-2">
-              <label for="vehicle_registration_date" class="text-xs font-bold whitespace-nowrap min-w-[95px]">วันที่จดทะเบียน:</label>
-              <input type="date" id="vehicle_registration_date" value="2020-03-09"
-                class="vis-gov-input flex-1 text-xs">
-            </div>
-
-            <div class="sm:col-span-7 flex items-center gap-3">
-              <label class="text-xs font-bold text-red-600 whitespace-nowrap">จำนวนเพลา/ตำแหน่งเบรกมือ *:</label>
-              <select id="axle_select" onchange="setAxle(parseInt(this.value))" class="vis-gov-input w-24 text-xs font-bold">
-                <option value="2" selected>2 เพลา</option>
-                <option value="3">3 เพลา</option>
-                <option value="4">4 เพลา</option>
-              </select>
-
-              <!-- Handbrake check positions -->
-              <div id="handbrake-axles" class="flex items-center gap-2 text-xs">
-                <!-- Populated dynamically -->
+              <div class="sm:col-span-3 flex items-center justify-end gap-1.5">
+                <label for="vehicle_registration_date" class="text-xs font-bold whitespace-nowrap" style="color: var(--color-ink);">วันที่จด:</label>
+                <input type="date" id="vehicle_registration_date" value="2020-03-09"
+                  class="vis-gov-input flex-1 text-xs">
               </div>
             </div>
           </div>
 
-          <!-- Row 4: Vehicle Type DLT, Sub-type, Inspector -->
-          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
-            <div class="sm:col-span-7 flex items-center gap-2">
-              <label for="vehicle_type_id" class="text-xs font-bold text-red-600 whitespace-nowrap min-w-[95px]">ประเภทรถ ขส. *:</label>
-              <select id="vehicle_type_id" onchange="onVehicleTypeChanged()" class="vis-gov-input w-1/2 font-medium text-xs">
-                <option value="รถโดยสาร" selected>รถโดยสาร (พ.ร.บ. ขนส่ง)</option>
-                <option value="รย.1">รย.1 รถยนต์นั่งไม่เกิน 7 คน</option>
-                <option value="รย.2">รย.2 รถยนต์นั่งเกิน 7 คน</option>
-                <option value="รย.3">รย.3 รถบรรทุกส่วนบุคคล</option>
-                <option value="รถบรรทุก">รถบรรทุก (พ.ร.บ. ขนส่ง)</option>
-              </select>
-              <select id="sub_type" class="vis-gov-input w-1/2 font-medium text-xs">
-                <option value="ประจำทาง" selected>รถโดยสารประจำทาง</option>
-                <option value="ไม่ประจำทาง">รถโดยสารไม่ประจำทาง</option>
-                <option value="ส่วนบุคคล">ส่วนบุคคล</option>
-              </select>
+          <!-- CHUNK 2: ข้อมูลเชิงกลและเชื้อเพลิง (Mechanical & Fuel) -->
+          <div class="p-2.5 rounded-md border space-y-2" style="background-color: var(--color-paper); border-color: var(--color-rule-light);">
+            <div class="flex items-center justify-between pb-0.5">
+              <span class="text-xs font-bold flex items-center gap-1.5" style="color: var(--color-ink);">
+                <i data-lucide="wrench" class="w-3.5 h-3.5 text-blue-600"></i>
+                <span>2. พิกัดเชิงกลและชนิดเชื้อเพลิง</span>
+              </span>
+              <span class="text-[11px] text-zinc-500">เงื่อนไขแท่นตรวจเบรกและไอเสีย</span>
             </div>
 
-            <div class="sm:col-span-5 flex items-center gap-2">
-              <label for="inspector_user_id" class="text-xs font-bold whitespace-nowrap min-w-[85px]">ชื่อผู้ตรวจสอบ:</label>
-              <select id="inspector_user_id" class="vis-gov-input flex-1 text-xs font-medium">
-                <option value="EMP-0412 (นายสมชาย ตรวจการ)" selected>EMP-0412 นายสมชาย ตรวจการ</option>
-                <option value="EMP-0205 (นายประสิทธิ์)">EMP-0205 นายประสิทธิ์ มีสุข</option>
-              </select>
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
+              <div class="sm:col-span-6 flex items-center gap-2">
+                <label class="text-xs font-bold whitespace-nowrap min-w-[95px]" style="color: var(--color-ink);">
+                  เพลา / เบรกมือ <span class="text-red-500 font-bold ml-0.5">*</span>:
+                </label>
+                <select id="axle_select" onchange="setAxle(parseInt(this.value))" class="vis-gov-input w-24 text-xs font-bold">
+                  <option value="2" selected>2 เพลา</option>
+                  <option value="3">3 เพลา</option>
+                  <option value="4">4 เพลา</option>
+                </select>
+                <div id="handbrake-axles" class="flex items-center gap-2 text-xs pl-1">
+                  <!-- Populated dynamically -->
+                </div>
+              </div>
+
+              <div class="sm:col-span-6 flex items-center gap-2">
+                <label for="fuel_type_id" class="text-xs font-bold whitespace-nowrap min-w-[80px]" style="color: var(--color-ink);">
+                  ชนิดเชื้อเพลิง <span class="text-red-500 font-bold ml-0.5">*</span>:
+                </label>
+                <select id="fuel_type_id" class="vis-gov-input flex-1 text-xs font-bold">
+                  <option value="ดีเซล" selected>ดีเซล (ตรวจควันดำ)</option>
+                  <option value="เบนซิน">เบนซิน (ตรวจก๊าซ CO/HC)</option>
+                  <option value="ก๊าซ (LPG/NGV)">ก๊าซ (LPG/NGV)</option>
+                  <option value="ไฟฟ้า EV">ไฟฟ้า EV</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <!-- Row 5: Print Format, Fuel Type, Checklist Form -->
-          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
-            <div class="sm:col-span-4 flex items-center gap-2">
-              <label for="print_format_id" class="text-xs font-bold text-red-600 whitespace-nowrap min-w-[95px]">รูปแบบการพิมพ์ *:</label>
-              <select id="print_format_id" class="vis-gov-input flex-1 text-xs font-medium">
-                <option value="2. แบบรถโดยสาร / รถบรรทุก (ขส.)" selected>2. แบบรถโดยสาร (A4 ขส.)</option>
-                <option value="1. แบบรถยนต์ทั่วไป (รย.1, 2, 3)">1. รถยนต์ทั่วไป (A4)</option>
-                <option value="3. สลิปผลย่อความร้อน (80mm)">3. สลิปย่อ (80mm)</option>
-              </select>
+          <!-- CHUNK 3: มาตรฐานการตรวจและเอกสาร (Inspection Standards & Docs) -->
+          <div class="p-2.5 rounded-md border space-y-2" style="background-color: var(--color-paper); border-color: var(--color-rule-light);">
+            <div class="flex items-center justify-between pb-0.5">
+              <span class="text-xs font-bold flex items-center gap-1.5" style="color: var(--color-ink);">
+                <i data-lucide="file-check-2" class="w-3.5 h-3.5 text-blue-600"></i>
+                <span>3. ประเภทรถ ขส. และเอกสารการตรวจ</span>
+              </span>
+              <span class="text-[11px] text-zinc-500">เกณฑ์มาตรฐานกรมการขนส่งทางบก</span>
             </div>
 
-            <div class="sm:col-span-4 flex items-center gap-2">
-              <label for="fuel_type_id" class="text-xs font-bold text-red-600 whitespace-nowrap min-w-[80px]">ชนิดเชื้อเพลิง *:</label>
-              <select id="fuel_type_id" class="vis-gov-input flex-1 text-xs font-bold">
-                <option value="ดีเซล" selected>ดีเซล (ตรวจควันดำ)</option>
-                <option value="เบนซิน">เบนซิน (ตรวจก๊าซ CO/HC)</option>
-                <option value="ก๊าซ (LPG/NGV)">ก๊าซ (LPG/NGV)</option>
-                <option value="ไฟฟ้า EV">ไฟฟ้า EV</option>
-              </select>
+            <!-- Row 1: Vehicle Type & Inspector -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
+              <div class="sm:col-span-7 flex items-center gap-2">
+                <label for="vehicle_type_id" class="text-xs font-bold whitespace-nowrap min-w-[95px]" style="color: var(--color-ink);">
+                  ประเภทรถ ขส. <span class="text-red-500 font-bold ml-0.5">*</span>:
+                </label>
+                <select id="vehicle_type_id" onchange="onVehicleTypeChanged()" class="vis-gov-input w-1/2 font-semibold text-xs">
+                  <option value="รถโดยสาร" selected>รถโดยสาร (พ.ร.บ. ขนส่ง)</option>
+                  <option value="รย.1">รย.1 รถยนต์นั่งไม่เกิน 7 คน</option>
+                  <option value="รย.2">รย.2 รถยนต์นั่งเกิน 7 คน</option>
+                  <option value="รย.3">รย.3 รถบรรทุกส่วนบุคคล</option>
+                  <option value="รถบรรทุก">รถบรรทุก (พ.ร.บ. ขนส่ง)</option>
+                </select>
+                <select id="sub_type" class="vis-gov-input w-1/2 font-medium text-xs">
+                  <option value="ประจำทาง" selected>รถโดยสารประจำทาง</option>
+                  <option value="ไม่ประจำทาง">รถโดยสารไม่ประจำทาง</option>
+                  <option value="ส่วนบุคคล">ส่วนบุคคล</option>
+                </select>
+              </div>
+
+              <div class="sm:col-span-5 flex items-center gap-2">
+                <label for="inspector_user_id" class="text-xs font-bold whitespace-nowrap min-w-[75px]" style="color: var(--color-ink);">ผู้ตรวจสภาพ:</label>
+                <select id="inspector_user_id" class="vis-gov-input flex-1 text-xs font-medium">
+                  <option value="EMP-0412 (นายสมชาย ตรวจการ)" selected>EMP-0412 นายสมชาย ตรวจการ</option>
+                  <option value="EMP-0205 (นายประสิทธิ์)">EMP-0205 นายประสิทธิ์ มีสุข</option>
+                </select>
+              </div>
             </div>
 
-            <div class="sm:col-span-4 flex items-center gap-2">
-              <label for="visual_checklist_id" class="text-xs font-bold whitespace-nowrap min-w-[90px]">รายการตรวจพินิจ:</label>
-              <select id="visual_checklist_id" class="vis-gov-input flex-1 text-xs font-medium">
-                <option value="ชุดมาตรฐาน: รถโดยสาร (ฉบับเต็ม)" selected>ชุดมาตรฐาน: รถโดยสาร</option>
-                <option value="ชุดมาตรฐาน: รถยนต์นั่ง">ชุดมาตรฐาน: รถยนต์นั่ง</option>
-              </select>
+            <!-- Row 2: Print Format & Checklist -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
+              <div class="sm:col-span-6 flex items-center gap-2">
+                <label for="print_format_id" class="text-xs font-bold whitespace-nowrap min-w-[95px]" style="color: var(--color-ink);">
+                  แบบพิมพ์ <span class="text-red-500 font-bold ml-0.5">*</span>:
+                </label>
+                <select id="print_format_id" class="vis-gov-input flex-1 text-xs font-medium">
+                  <option value="2. แบบรถโดยสาร / รถบรรทุก (ขส.)" selected>2. แบบรถโดยสาร (A4 ขส.)</option>
+                  <option value="1. แบบรถยนต์ทั่วไป (รย.1, 2, 3)">1. รถยนต์ทั่วไป (A4)</option>
+                  <option value="3. สลิปผลย่อความร้อน (80mm)">3. สลิปย่อ (80mm)</option>
+                </select>
+              </div>
+
+              <div class="sm:col-span-6 flex items-center gap-2">
+                <label for="visual_checklist_id" class="text-xs font-bold whitespace-nowrap min-w-[80px]" style="color: var(--color-ink);">ตรวจพินิจ:</label>
+                <select id="visual_checklist_id" class="vis-gov-input flex-1 text-xs font-medium">
+                  <option value="ชุดมาตรฐาน: รถโดยสาร (ฉบับเต็ม)" selected>ชุดมาตรฐาน: รถโดยสาร</option>
+                  <option value="ชุดมาตรฐาน: รถยนต์นั่ง">ชุดมาตรฐาน: รถยนต์นั่ง</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <!-- Bottom Notice & Shortcuts Help -->
-          <div class="flex items-center justify-between text-[11px] pt-1" style="color: var(--color-ink-muted);">
-            <div>
-              <span class="text-red-500 font-bold">*</span> ค่าที่มีสัญลักษณ์นี้ <strong class="text-zinc-700 dark:text-zinc-300">ต้องป้อนค่า</strong>
+          <!-- ACTION BUTTONS: Fitts's Law Primary CTA + Secondary Clear Button + Shortcuts Help -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t" style="border-color: var(--color-rule-light);">
+            <div class="flex items-center gap-2 text-xs" style="color: var(--color-ink-muted);">
+              <span class="text-red-500 font-bold text-sm">*</span>
+              <span>จำเป็นต้องระบุตามระเบียบ ขส.</span>
+              <span class="text-zinc-300 dark:text-zinc-600">|</span>
+              <button type="button" onclick="loadLegacyExample()" class="text-blue-600 dark:text-blue-400 font-bold hover:underline inline-flex items-center gap-1">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> โหลดตัวอย่างเดิม (15-5461)
+              </button>
             </div>
-            <div class="flex items-center gap-3">
-              <span>คีย์ลัด: <kbd class="vis-kbd">F4</kbd> ล้างฟอร์ม</span>
-              <span>•</span>
-              <span><kbd class="vis-kbd">F9</kbd> บันทึกและส่งตรวจ</span>
-              <span>•</span>
-              <button type="button" onclick="loadLegacyExample()" class="text-blue-600 dark:text-blue-400 font-bold hover:underline">
-                [โหลดตัวอย่างเดิม 15-5461]
+
+            <div class="flex items-center gap-2.5">
+              <!-- F4 Clear Form Button -->
+              <button type="button" onclick="clearForm()" 
+                class="h-10 px-4 rounded-md border font-semibold text-xs flex items-center gap-1.5 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink);"
+                title="ล้างข้อมูลทั้งหมดในฟอร์ม (กดแป้นพิมพ์ F4)">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-zinc-500"></i>
+                <span>ล้างฟอร์ม</span>
+                <kbd class="vis-kbd text-[10px] ml-0.5">F4</kbd>
+              </button>
+
+              <!-- F9 Save & Send to Lane Primary CTA -->
+              <button type="submit" 
+                class="h-10 px-5 rounded-md font-bold text-xs shadow-md flex items-center gap-2 transition-all hover:brightness-105 active:scale-98"
+                style="background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%); color: #ffffff;"
+                title="บันทึกข้อมูลและส่งรถเข้าเลนตรวจ (กดแป้นพิมพ์ F9 หรือ Enter)">
+                <i data-lucide="save" class="w-4 h-4"></i>
+                <span>บันทึกและส่งเข้าเลนตรวจ</span>
+                <kbd class="bg-blue-900/60 text-blue-100 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold">F9</kbd>
               </button>
             </div>
           </div>
@@ -430,27 +486,29 @@
         </form>
 
         <!-- RIGHT: OFFICIAL DLT EMBLEM & DIGITAL LICENSE PLATE BILLBOARD (4 COLS) -->
-        <div class="lg:col-span-4 flex flex-col items-center justify-between space-y-3 p-3 rounded-lg border h-full" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
+        <div class="lg:col-span-4 flex flex-col items-center justify-between space-y-4 p-4 rounded-lg border h-full" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule);">
           
           <!-- Digital LED License Plate Box (Syncs 100% in real-time) -->
           <div class="w-full">
-            <div class="text-[10px] font-bold text-center mb-1 text-zinc-500">ป้ายทะเบียนรถที่กำลังดำเนินการ (Real-time Display)</div>
-            <div class="digital-plate-box py-2.5 px-4 w-full">
-              <div id="led-plate" class="font-mono font-bold text-2xl md:text-3xl text-zinc-900 tracking-wider">15-5461</div>
-              <div id="led-prov" class="text-sm md:text-base font-bold text-zinc-800 tracking-tight">กรุงเทพมหานคร</div>
+            <div class="text-[11px] font-bold text-center mb-1.5" style="color: var(--color-ink-secondary);">
+              ป้ายทะเบียนรถที่กำลังดำเนินการ (Real-time Display)
+            </div>
+            <div class="digital-plate-box py-3 px-4 w-full">
+              <div id="led-plate" class="font-mono font-bold text-3xl text-zinc-900 tracking-wider">15-5461</div>
+              <div id="led-prov" class="text-base font-bold text-zinc-800 tracking-tight mt-0.5">กรุงเทพมหานคร</div>
               <div class="absolute right-2 bottom-1 text-[9px] font-mono font-bold text-zinc-400">ขส. แท้</div>
             </div>
           </div>
 
           <!-- Official Logos & DLT Emblem -->
-          <div class="flex items-center justify-center gap-4 py-1">
+          <div class="flex items-center justify-center gap-5 py-2">
             
             <!-- SectionModul SeMo Legacy Logo -->
             <div class="text-center leading-tight">
-              <div class="flex items-center justify-center gap-1 font-heading font-black text-xl tracking-tighter">
+              <div class="flex items-center justify-center gap-1 font-heading font-black text-2xl tracking-tighter">
                 <span class="text-red-600">Se</span><span class="text-blue-700 dark:text-blue-400">Mo</span>
               </div>
-              <div class="text-[10px] font-bold text-blue-900 dark:text-blue-300 tracking-tight">SectionModul</div>
+              <div class="text-[11px] font-bold text-blue-900 dark:text-blue-300 tracking-tight">SectionModul</div>
             </div>
 
             <!-- Official Golden-Purple DLT Emblem (ตราสัญลักษณ์กรมการขนส่งทางบก) -->
@@ -484,14 +542,9 @@
 
           </div>
 
-          <!-- Bottom Action Buttons inside Header Card -->
-          <div class="w-full flex items-center gap-2 pt-1">
-            <button type="button" onclick="clearForm()" class="flex-1 py-1.5 px-2 rounded border text-xs font-semibold hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" style="background-color: var(--color-paper-card); border-color: var(--color-rule);">
-              ล้างฟอร์ม [F4]
-            </button>
-            <button type="button" onclick="saveRegistration()" class="flex-1 py-1.5 px-2 rounded text-xs font-bold text-white shadow-xs hover:opacity-90 transition-all flex items-center justify-center gap-1" style="background-color: var(--color-accent);">
-              <i data-lucide="send" class="w-3.5 h-3.5"></i> บันทึกส่งตรวจ [F9]
-            </button>
+          <!-- Channel & Lane Indicator Badge -->
+          <div class="w-full text-center py-1.5 px-3 rounded border text-xs font-semibold" style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink-secondary);">
+            เลนตรวจที่ 01 • ระบบส่งข้อมูล ขส. ออนไลน์
           </div>
 
         </div>
@@ -556,11 +609,12 @@
 
       <!-- Bottom Matrix Summary & Legend Footer -->
       <div class="px-3.5 py-1.5 border-t flex items-center justify-between text-xs flex-shrink-0" style="background-color: var(--color-paper-elevated); border-color: var(--color-rule); color: var(--color-ink-muted);">
-        <div class="flex items-center gap-4 text-[11px]">
-          <span class="flex items-center gap-1 font-bold text-emerald-600"><i data-lucide="check" class="w-3.5 h-3.5"></i> ผ่านเกณฑ์</span>
-          <span class="flex items-center gap-1 font-bold text-red-600"><i data-lucide="x" class="w-3.5 h-3.5"></i> ตกเกณฑ์</span>
-          <span class="flex items-center gap-1 font-bold text-blue-600"><i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> กำลังตรวจ</span>
-          <span class="flex items-center gap-1 font-bold text-zinc-400">= ไม่ต้องตรวจ</span>
+        <div class="flex items-center gap-3 text-[11px]">
+          <span class="inline-flex items-center gap-1 font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950 px-2 py-0.5 rounded border border-emerald-300/60 shadow-2xs">✓ ผ่านเกณฑ์</span>
+          <span class="inline-flex items-center gap-1 font-bold text-rose-800 dark:text-rose-200 bg-rose-100 dark:bg-rose-950 px-2 py-0.5 rounded border border-rose-400/60 shadow-2xs">✕ ตกเกณฑ์</span>
+          <span class="inline-flex items-center gap-1 font-bold text-blue-800 dark:text-blue-300 bg-blue-100 dark:bg-blue-950 px-2 py-0.5 rounded border border-blue-300/60 shadow-2xs">⏳ กำลังตรวจ</span>
+          <span class="inline-flex items-center gap-1 font-bold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/70 px-2 py-0.5 rounded border border-amber-200">รอคิว</span>
+          <span class="inline-flex items-center gap-1 font-medium text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-700">— ข้าม (N/A)</span>
         </div>
         <div class="flex items-center gap-3 font-mono text-[11px]">
           <span>รวมในคิววันนี้: <strong id="total-queue-count" class="text-zinc-800 dark:text-zinc-200">6</strong> คัน</span>
@@ -836,12 +890,12 @@
       document.getElementById('axle_select').value = count;
 
       const container = document.getElementById('handbrake-axles');
-      container.innerHTML = `<span class="text-xs font-semibold text-zinc-500">เบรกมือ:</span>`;
+      container.innerHTML = `<span class="text-xs font-bold" style="color: var(--color-ink-secondary);">เบรกมือ:</span>`;
       for (let i = 1; i <= count; i++) {
         const isDefault = (i === 2);
         const label = document.createElement('label');
-        label.className = `cursor-pointer flex items-center gap-1 text-xs font-medium`;
-        label.innerHTML = `<input type="checkbox" name="brake_pos" value="${i}" ${isDefault ? 'checked' : ''} class="w-3.5 h-3.5 rounded text-blue-600"> P${i}`;
+        label.className = `cursor-pointer flex items-center gap-1.5 text-xs font-semibold px-1.5 py-0.5 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors`;
+        label.innerHTML = `<input type="checkbox" name="brake_pos" value="${i}" ${isDefault ? 'checked' : ''} class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"> เพลา ${i}`;
         container.appendChild(label);
       }
     }
@@ -1003,31 +1057,31 @@
           tr.className = "active-car-row";
         }
 
-        // Cell status symbol helper
+        // Cell status symbol helper (Preattentive Processing Pill Badges)
         const renderCell = (t) => {
           if (t.status === 'pass') {
-            return `<span class="text-emerald-600 dark:text-emerald-400 font-bold text-base">✓</span>`;
+            return `<span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300/60 shadow-2xs">✓ ผ่าน</span>`;
           } else if (t.status === 'fail') {
-            return `<span class="text-rose-600 font-black text-base animate-pulse">✕</span>`;
+            return `<span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[11px] font-black bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-200 border border-rose-400/60 shadow-2xs animate-pulse">✕ ตก</span>`;
           } else if (t.status === 'testing') {
-            return `<span class="text-blue-500 font-bold animate-spin inline-block">⏳</span>`;
+            return `<span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[11px] font-bold bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 border border-blue-300/60 shadow-2xs animate-pulse">⏳ ตรวจ</span>`;
           } else if (t.status === 'na') {
-            return `<span class="text-zinc-400 font-mono font-bold">=</span>`;
+            return `<span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700">— ข้าม</span>`;
           } else {
-            return `<span class="text-zinc-400 text-xs">รอ</span>`;
+            return `<span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300 border border-amber-200">รอคิว</span>`;
           }
         };
 
-        // Main status icon
+        // Main status badge
         let mainStatusIcon = '';
         if (c.status === 'testing') {
-          mainStatusIcon = `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">ตรวจอยู่</span>`;
+          mainStatusIcon = `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-blue-100 text-blue-800 dark:bg-blue-900/80 dark:text-blue-200 border border-blue-300 shadow-2xs">กำลังตรวจ</span>`;
         } else if (c.status === 'passed') {
-          mainStatusIcon = `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">ผ่าน</span>`;
+          mainStatusIcon = `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/80 dark:text-emerald-200 border border-emerald-300 shadow-2xs">ผ่านเกณฑ์</span>`;
         } else if (c.status === 'failed') {
-          mainStatusIcon = `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">ตกเกณฑ์</span>`;
+          mainStatusIcon = `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 dark:bg-rose-900/80 dark:text-rose-200 border border-rose-300 shadow-2xs">ตกเกณฑ์</span>`;
         } else {
-          mainStatusIcon = `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">รอตรวจ</span>`;
+          mainStatusIcon = `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300 border border-zinc-300 shadow-2xs">รอตรวจ</span>`;
         }
 
         // Action button
