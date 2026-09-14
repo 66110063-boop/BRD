@@ -1,0 +1,140 @@
+/* Hallmark · tokens.css · Vehicle Inspection System (VIS)
+ * Palette: Industrial Technical Slate & Precision Blue Anchor
+ * OKLCH Perceptually Uniform Color Space · 4pt Spacing Scale
+ */
+
+:root {
+  /* ==================== FONT STACK (2+1 Rule) ==================== */
+  /* Display / Section Headers: Prompt (Thai/Latin modern humanist) */
+  --font-display: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Body / Formal Forms / DLT Documents: Sarabun */
+  --font-body: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Outlier (≤ 2 slots: License Plates, VIN & Hardware Readings ONLY): JetBrains Mono */
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* ==================== TYPOGRAPHIC SCALE (Ratio: 1.25 Major Third) ==================== */
+  --text-2xs: 0.6875rem; /* 11px */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px (Base body size) */
+  --text-md: 1.125rem;   /* 18px */
+  --text-lg: 1.25rem;    /* 20px */
+  --text-xl: 1.5rem;     /* 24px */
+  --text-2xl: 1.875rem;  /* 30px */
+  --text-display: clamp(1.75rem, 2.5vw + 1rem, 2.5rem);
+
+  --lh-tight: 1.15;
+  --lh-normal: 1.45;
+  --lh-relaxed: 1.6;
+
+  /* ==================== SPACING SCALE (Multiples of 4px) ==================== */
+  --space-3xs: 0.25rem; /* 4px */
+  --space-2xs: 0.5rem;  /* 8px */
+  --space-xs: 0.75rem;  /* 12px */
+  --space-sm: 1rem;     /* 16px */
+  --space-md: 1.25rem;  /* 20px */
+  --space-lg: 1.5rem;   /* 24px */
+  --space-xl: 2rem;     /* 32px */
+  --space-2xl: 2.5rem;  /* 40px */
+  --space-3xl: 3rem;    /* 48px */
+
+  /* ==================== BORDER RADIUS ==================== */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* ==================== EASINGS & DURATIONS (No bounce on UI) ==================== */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 100ms;
+  --dur-base: 180ms;
+  --dur-moderate: 250ms;
+
+  /* ==================== LIGHT MODE PALETTE (OKLCH Anchor Hue 250 - Tech Cobalt) ==================== */
+  /* Paper (Surface) - Tinted warm-cool, no pure #ffffff */
+  --color-paper: oklch(98.5% 0.006 250);       /* Main background canvas */
+  --color-paper-card: oklch(100% 0.002 250);   /* Primary card surface */
+  --color-paper-elevated: oklch(96.8% 0.008 250); /* Sub-panels, header, table headers */
+  --color-paper-hover: oklch(95.2% 0.010 250); /* Hover states */
+
+  /* Ink (Text) - Tinted deep carbon, no pure #000000 */
+  --color-ink: oklch(18% 0.015 250);           /* Primary text (high contrast) */
+  --color-ink-secondary: oklch(38% 0.012 250); /* Labels, subheadings */
+  --color-ink-muted: oklch(52% 0.010 250);     /* Placeholder, timestamps, helpers */
+  
+  /* Hairline Rules and Borders */
+  --color-rule: oklch(89% 0.008 250);          /* Card borders, table dividers */
+  --color-rule-light: oklch(93% 0.006 250);    /* Subtle inner dividers */
+
+  /* Accent (Cobalt Blue - Used sparingly <= 3% footprint) */
+  --color-accent: oklch(52% 0.21 254);         /* Action buttons, key indicators */
+  --color-accent-hover: oklch(46% 0.22 254);
+  --color-accent-active: oklch(42% 0.22 254);
+  --color-accent-subtle: oklch(95% 0.04 254);  /* Soft active badge background */
+  --color-accent-ink: oklch(99% 0.002 250);    /* Text on accent fill (contrast > 4.5:1) */
+
+  /* Focus Ring */
+  --color-focus: oklch(52% 0.21 254);
+
+  /* Status Colors (Semantic with dedicated text & borders) */
+  --color-pass: oklch(52% 0.16 148);           /* Green Pass */
+  --color-pass-bg: oklch(96.5% 0.035 148);
+  --color-pass-border: oklch(85% 0.08 148);
+
+  --color-fail: oklch(54% 0.21 27);            /* Red Fail */
+  --color-fail-bg: oklch(96.5% 0.045 27);
+  --color-fail-border: oklch(85% 0.10 27);
+
+  --color-testing: oklch(58% 0.18 245);        /* Testing In-progress */
+  --color-testing-bg: oklch(96.5% 0.04 245);
+  --color-testing-border: oklch(86% 0.08 245);
+
+  --color-warning: oklch(65% 0.18 75);         /* Fuel / Alert Warning */
+  --color-warning-bg: oklch(97% 0.04 75);
+}
+
+/* ==================== DARK MODE PALETTE (Preserves Hue 250, Optical Weight) ==================== */
+.dark {
+  /* Paper - Elevation increases lightness */
+  --color-paper: oklch(14% 0.012 250);
+  --color-paper-card: oklch(17.5% 0.014 250);
+  --color-paper-elevated: oklch(21% 0.016 250);
+  --color-paper-hover: oklch(24% 0.018 250);
+
+  /* Ink - Optical brightness */
+  --color-ink: oklch(95% 0.006 250);
+  --color-ink-secondary: oklch(78% 0.010 250);
+  --color-ink-muted: oklch(62% 0.008 250);
+
+  /* Hairlines */
+  --color-rule: oklch(27% 0.014 250);
+  --color-rule-light: oklch(22% 0.012 250);
+
+  /* Accent (Slightly reduced chroma, +6% lightness for dark background legibility) */
+  --color-accent: oklch(60% 0.19 254);
+  --color-accent-hover: oklch(65% 0.19 254);
+  --color-accent-active: oklch(55% 0.19 254);
+  --color-accent-subtle: oklch(24% 0.06 254);
+  --color-accent-ink: oklch(99% 0.002 250);
+
+  --color-focus: oklch(62% 0.20 254);
+
+  /* Status Colors in Dark Mode */
+  --color-pass: oklch(68% 0.16 148);
+  --color-pass-bg: oklch(20% 0.04 148);
+  --color-pass-border: oklch(34% 0.08 148);
+
+  --color-fail: oklch(66% 0.19 27);
+  --color-fail-bg: oklch(21% 0.05 27);
+  --color-fail-border: oklch(36% 0.09 27);
+
+  --color-testing: oklch(68% 0.17 245);
+  --color-testing-bg: oklch(22% 0.05 245);
+  --color-testing-border: oklch(36% 0.09 245);
+
+  --color-warning: oklch(75% 0.16 75);
+  --color-warning-bg: oklch(24% 0.05 75);
+}
