@@ -149,6 +149,13 @@
     }
 
     /* Matrix Table Styles (Institutional Government Standard) */
+    .matrix-table {
+      width: 100%;
+      min-width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: auto;
+    }
     .matrix-table th {
       background-color: #1e293b;
       color: #f8fafc;
@@ -161,6 +168,9 @@
       white-space: nowrap;
       line-height: 1.25;
     }
+    .matrix-table th:last-child {
+      border-right: none !important;
+    }
     .matrix-table td {
       padding: 6px 5px;
       border-bottom: 1px solid var(--color-rule-light);
@@ -169,14 +179,31 @@
       text-align: center;
       vertical-align: middle;
     }
+    .matrix-table td:last-child {
+      border-right: none !important;
+    }
     .matrix-table tr.active-car-row {
       background-color: #0f2942 !important;
       color: #f8fafc !important;
       font-weight: 700;
     }
+    .matrix-table tr.active-car-row td {
+      border-bottom-color: #1e3a5f !important;
+      border-right-color: #1e3a5f !important;
+    }
+    .matrix-table tr.active-car-row td:last-child {
+      border-right: none !important;
+    }
     .dark .matrix-table tr.active-car-row {
       background-color: #0c2338 !important;
       color: #ffffff !important;
+    }
+    .dark .matrix-table tr.active-car-row td {
+      border-bottom-color: #1e3a5f !important;
+      border-right-color: #1e3a5f !important;
+    }
+    .dark .matrix-table tr.active-car-row td:last-child {
+      border-right: none !important;
     }
     .matrix-table tr:hover:not(.active-car-row) {
       background-color: var(--color-paper-hover);
