@@ -183,18 +183,20 @@
       cursor: pointer;
     }
 
-    /* Individual Action Buttons with 8px Spacing (Matching User Reference) */
+    /* Individual Action Buttons with 8px Spacing (Matching User Reference media_1789375849326) */
     .vis-action-btn {
-      background-color: var(--color-paper-card);
-      border: 1.5px solid var(--color-rule);
-      color: var(--color-ink);
-      height: 29px;
-      padding: 0 10px;
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #0f172a;
+      height: 28px;
+      min-width: 76px;
+      padding: 0 8px;
       border-radius: 6px;
-      font-size: 11.5px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 500;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 5px;
       white-space: nowrap;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -202,13 +204,24 @@
       cursor: pointer;
     }
     .vis-action-btn:hover {
-      border-color: #1d4ed8;
+      border-color: #3b82f6;
       color: #1d4ed8;
-      background-color: #f0f7ff;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+      background-color: #f8fafc;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
     }
     .vis-action-btn:active {
       transform: scale(0.97);
+    }
+
+    .dark .vis-action-btn {
+      background-color: #1e293b;
+      border-color: #475569;
+      color: #f8fafc;
+    }
+    .dark .vis-action-btn:hover {
+      border-color: #60a5fa;
+      color: #93c5fd;
+      background-color: #334155;
     }
 
     /* Active Row Overrides for Action Buttons (High-Contrast Clean White Buttons) */
@@ -216,7 +229,7 @@
       background-color: #ffffff !important;
       border-color: #cbd5e1 !important;
       color: #0f172a !important;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
     }
     .active-car-row .vis-action-btn:hover {
       background-color: #f8fafc !important;
@@ -1193,15 +1206,15 @@
           <div class="flex items-center justify-center gap-2 px-1">
             <button type="button" onclick="openDetailModalByPlate('${c.plate}')" 
               class="vis-action-btn" 
-              title="คลิกดูผลตัวเลขและเกณฑ์มาตรฐานละเอียด">
-              <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-blue-700 dark:text-blue-300"></i>
-              <span>ดูผลตรวจ</span>
+              title="คลิกดูผลตัวเลขและเกณฑ์มาตรฐานละเอียด (Preview)">
+              <i data-lucide="eye" class="w-3.5 h-3.5 text-slate-700 dark:text-slate-200"></i>
+              <span>Preview</span>
             </button>
             <button type="button" onclick="${isWaiting ? `quickEditCar('${c.plate}')` : `requestSupervisorEdit('${c.plate}')`}" 
               class="vis-action-btn" 
-              title="${isWaiting ? 'แก้ไขข้อมูลรถก่อนเข้าตรวจ' : 'ขอสิทธิ์หัวหน้างานเพื่อปลดล็อกผลตรวจ'}">
+              title="${isWaiting ? 'แก้ไขข้อมูลรถก่อนเข้าตรวจ' : 'ขอสิทธิ์หัวหน้างานเพื่อแก้ไขผลตรวจ'}">
               <i data-lucide="${isWaiting ? 'edit-3' : 'lock'}" class="w-3.5 h-3.5 ${isWaiting ? 'text-slate-700 dark:text-slate-200' : 'text-amber-600 dark:text-amber-400'}"></i>
-              <span>${isWaiting ? 'แก้ไข' : 'ขอปลดล็อก'}</span>
+              <span>แก้ไข</span>
             </button>
           </div>
         `;
