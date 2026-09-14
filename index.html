@@ -180,56 +180,45 @@
       cursor: pointer;
     }
 
-    /* Unified Segmented Action Group in Matrix Table */
-    .action-btn-group {
+    /* Individual Action Buttons with Spacing (Matching User Reference) */
+    .vis-action-btn {
       background-color: var(--color-paper-card);
       border: 1px solid var(--color-rule);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-      display: inline-flex;
-      align-items: center;
-      border-radius: 5px;
-      overflow: hidden;
-      height: 27px;
-    }
-    .action-item-left, .action-item-right {
-      background-color: var(--color-paper-card);
       color: var(--color-ink);
-      height: 100%;
-      padding: 0 9px;
-      font-size: 11px;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       white-space: nowrap;
-      transition: background-color 120ms ease, color 120ms ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      transition: all 120ms ease;
+      cursor: pointer;
     }
-    .action-item-left {
-      border-right: 1px solid var(--color-rule);
-    }
-    .action-item-left:hover {
-      background-color: #eff6ff;
+    .vis-action-btn:hover {
+      border-color: #3b82f6;
       color: #1d4ed8;
+      background-color: #f8fafc;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
     }
-    .action-item-right:hover {
-      background-color: #f1f5f9;
-      color: #0f172a;
+    .vis-action-btn:active {
+      transform: scale(0.97);
     }
 
-    /* Active Row Overrides for Segmented Action Group */
-    .active-car-row .action-btn-group {
-      background-color: rgba(255, 255, 255, 0.15) !important;
-      border-color: rgba(255, 255, 255, 0.35) !important;
-    }
-    .active-car-row .action-item-left,
-    .active-car-row .action-item-right {
-      background-color: transparent !important;
+    /* Active Row Overrides for Action Buttons */
+    .active-car-row .vis-action-btn {
+      background-color: rgba(255, 255, 255, 0.18) !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
       color: #ffffff !important;
-      border-color: rgba(255, 255, 255, 0.3) !important;
+      box-shadow: none;
     }
-    .active-car-row .action-item-left:hover,
-    .active-car-row .action-item-right:hover {
-      background-color: rgba(255, 255, 255, 0.25) !important;
+    .active-car-row .vis-action-btn:hover {
+      background-color: rgba(255, 255, 255, 0.3) !important;
+      border-color: rgba(255, 255, 255, 0.6) !important;
+      color: #ffffff !important;
     }
 
     .vis-kbd {
@@ -652,7 +641,7 @@
               <th class="w-24">เบรก</th>
               <th class="w-28">ตรวจพินิจ</th>
               <th class="w-24">ไฟหน้า</th>
-              <th class="w-36 text-center">การจัดการ</th>
+              <th class="w-44 text-center">การจัดการ</th>
             </tr>
           </thead>
           <tbody id="matrix-tbody">
@@ -1140,21 +1129,19 @@
 
         const isWaiting = (c.status === 'waiting');
         const actionHtml = `
-          <div class="inline-flex items-center justify-center">
-            <div class="action-btn-group">
-              <button type="button" onclick="openDetailModalByPlate('${c.plate}')" 
-                class="action-item-left" 
-                title="คลิกดูผลตัวเลขและเกณฑ์มาตรฐานละเอียด">
-                <i data-lucide="eye" class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400"></i>
-                <span>ดูผล</span>
-              </button>
-              <button type="button" onclick="${isWaiting ? `quickEditCar('${c.plate}')` : `requestSupervisorEdit('${c.plate}')`}" 
-                class="action-item-right" 
-                title="${isWaiting ? 'แก้ไขข้อมูลรถก่อนเข้าตรวจ' : 'ขอสิทธิ์หัวหน้างานเพื่อแก้ไขผลตรวจ'}">
-                <i data-lucide="${isWaiting ? 'edit-3' : 'lock'}" class="w-3 h-3 ${isWaiting ? 'text-blue-600 dark:text-blue-400' : 'text-amber-600 dark:text-amber-400'}"></i>
-                <span>${isWaiting ? 'แก้ไข' : 'ขอแก้'}</span>
-              </button>
-            </div>
+          <div class="flex items-center justify-center gap-2 px-1">
+            <button type="button" onclick="openDetailModalByPlate('${c.plate}')" 
+              class="vis-action-btn" 
+              title="คลิกดูผลตัวเลขและเกณฑ์มาตรฐานละเอียด (Preview)">
+              <i data-lucide="eye" class="w-3.5 h-3.5 text-slate-700 dark:text-slate-200"></i>
+              <span>Preview</span>
+            </button>
+            <button type="button" onclick="${isWaiting ? `quickEditCar('${c.plate}')` : `requestSupervisorEdit('${c.plate}')`}" 
+              class="vis-action-btn" 
+              title="${isWaiting ? 'แก้ไขข้อมูลรถก่อนเข้าตรวจ' : 'ขอสิทธิ์หัวหน้างานเพื่อแก้ไขผลตรวจ'}">
+              <i data-lucide="${isWaiting ? 'edit-3' : 'lock'}" class="w-3.5 h-3.5 ${isWaiting ? 'text-slate-700 dark:text-slate-200' : 'text-amber-600 dark:text-amber-400'}"></i>
+              <span>${isWaiting ? 'แก้ไข' : 'ขอแก้'}</span>
+            </button>
           </div>
         `;
 
