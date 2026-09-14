@@ -299,10 +299,11 @@
 
         <!-- Smoke warning chip -->
         <button type="button" onclick="toggleSmokeDeviceStatus()" id="smoke-status-chip"
-          class="px-2 py-0.5 rounded border text-[11px] font-bold transition-all" 
+          class="px-2 py-0.5 rounded border text-[11px] font-bold transition-all inline-flex items-center gap-1" 
           style="background-color: var(--color-warning-bg); color: var(--color-warning); border-color: var(--color-warning-border);"
           title="คลิกเพื่อสลับ ออนไลน์/ออฟไลน์">
-          ควันดำ (COM3 หลุด) ⚠️
+          <i data-lucide="alert-triangle" class="w-3 h-3 text-amber-500"></i>
+          <span>ควันดำ (COM3 หลุด)</span>
         </button>
 
         <!-- Dark Mode Toggle -->
@@ -516,36 +517,36 @@
             </div>
           </div>
 
-          <!-- ACTION BUTTONS: Fitts's Law Primary CTA + Secondary Clear Button + Shortcuts Help -->
+          <!-- ACTION BUTTONS: Official Government Command Bar (No Emojis) -->
           <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t" style="border-color: var(--color-rule-light);">
-            <div class="flex items-center gap-2 text-xs" style="color: var(--color-ink-muted);">
-              <span class="text-red-500 font-bold text-sm">*</span>
-              <span>ข้อมูลจำเป็นตามระเบียบ ขส.</span>
-              <span class="text-zinc-300 dark:text-zinc-600">|</span>
-              <button type="button" onclick="loadLegacyExample()" class="text-blue-700 dark:text-blue-400 font-bold hover:underline inline-flex items-center gap-1">
-                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i> โหลดข้อมูลตัวอย่าง (15-5461)
+            <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+              <span class="text-red-500 font-bold text-sm leading-none">*</span>
+              <span class="font-medium">ข้อมูลที่มีเครื่องหมาย (*) เป็นข้อมูลจำเป็นตามระเบียบกรมการขนส่งทางบก</span>
+              <span class="text-slate-300 dark:text-slate-600">|</span>
+              <button type="button" onclick="loadLegacyExample()" class="text-slate-500 hover:text-blue-700 dark:hover:text-blue-400 underline font-normal transition-colors" title="โหลดข้อมูลรถตัวอย่างเพื่อทดสอบระบบ">
+                ดึงข้อมูลตัวอย่าง (15-5461)
               </button>
             </div>
 
             <div class="flex items-center gap-2.5">
               <!-- F4 Clear Form Button -->
               <button type="button" onclick="clearForm()" 
-                class="h-10 px-4 rounded-md border font-semibold text-xs flex items-center gap-1.5 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-2xs"
+                class="h-10 px-4 rounded-md border font-semibold text-xs flex items-center gap-2 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 shadow-2xs"
                 style="background-color: var(--color-paper-card); border-color: var(--color-rule); color: var(--color-ink);"
                 title="ล้างข้อมูลทั้งหมดในฟอร์ม (กดแป้นพิมพ์ F4)">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-zinc-500"></i>
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-500"></i>
                 <span>ล้างฟอร์ม</span>
                 <kbd class="vis-kbd text-[10px] ml-0.5">F4</kbd>
               </button>
 
               <!-- F9 Save & Send to Lane Primary CTA -->
               <button type="submit" 
-                class="h-10 px-6 rounded-md font-bold text-xs shadow-md flex items-center gap-2 transition-all hover:brightness-110 active:scale-98 text-white border border-blue-800"
+                class="h-10 px-6 rounded-md font-bold text-xs shadow-md flex items-center gap-2 transition-all hover:brightness-110 active:scale-98 text-white border border-blue-900"
                 style="background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);"
                 title="บันทึกข้อมูลและส่งรถเข้าเลนตรวจ (กดแป้นพิมพ์ F9 หรือ Enter)">
-                <i data-lucide="save" class="w-4 h-4 text-amber-300"></i>
+                <i data-lucide="send" class="w-3.5 h-3.5 text-white"></i>
                 <span>บันทึกและส่งเข้าเลนตรวจ</span>
-                <kbd class="bg-amber-400 text-slate-950 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold">F9</kbd>
+                <kbd class="bg-blue-950 text-amber-300 border border-blue-700/60 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold">F9</kbd>
               </button>
             </div>
           </div>
@@ -589,11 +590,17 @@
               <div class="grid grid-cols-2 gap-x-2 gap-y-1.5 text-[11px]">
                 <div>
                   <span class="text-slate-500 dark:text-slate-400 block">สถานะช่องตรวจ:</span>
-                  <span class="font-bold text-emerald-700 dark:text-emerald-400">🟢 พร้อมตรวจ (เลน 01)</span>
+                  <span class="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                    <span>พร้อมตรวจ (เลน 01)</span>
+                  </span>
                 </div>
                 <div>
                   <span class="text-slate-500 dark:text-slate-400 block">ระบบส่งผล ขส.:</span>
-                  <span class="font-bold text-emerald-700 dark:text-emerald-400">🟢 เชื่อมต่อ Realtime</span>
+                  <span class="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+                    <span>เชื่อมต่อ Realtime</span>
+                  </span>
                 </div>
                 <div>
                   <span class="text-slate-500 dark:text-slate-400 block">ผู้ตรวจสภาพรถ:</span>
@@ -799,8 +806,11 @@
       </div>
 
       <div class="p-5 space-y-4">
-        <div class="p-3 rounded-lg border text-sm" style="background-color: var(--color-warning-bg); color: var(--color-warning); border-color: var(--color-warning-border);">
-          <strong>🔒 ข้อมูลถูกล็อก:</strong> รถทะเบียน <span id="sup-target-plate" class="font-bold font-mono">15-5461</span> มีการบันทึกผลการตรวจในเลนแล้ว การแก้ไขต้องได้รับอนุมัติจากหัวหน้างานเท่านั้น
+        <div class="p-3 rounded-lg border text-sm flex items-start gap-2" style="background-color: var(--color-warning-bg); color: var(--color-warning); border-color: var(--color-warning-border);">
+          <i data-lucide="lock" class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5"></i>
+          <div>
+            <strong>ข้อมูลถูกล็อก:</strong> รถทะเบียน <span id="sup-target-plate" class="font-bold font-mono">15-5461</span> มีการบันทึกผลการตรวจในเลนแล้ว การแก้ไขต้องได้รับอนุมัติจากหัวหน้างานเท่านั้น
+          </div>
         </div>
 
         <div class="space-y-1">
@@ -937,13 +947,14 @@
         chip.style.backgroundColor = 'var(--color-warning-bg)';
         chip.style.color = 'var(--color-warning)';
         chip.style.borderColor = 'var(--color-warning-border)';
-        chip.innerHTML = `ควันดำ (COM3 หลุด) ⚠️`;
+        chip.innerHTML = `<i data-lucide="alert-triangle" class="w-3 h-3 text-amber-500"></i><span>ควันดำ (COM3 หลุด)</span>`;
+        if (window.lucide) lucide.createIcons();
         showToast('จำลองสถานะ: เครื่องวัดควันดำ ออฟไลน์ (COM3 หลุด)');
       } else {
         chip.style.backgroundColor = 'var(--color-pass-bg)';
         chip.style.color = 'var(--color-pass)';
         chip.style.borderColor = 'var(--color-pass-border)';
-        chip.innerHTML = `ควันดำ (Online ปกติ)`;
+        chip.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span><span>ควันดำ (Online ปกติ)</span>`;
         showToast('จำลองสถานะ: เครื่องวัดควันดำ ออนไลน์ พร้อมใช้งานแล้ว');
       }
     }
