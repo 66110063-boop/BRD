@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VRMS — นโยบายการจอง (F4)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ==========================================================================
+       VRMS Carpool — Theme & Design Tokens (อ้างอิงตรงตาม Figma F4 100%)
+       ========================================================================== */
+    :root {
+      /* Charcoal & Slate Colors */
+      --primary-dark: #1E293B;      /* สีปุ่มบันทึก (#1E293B) */
+      --primary-hover: #0F172A;
+      --active-nav-bg: #EDEDED;     /* แถบ active ใน sidebar (#EDEDED) */
+      
+      /* Neutrals & Text */
+      --text-dark: #0F172A;         /* หัวข้อหลัก, ข้อความใน input */
+      --text-body: #1E293B;         /* ชื่อเงื่อนไขนโยบาย */
+      --text-muted: #64748B;        /* คำอธิบายรองใต้ชื่อนโยบาย */
+      --text-caption: #94A3B8;      /* วันเวลาแก้ไข, หมายเหตุ SLA */
+      
+      /* Borders & Surfaces */
+      --border-light: #E2E8F0;      /* ขอบการ์ด, เส้นแบ่ง header */
+      --border-input: #CBD5E1;      /* เส้นขอบ input, ปุ่มยกเลิก */
+      --border-divider: #F1F5F9;    /* เส้นคั่นระหว่างแถวนโยบาย */
+      
+      --bg-white: #FFFFFF;          /* พื้นการ์ด, ไซด์บาร์ */
+      --bg-canvas: #FAFAFA;         /* พื้นหลังจอ */
+      --bg-avatar: #E2E8F0;         /* พื้นหลัง Avatar 'กร' */
+
+      /* Typography & Radii */
+      --font-family: 'Anuphan', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      --radius-card: 12px;
+      --radius-sm: 8px;
+      --radius-pill: 999px;
+    }
+
+    /* Reset & Rule: ไม่มีเงา (Zero Box-Shadow) */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      box-shadow: none !important;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-canvas);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ==========================================================================
+       SIDEBAR: เมนูด้านซ้าย
+       ========================================================================== */
+    .sidebar {
+      width: 220px;
+      background-color: var(--bg-white);
+      border-right: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      padding: 24px 14px;
+      user-select: none;
+    }
+
+    .sidebar-header {
+      padding-left: 6px;
+      margin-bottom: 24px;
+    }
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.1;
+      letter-spacing: -0.2px;
+    }
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    /* Nav Section */
+    .nav-group {
+      margin-bottom: 22px;
+    }
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-caption);
+      padding: 6px 8px;
+      letter-spacing: 0.2px;
+    }
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 120ms ease, color 120ms ease;
+    }
+    .nav-item:hover {
+      background-color: #F1F5F9;
+      color: var(--text-dark);
+    }
+    /* Active Item: นโยบายการจอง (พื้นสีเทาอ่อน #EDEDED ตัวหนังสือสีเข้มตามตัวอย่าง) */
+    .nav-item.active {
+      background-color: var(--active-nav-bg);
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+    .nav-item i,
+    .nav-item svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       MAIN CONTENT: F4 นโยบายการจอง + SLA
+       ========================================================================== */
+    .main-content {
+      flex: 1;
+      background-color: var(--bg-canvas);
+      padding: 28px 40px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      max-width: 1240px;
+    }
+
+    /* Page Header */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-dark);
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+    .page-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .avatar-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-pill);
+      background-color: var(--bg-avatar);
+      color: #475569;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Header Divider */
+    .header-divider {
+      border: none;
+      height: 1px;
+      background-color: var(--border-light);
+      margin: 18px 0 22px 0;
+    }
+
+    /* 2 Columns Grid Layout */
+    .policy-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    /* ==========================================================================
+       LEFT CARD: นโยบายการจอง (8 แถว)
+       ========================================================================== */
+    .left-policy-card {
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-card);
+      padding: 6px 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .policy-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border-divider);
+      gap: 20px;
+    }
+    .policy-row:last-child {
+      border-bottom: none;
+    }
+
+    .policy-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      line-height: 1.35;
+    }
+    .policy-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    .policy-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .policy-input {
+      width: 170px;
+      height: 38px;
+      border: 1px solid var(--border-input);
+      border-radius: var(--radius-sm);
+      padding: 0 14px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-dark);
+      background-color: var(--bg-white);
+      outline: none;
+      transition: border-color 120ms ease;
+    }
+    .policy-input:focus {
+      border-color: var(--primary-dark);
+    }
+
+    /* ==========================================================================
+       RIGHT CARD: SLA และการแจ้งเตือน
+       ========================================================================== */
+    .right-sla-card {
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-card);
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sla-card-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 18px;
+    }
+
+    .sla-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .sla-label {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .sla-input {
+      width: 100%;
+      height: 38px;
+      border: 1px solid var(--border-input);
+      border-radius: var(--radius-sm);
+      padding: 0 14px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-dark);
+      background-color: var(--bg-white);
+      outline: none;
+      transition: border-color 120ms ease;
+    }
+    .sla-input:focus {
+      border-color: var(--primary-dark);
+    }
+
+    .sla-footer-note {
+      font-size: 11.5px;
+      color: var(--text-caption);
+      margin-top: 10px;
+    }
+
+    /* ==========================================================================
+       BOTTOM ACTION BAR
+       ========================================================================== */
+    .bottom-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 20px;
+      margin-top: 24px;
+    }
+    .last-edited-text {
+      font-size: 12px;
+      color: var(--text-caption);
+    }
+    .action-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-cancel {
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-input);
+      color: var(--text-body);
+      padding: 9px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 120ms ease;
+    }
+    .btn-cancel:hover {
+      background-color: #F8FAFC;
+      border-color: #94A3B8;
+    }
+    .btn-save {
+      background-color: var(--primary-dark);
+      color: #FFFFFF;
+      border: none;
+      padding: 9px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 120ms ease;
+    }
+    .btn-save:hover {
+      background-color: var(--primary-hover);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SIDEBAR
+       ========================================================================== -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-title">VRMS</div>
+      <div class="brand-subtitle">Key User · ทั้งองค์กร</div>
+    </div>
+
+    <nav>
+      <!-- Group 1: ตั้งค่าระบบ -->
+      <div class="nav-group">
+        <div class="nav-section-title">ตั้งค่าระบบ</div>
+        <ul class="nav-list">
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="list"></i>
+              <span>สายอนุมัติ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="check"></i>
+              <span>อนุมัติอัตโนมัติ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="key"></i>
+              <span>กฎจัดสรรรถ</span>
+            </a>
+          </li>
+          <li>
+            <!-- Active Page: F4 นโยบายการจอง -->
+            <a class="nav-item active" href="#">
+              <i data-lucide="clock"></i>
+              <span>นโยบายการจอง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="file-text"></i>
+              <span>ฟอร์มจอง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="database"></i>
+              <span>ข้อมูลหลัก</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="user"></i>
+              <span>สิทธิ์การใช้งาน</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="bell"></i>
+              <span>แจ้งเตือนและเชื่อมต่อ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="shield"></i>
+              <span>Audit log</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Group 2: วิเคราะห์ -->
+      <div class="nav-group">
+        <div class="nav-section-title">วิเคราะห์</div>
+        <ul class="nav-list">
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="home"></i>
+              <span>Dashboard ผู้บริหาร</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="edit-3"></i>
+              <span>การใช้รถ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="map-pin"></i>
+              <span>การเดินทาง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="repeat"></i>
+              <span>แนวโน้มการจอง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="user"></i>
+              <span>เปรียบเทียบคนขับ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="list"></i>
+              <span>รายงาน</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ==========================================================================
+       MAIN CONTENT: F4 นโยบายการจอง + SLA
+       ========================================================================== */
+  -->
+  <main class="main-content">
+    
+    <!-- Header -->
+    <header class="page-header">
+      <div>
+        <h1 class="page-title">นโยบายการจอง</h1>
+        <p class="page-subtitle">ค่าที่ใช้ใน wireframe ทั้งหมดเป็นค่าสมมติ · รอยืนยันกับลูกค้า</p>
+      </div>
+      <div class="avatar-badge">กร</div>
+    </header>
+
+    <hr class="header-divider">
+
+    <!-- 2 Columns Grid -->
+    <div class="policy-grid">
+
+      <!-- Left Column Card: รายการนโยบาย 8 ข้อ -->
+      <div class="left-policy-card">
+        
+        <!-- Row 1 -->
+        <div class="policy-row">
+          <div class="policy-info">
+            <div class="policy-title">จองล่วงหน้าอย่างน้อย</div>
+            <div class="policy-desc">น้อยกว่านี้ = เร่งด่วน ➔ สายอนุมัติกฎที่ 3</div>
+          </div>
+          <input type="text" class="policy-input" value="4 ชม." />
+        </div>
+
+        <!-- Row 2 -->
+        <div class="policy-row">
+          <div class="policy-info">
+            <div class="policy-title">จองล่วงหน้าได้ไม่เกิน</div>
+            <div class="policy-desc">ปฏิทินผู้จองปิดวันที่เกิน</div>
+          </div>
+          <input type="text" class="policy-input" value="30 วัน" />
+        </div>
+
+        <!-- Row 3 -->
+        <div class="policy-row">
+          <div class="policy-info">
+            <div class="policy-title">จำนวนวันต่อการจองสูงสุด</div>
+            <div class="policy-desc">เกิน = ต้องอนุมัติเพิ่ม 1 ขั้น</div>
+          </div>
+          <input type="text" class="policy-input" value="2 วัน" />
+        </div>
+
+        <!-- Row 4 -->
+        <div class="policy-row">
+          <div class="policy-info">
+            <div class="policy-title">เวลาทำการ</div>
+            <div class="policy-desc">นอกเวลา = อนุมัติพิเศษ</div>
+          </div>
+          <input type="text" class="policy-input" value="จ–ศ 08:00–17:00" />
+        </div>
+
+        <!-- Row 5 -->
+        <div class="policy-row">
+          <div class="policy-info">
+            <div class="policy-title">ปฏิทินวันหยุด</div>
+            <div class="policy-desc">นำเข้าจาก HR · แสดงในปฏิทินผู้จอง</div>
+          </div>
+          <input type="text" class="policy-input" value="ปฏิทินธนาคาร 2569" />
+        </div>
+
+        <!-- Row 6 -->
+        <div class="policy-row">
+          <div class="policy-info">
+            <div class="policy-title">ยกเลิกโดยไม่ต้องระบุเหตุผลได้ถึง</div>
+            <div class="policy-desc">หลังจากนั้นบังคับเหตุผล</div>
+          </div>
+          <input type="text" class="policy-input" value="2 ชม. ก่อนเดินทาง" />
+        </div>
+
+        <!-- Row 7 -->
+        <div class="policy-row">
+          <div class="policy-info">
+            <div class="policy-title">เวลารอก่อนรายงาน No-show</div>
+            <div class="policy-desc">คนขับกดรายงานได้หลังครบเวลา</div>
+          </div>
+          <input type="text" class="policy-input" value="15 นาที" />
+        </div>
+
+        <!-- Row 8 -->
+        <div class="policy-row">
+          <div class="policy-info">
+            <div class="policy-title">คนขับต้องตอบรับงานภายใน</div>
+            <div class="policy-desc">เกิน = แจ้ง Fleet Admin</div>
+          </div>
+          <input type="text" class="policy-input" value="30 นาที" />
+        </div>
+
+      </div>
+
+      <!-- Right Column Card: SLA และการแจ้งเตือน -->
+      <div class="right-sla-card">
+        <div class="sla-card-title">SLA และการแจ้งเตือน</div>
+
+        <div class="sla-form-group">
+          <label class="sla-label">SLA ผู้อนุมัติ (ค่าเริ่มต้น)</label>
+          <input type="text" class="sla-input" value="24 ชม." />
+        </div>
+
+        <div class="sla-form-group">
+          <label class="sla-label">Reminder</label>
+          <input type="text" class="sla-input" value="ทุก 12 ชม. · ไม่เกิน 2 ครั้ง" />
+        </div>
+
+        <div class="sla-form-group">
+          <label class="sla-label">เมื่อเกิน SLA</label>
+          <input type="text" class="sla-input" value="ส่งต่อผู้อนุมัติลำดับถัดไป / ผู้บังคับบัญชา" />
+        </div>
+
+        <div class="sla-form-group">
+          <label class="sla-label">แจ้งเตือนผู้จองก่อนเดินทาง</label>
+          <input type="text" class="sla-input" value="1 วัน และ 1 ชม." />
+        </div>
+
+        <div class="sla-footer-note">
+          ตั้ง SLA แยกต่อระดับได้ในหน้าสายอนุมัติ
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Action Bar -->
+    <footer class="bottom-action-bar">
+      <div class="last-edited-text">แก้ไขล่าสุด: กรกนก ธ. · 12 ก.ย. 69 16:40</div>
+      <div class="action-btn-group">
+        <button type="button" class="btn-cancel">ยกเลิก</button>
+        <button type="button" class="btn-save">บันทึก · มีผลกับคำขอใหม่เท่านั้น</button>
+      </div>
+    </footer>
+
+  </main>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
