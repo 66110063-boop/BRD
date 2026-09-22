@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VRMS — ข้อมูลหลัก (F14)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ==========================================================================
+       VRMS Carpool — Design Tokens (KTB Theme 21 กันยายน 2569 ตามเอกสาร PDF)
+       Frame ขนาดตายตัว W: 1280px | H: 860px
+       ========================================================================== */
+    :root {
+      /* Brand & Actions */
+      --ktb-brand: #00A5E5;         /* โลโก้, ขีด active เมนูล่าง */
+      --ktb-action: #007AAE;        /* ทุกสิ่งที่กดได้: ปุ่มหลัก, ลิงก์, เมนู active (Contrast 4.78:1) */
+      --ktb-action-tint: #E6F6FD;   /* พื้นหลังชิปเลือก, แถบข้อมูล, เมนู active */
+      --primary-dark: #1E293B;      /* ปุ่มเข้ม, toggle active */
+
+      /* Neutrals */
+      --ink-900: #16181A;           /* หัวข้อ, ข้อความหลัก */
+      --ink-600: #5A6066;           /* ข้อความรอง, คำอธิบาย, ไอคอนเมนู */
+      --line-200: #E3E7EA;          /* เส้นขอบการ์ด, เส้นคั่น */
+      --paper: #FFFFFF;             /* พื้นการ์ด, ไซด์บาร์ */
+      --canvas: #F7F9FA;            /* พื้นหลังหน้าจอ */
+
+      /* Status */
+      --success: #14865A;
+      --warning: #946011;
+      --warning-bg: #FDF3E3;
+      --danger: #B3261E;
+      --danger-bg: #FCEBEA;
+
+      /* Typography: Anuphan 3 น้ำหนักเท่านั้น (400, 500, 600) ห้ามใช้ Bold 700 */
+      --font: 'Anuphan', system-ui, -apple-system, sans-serif;
+
+      /* Radii */
+      --r-card: 10px;               /* การ์ด, กล่องเนื้อหา */
+      --r-ghost: 8px;               /* ปุ่มขอบ, ชิป, ปุ่มทั่วไป */
+      --r-pill: 999px;              /* ป้ายสถานะ, Avatar, Toggle */
+    }
+
+    /* Reset & Rule: ทั้งระบบไม่มีเงาเด็ดขาด (Zero Box-Shadow) */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      box-shadow: none !important;
+    }
+
+    html, body {
+      width: 1280px;
+      height: 860px;
+      overflow: hidden;
+      background-color: var(--canvas);
+      color: var(--ink-900);
+      font-family: var(--font);
+    }
+
+    .app-frame {
+      width: 1280px;
+      height: 860px;
+      display: flex;
+      background-color: var(--canvas);
+      overflow: hidden;
+    }
+
+    /* ==========================================================================
+       SIDEBAR: เมนูด้านซ้าย (Fixed W: 220px, H: 860px)
+       ========================================================================== */
+    .sidebar {
+      width: 220px;
+      background-color: var(--paper);
+      border-right: 1px solid var(--line-200);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      padding: 24px 14px;
+      user-select: none;
+      height: 100%;
+    }
+
+    .sidebar-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 6px;
+      margin-bottom: 2px;
+    }
+    .brand-logo-icon {
+      width: 22px;
+      height: 22px;
+      background-color: var(--ktb-brand);
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .brand-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink-900);
+      letter-spacing: -0.2px;
+      line-height: 1;
+    }
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--ink-600);
+      padding-left: 38px;
+      margin-bottom: 22px;
+      font-weight: 400;
+    }
+
+    /* Nav Section */
+    .nav-group {
+      margin-bottom: 18px;
+    }
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-600);
+      padding: 5px 8px;
+      letter-spacing: 0.2px;
+    }
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6.5px 10px;
+      border-radius: var(--r-ghost);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-600);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 120ms ease, color 120ms ease;
+    }
+    .nav-item:hover {
+      background-color: var(--canvas);
+      color: var(--ink-900);
+    }
+    /* Active Item: ข้อมูลหลัก */
+    .nav-item.active {
+      background-color: var(--ktb-action-tint);
+      color: var(--ktb-action);
+      font-weight: 600;
+    }
+    .nav-item i,
+    .nav-item svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       MAIN CONTENT: F14 ข้อมูลหลัก (กว้าง 1060px)
+       ========================================================================== */
+    .main-content {
+      flex: 1;
+      height: 100%;
+      background-color: var(--canvas);
+      padding: 22px 28px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    /* Header */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ink-900);
+      line-height: 1.3;
+    }
+    .page-subtitle {
+      font-size: 12px;
+      color: var(--ink-600);
+      margin-top: 3px;
+      font-weight: 400;
+    }
+    .avatar-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--r-pill);
+      background-color: var(--ktb-action-tint);
+      color: var(--ktb-action);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Header Divider */
+    .header-divider {
+      border: none;
+      height: 1px;
+      background-color: var(--line-200);
+      margin: 12px 0 14px 0;
+    }
+
+    /* ==========================================================================
+       TABS & ACTION ROW
+       ========================================================================== */
+    .tabs-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line-200);
+      margin-bottom: 14px;
+    }
+    .tabs-list {
+      display: flex;
+      gap: 26px;
+      list-style: none;
+    }
+    .tab-item {
+      padding: 6px 2px 10px 2px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-600);
+      text-decoration: none;
+      cursor: pointer;
+      position: relative;
+      transition: color 120ms ease;
+      white-space: nowrap;
+    }
+    .tab-item:hover {
+      color: var(--ink-900);
+    }
+    .tab-item.active {
+      font-weight: 600;
+      color: var(--ink-900);
+    }
+    .tab-item.active::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--ink-900);
+    }
+
+    .btn-add-vehicle {
+      background-color: var(--primary-dark);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--r-ghost);
+      padding: 7px 18px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      transition: background-color 120ms ease;
+    }
+    .btn-add-vehicle:hover {
+      background-color: #0F172A;
+    }
+
+    /* ==========================================================================
+       DATA TABLE CARD
+       ========================================================================== */
+    .table-card {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-card);
+      padding: 4px 18px;
+      margin-bottom: 14px;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 12px;
+    }
+    .data-table th {
+      background-color: transparent;
+      color: var(--ink-600);
+      font-weight: 500;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line-200);
+      font-size: 11.5px;
+      white-space: nowrap;
+    }
+    .data-table td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line-200);
+      color: var(--ink-900);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+    .data-table tr:hover td {
+      background-color: #FAFCFD;
+    }
+
+    .vehicle-type-cell {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-900);
+    }
+
+    /* Toggle Switch (iOS style flat) */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+      vertical-align: middle;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--line-200);
+      transition: background-color 150ms ease;
+      border-radius: var(--r-pill);
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #FFFFFF;
+      transition: transform 150ms ease;
+      border-radius: 50%;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: var(--primary-dark);
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(16px);
+    }
+
+    /* Action Edit Button */
+    .btn-edit {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-ghost);
+      padding: 5px 14px;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--ink-900);
+      cursor: pointer;
+      transition: all 120ms ease;
+    }
+    .btn-edit:hover {
+      border-color: var(--ktb-action);
+      color: var(--ktb-action);
+      background-color: var(--ktb-action-tint);
+    }
+
+    /* ==========================================================================
+       BOTTOM EXPLANATORY 3-CARD GRID
+       ========================================================================== */
+    .info-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .info-card {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-card);
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+    }
+    .info-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-900);
+      margin-bottom: 4px;
+    }
+    .info-card-text {
+      font-size: 11px;
+      color: var(--ink-600);
+      line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1280 x 860 Container Frame -->
+  <div class="app-frame">
+
+    <!-- ==========================================================================
+         SIDEBAR: เมนูด้านซ้าย
+         ========================================================================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand-row">
+        <div class="brand-logo-icon"></div>
+        <div class="brand-title">VRMS</div>
+      </div>
+      <div class="brand-subtitle">Key User · ทั้งองค์กร</div>
+
+      <nav>
+        <!-- Group 1: ตั้งค่าระบบ -->
+        <div class="nav-group">
+          <div class="nav-section-title">ตั้งค่าระบบ</div>
+          <ul class="nav-list">
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="list"></i>
+                <span>สายอนุมัติ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="check"></i>
+                <span>อนุมัติอัตโนมัติ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="key"></i>
+                <span>กฎจัดสรรรถ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="clock"></i>
+                <span>นโยบายการจอง</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="file-text"></i>
+                <span>ฟอร์มจอง</span>
+              </a>
+            </li>
+            <li>
+              <!-- Active Page: F14 ข้อมูลหลัก -->
+              <a class="nav-item active" href="#">
+                <i data-lucide="database"></i>
+                <span>ข้อมูลหลัก</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="user"></i>
+                <span>สิทธิ์การใช้งาน</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="bell"></i>
+                <span>แจ้งเตือนและเชื่อมต่อ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="shield"></i>
+                <span>Audit log</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Group 2: วิเคราะห์ -->
+        <div class="nav-group">
+          <div class="nav-section-title">วิเคราะห์</div>
+          <ul class="nav-list">
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="home"></i>
+                <span>Dashboard ผู้บริหาร</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="edit-3"></i>
+                <span>การใช้รถ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="map-pin"></i>
+                <span>การเดินทาง</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="repeat"></i>
+                <span>แนวโน้มการจอง</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="user"></i>
+                <span>เปรียบเทียบคนขับ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="list"></i>
+                <span>รายงาน</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ==========================================================================
+         MAIN CONTENT: F14 ข้อมูลหลัก
+         ========================================================================== -->
+    <main class="main-content">
+      
+      <!-- Page Header -->
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">ข้อมูลหลัก</h1>
+          <p class="page-subtitle">ค่ามาตรฐานที่ใช้ทั้งระบบ · เปลี่ยนแปลงมีผลต่อคำขอใหม่</p>
+        </div>
+        <div class="avatar-badge">กร</div>
+      </header>
+
+      <hr class="header-divider">
+
+      <!-- Tabs & Action Bar -->
+      <div class="tabs-bar">
+        <ul class="tabs-list">
+          <li><a class="tab-item active" href="#">ประเภทรถ (6)</a></li>
+          <li><a class="tab-item" href="#">สถานที่ขององค์กร (48)</a></li>
+          <li><a class="tab-item" href="#">หน่วยงาน</a></li>
+          <li><a class="tab-item" href="#">ประเภทภารกิจ (4)</a></li>
+          <li><a class="tab-item" href="#">ปฏิทินวันหยุด</a></li>
+        </ul>
+        <button type="button" class="btn-add-vehicle">
+          <span>+ เพิ่มประเภทรถ</span>
+        </button>
+      </div>
+
+      <!-- Data Table Card -->
+      <div class="table-card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width: 14%;">ประเภท</th>
+              <th style="width: 11%;">ที่นั่งมาตรฐาน</th>
+              <th style="width: 11%;">สัมภาระ</th>
+              <th style="width: 14%;">ใบขับขี่ที่ต้องมี</th>
+              <th style="width: 14%;">ผู้มีสิทธิ์ใช้</th>
+              <th style="width: 20%;">เงื่อนไขพิเศษ</th>
+              <th style="width: 8%; text-align: center;">ใช้งาน</th>
+              <th style="width: 8%; text-align: right;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1: รถเก๋ง -->
+            <tr>
+              <td class="vehicle-type-cell">รถเก๋ง</td>
+              <td>4</td>
+              <td>2 ใบ</td>
+              <td>ส่วนบุคคล / ท.2</td>
+              <td>ทุกระดับ</td>
+              <td>—</td>
+              <td style="text-align: center;">
+                <label class="toggle-switch">
+                  <input type="checkbox" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="btn-edit">แก้ไข</button>
+              </td>
+            </tr>
+
+            <!-- Row 2: SUV -->
+            <tr>
+              <td class="vehicle-type-cell">SUV</td>
+              <td>7</td>
+              <td>4 ใบ</td>
+              <td>ส่วนบุคคล / ท.2</td>
+              <td>ทุกระดับ</td>
+              <td>—</td>
+              <td style="text-align: center;">
+                <label class="toggle-switch">
+                  <input type="checkbox" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="btn-edit">แก้ไข</button>
+              </td>
+            </tr>
+
+            <!-- Row 3: Van -->
+            <tr>
+              <td class="vehicle-type-cell">Van</td>
+              <td>10</td>
+              <td>6 ใบ</td>
+              <td>ท.2</td>
+              <td>ทุกระดับ</td>
+              <td>ผู้โดยสาร &ge; 5 คน</td>
+              <td style="text-align: center;">
+                <label class="toggle-switch">
+                  <input type="checkbox" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="btn-edit">แก้ไข</button>
+              </td>
+            </tr>
+
+            <!-- Row 4: กระบะ -->
+            <tr>
+              <td class="vehicle-type-cell">กระบะ</td>
+              <td>2</td>
+              <td>แบบเปิด</td>
+              <td>ส่วนบุคคล / ท.2</td>
+              <td>ทุกระดับ</td>
+              <td>—</td>
+              <td style="text-align: center;">
+                <label class="toggle-switch">
+                  <input type="checkbox" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="btn-edit">แก้ไข</button>
+              </td>
+            </tr>
+
+            <!-- Row 5: EV -->
+            <tr>
+              <td class="vehicle-type-cell">EV</td>
+              <td>4</td>
+              <td>2 ใบ</td>
+              <td>ส่วนบุคคล / ท.2</td>
+              <td>ทุกระดับ</td>
+              <td>แบตคงเหลือและระยะทาง</td>
+              <td style="text-align: center;">
+                <label class="toggle-switch">
+                  <input type="checkbox" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="btn-edit">แก้ไข</button>
+              </td>
+            </tr>
+
+            <!-- Row 6: รถผู้บริหาร -->
+            <tr>
+              <td class="vehicle-type-cell">รถผู้บริหาร</td>
+              <td>4</td>
+              <td>2 ใบ</td>
+              <td>ท.2</td>
+              <td>ผู้บริหารขึ้นไป</td>
+              <td>ระบุชื่อคนขับได้ &middot; อนุมัติเพิ่ม 1 ขั้น</td>
+              <td style="text-align: center;">
+                <label class="toggle-switch">
+                  <input type="checkbox" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="btn-edit">แก้ไข</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Explanatory 3-Card Grid -->
+      <div class="info-cards-grid">
+        <!-- Card 1 -->
+        <div class="info-card">
+          <div class="info-card-title">ใช้ที่ไหน</div>
+          <div class="info-card-text">
+            การตรวจในหน้าฟอร์มจอง &middot; ตรวจที่นั่งและสัมภาระ &middot; ตรวจใบขับขี่ในขั้นตอนจัดรถและกำหนดคนขับ
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="info-card">
+          <div class="info-card-title">ขอใช้งานข้ามประเภทรถ</div>
+          <div class="info-card-text">
+            รถที่มีอยู่ไม่พอหรือผู้ขอเลือกไม่ได้ &middot; คำขอต้องอนุมัติแล้วไม่กระทบ
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="info-card">
+          <div class="info-card-title">สถานที่ขององค์กร</div>
+          <div class="info-card-text">
+            สาขาและอาคาร พร้อมพิกัดและเวลาเปิดปิด &middot; ลิงก์ตรงแสดงแผนที่ในหน้าค้นหาสถานที่
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
