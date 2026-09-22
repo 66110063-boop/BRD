@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VRMS — แจ้งเตือนและการเชื่อมต่อ (F6)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ==========================================================================
+       VRMS Carpool — Theme & Design Tokens (อ้างอิงตรงตาม Figma F6 100%)
+       ========================================================================== */
+    :root {
+      /* Charcoal & Slate Colors */
+      --primary-dark: #1E293B;      /* แบดจ์เชื่อมต่อแล้ว, ชิปที่เลือก (#1E293B) */
+      --primary-hover: #0F172A;
+      --active-nav-bg: #EDEDED;     /* แถบ active ใน sidebar (#EDEDED) */
+      
+      /* Neutrals & Text */
+      --text-dark: #0F172A;         /* หัวข้อหลัก, ชื่อระบบเชื่อมต่อ */
+      --text-body: #1E293B;         /* ข้อความทั่วไป */
+      --text-muted: #64748B;        /* คำอธิบายสถานะย่อย, วันที่ส่งล่าสุด */
+      --text-caption: #94A3B8;      /* หัวข้อหมวดหมู่เมนู */
+      
+      /* Borders & Surfaces */
+      --border-light: #E2E8F0;      /* ขอบการ์ด, เส้นแบ่ง header */
+      --border-input: #CBD5E1;      /* เส้นขอบกล่องข้อความ, ชิป unselected, ปุ่มทดสอบ */
+      
+      --bg-white: #FFFFFF;          /* พื้นการ์ด, ไซด์บาร์ */
+      --bg-canvas: #FAFAFA;         /* พื้นหลังจอ */
+      --bg-avatar: #E2E8F0;         /* พื้นหลัง Avatar 'กร' */
+      --bg-preview: #F8FAFC;        /* พื้นหลังกล่องตัวอย่างข้อความ */
+      --bg-tag: #F1F5F9;            /* พื้นหลังชิปแท็กตัวแปร */
+
+      /* Typography & Radii */
+      --font-family: 'Anuphan', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      --radius-card: 12px;
+      --radius-sm: 8px;
+      --radius-tag: 6px;
+      --radius-pill: 999px;
+    }
+
+    /* Reset & Rule: ไม่มีเงา (Zero Box-Shadow) */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      box-shadow: none !important;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-canvas);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ==========================================================================
+       SIDEBAR: เมนูด้านซ้าย
+       ========================================================================== */
+    .sidebar {
+      width: 220px;
+      background-color: var(--bg-white);
+      border-right: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      padding: 24px 14px;
+      user-select: none;
+    }
+
+    .sidebar-header {
+      padding-left: 6px;
+      margin-bottom: 24px;
+    }
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.1;
+      letter-spacing: -0.2px;
+    }
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    /* Nav Groups */
+    .nav-group {
+      margin-bottom: 22px;
+    }
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-caption);
+      padding: 6px 8px;
+      letter-spacing: 0.2px;
+    }
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 120ms ease, color 120ms ease;
+    }
+    .nav-item:hover {
+      background-color: #F1F5F9;
+      color: var(--text-dark);
+    }
+    /* Active Item: แจ้งเตือนและเชื่อมต่อ (พื้นสีเทาอ่อน #EDEDED ตามตัวอย่าง) */
+    .nav-item.active {
+      background-color: var(--active-nav-bg);
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+    .nav-item i,
+    .nav-item svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       MAIN CONTENT: F6 แจ้งเตือนและการเชื่อมต่อ
+       ========================================================================== */
+    .main-content {
+      flex: 1;
+      background-color: var(--bg-canvas);
+      padding: 28px 40px 60px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      max-width: 1240px;
+    }
+
+    /* Page Header */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-dark);
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+    .page-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .avatar-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-pill);
+      background-color: var(--bg-avatar);
+      color: #475569;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Header Divider */
+    .header-divider {
+      border: none;
+      height: 1px;
+      background-color: var(--border-light);
+      margin: 18px 0 20px 0;
+    }
+
+    /* ==========================================================================
+       TOP 6 INTEGRATION CARDS (3x2 GRID)
+       ========================================================================== */
+    .integrations-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .integration-card {
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-card);
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 112px;
+    }
+
+    .card-top-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .card-service-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-dark);
+      line-height: 1.3;
+    }
+
+    /* Status Badges */
+    .badge-status {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 12px;
+      border-radius: var(--radius-pill);
+      white-space: nowrap;
+    }
+    /* เชื่อมต่อแล้ว: สีชาร์โคล #1E293B */
+    .badge-connected {
+      background-color: var(--primary-dark);
+      color: #FFFFFF;
+    }
+    /* ยังไม่เปิด: สีเทาอ่อน */
+    .badge-inactive {
+      background-color: #E2E8F0;
+      color: #64748B;
+    }
+
+    .card-desc-text {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .card-settings-link {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-dark);
+      text-decoration: underline;
+      cursor: pointer;
+      display: inline-block;
+      margin-top: 10px;
+      align-self: flex-start;
+    }
+    .card-settings-link:hover {
+      color: #000000;
+    }
+
+    /* ==========================================================================
+       BOTTOM SECTION: TEMPLATE EDITOR (LEFT) + PREVIEW (RIGHT)
+       ========================================================================== */
+    .template-section-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    /* Left Card: แม่แบบข้อความ */
+    .template-editor-card {
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-card);
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section-card-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    /* Channel Switcher Chips */
+    .channel-chips-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .channel-chip {
+      padding: 6px 18px;
+      border-radius: var(--radius-pill);
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-input);
+      color: var(--text-dark);
+      transition: all 120ms ease;
+    }
+    /* Selected Channels (อีเมล, LINE เป็นสีเข้มตามภาพ) */
+    .channel-chip.selected {
+      background-color: var(--primary-dark);
+      color: #FFFFFF;
+      border: 1px solid var(--primary-dark);
+    }
+
+    /* Textarea Box */
+    .template-textarea {
+      margin-top: 14px;
+      width: 100%;
+      min-height: 110px;
+      border: 1px solid var(--border-input);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      background-color: var(--bg-white);
+      resize: vertical;
+      outline: none;
+      transition: border-color 120ms ease;
+    }
+    .template-textarea:focus {
+      border-color: var(--primary-dark);
+    }
+
+    /* Dynamic Tag Pills */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .tag-chip {
+      background-color: var(--bg-tag);
+      color: #475569;
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: var(--radius-tag);
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 120ms ease;
+    }
+    .tag-chip:hover {
+      background-color: #E2E8F0;
+      color: var(--text-dark);
+    }
+
+    /* Right Card: ตัวอย่างที่ผู้รับเห็น */
+    .preview-card {
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-card);
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-bubble {
+      background-color: var(--bg-preview);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      line-height: 1.45;
+    }
+    .preview-main-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+    .preview-sub-text {
+      font-size: 12px;
+      color: #475569;
+    }
+    .preview-action-link {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    .btn-send-test {
+      margin-top: 14px;
+      width: 100%;
+      height: 40px;
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-input);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 120ms ease;
+    }
+    .btn-send-test:hover {
+      background-color: #F8FAFC;
+      border-color: #94A3B8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SIDEBAR
+       ========================================================================== -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-title">VRMS</div>
+      <div class="brand-subtitle">Key User · ทั้งองค์กร</div>
+    </div>
+
+    <nav>
+      <!-- Group 1: ตั้งค่าระบบ -->
+      <div class="nav-group">
+        <div class="nav-section-title">ตั้งค่าระบบ</div>
+        <ul class="nav-list">
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="list"></i>
+              <span>สายอนุมัติ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="check"></i>
+              <span>อนุมัติอัตโนมัติ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="key"></i>
+              <span>กฎจัดสรรรถ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="clock"></i>
+              <span>นโยบายการจอง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="file-text"></i>
+              <span>ฟอร์มจอง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="database"></i>
+              <span>ข้อมูลหลัก</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="user"></i>
+              <span>สิทธิ์การใช้งาน</span>
+            </a>
+          </li>
+          <li>
+            <!-- Active Page: F6 แจ้งเตือนและการเชื่อมต่อ -->
+            <a class="nav-item active" href="#">
+              <i data-lucide="bell"></i>
+              <span>แจ้งเตือนและเชื่อมต่อ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="shield"></i>
+              <span>Audit log</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Group 2: วิเคราะห์ -->
+      <div class="nav-group">
+        <div class="nav-section-title">วิเคราะห์</div>
+        <ul class="nav-list">
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="home"></i>
+              <span>Dashboard ผู้บริหาร</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="edit-3"></i>
+              <span>การใช้รถ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="map-pin"></i>
+              <span>การเดินทาง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="repeat"></i>
+              <span>แนวโน้มการจอง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="user"></i>
+              <span>เปรียบเทียบคนขับ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="list"></i>
+              <span>รายงาน</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ==========================================================================
+       MAIN CONTENT: F6 แจ้งเตือนและการเชื่อมต่อ
+       ========================================================================== -->
+  <main class="main-content">
+    
+    <!-- Header -->
+    <header class="page-header">
+      <div>
+        <h1 class="page-title">แจ้งเตือนและการเชื่อมต่อ</h1>
+        <p class="page-subtitle">สถานะการเชื่อมต่อกับระบบอื่น และแม่แบบข้อความ</p>
+      </div>
+      <div class="avatar-badge">กร</div>
+    </header>
+
+    <hr class="header-divider">
+
+    <!-- Top 6 Integration Cards (3x2 Grid) -->
+    <div class="integrations-grid">
+
+      <!-- Card 1: อีเมล (SMTP) -->
+      <div class="integration-card">
+        <div>
+          <div class="card-top-row">
+            <div class="card-service-title">อีเมล (SMTP)</div>
+            <span class="badge-status badge-connected">เชื่อมต่อแล้ว</span>
+          </div>
+          <div class="card-desc-text">ส่งล่าสุด 09:30</div>
+        </div>
+        <a class="card-settings-link" href="#">ตั้งค่า</a>
+      </div>
+
+      <!-- Card 2: LINE Official Account -->
+      <div class="integration-card">
+        <div>
+          <div class="card-top-row">
+            <div class="card-service-title">LINE Official Account</div>
+            <span class="badge-status badge-connected">เชื่อมต่อแล้ว</span>
+          </div>
+          <div class="card-desc-text">LIFF สำหรับคนขับ · ส่งล่าสุด 09:28</div>
+        </div>
+        <a class="card-settings-link" href="#">ตั้งค่า</a>
+      </div>
+
+      <!-- Card 3: SMS -->
+      <div class="integration-card">
+        <div>
+          <div class="card-top-row">
+            <div class="card-service-title">SMS</div>
+            <span class="badge-status badge-inactive">ยังไม่เปิด</span>
+          </div>
+          <div class="card-desc-text">ต้องมีสัญญาผู้ให้บริการ</div>
+        </div>
+        <a class="card-settings-link" href="#">ตั้งค่า</a>
+      </div>
+
+      <!-- Card 4: Outlook / Google Calendar -->
+      <div class="integration-card">
+        <div>
+          <div class="card-top-row">
+            <div class="card-service-title">Outlook / Google Calendar</div>
+            <span class="badge-status badge-connected">เชื่อมต่อแล้ว</span>
+          </div>
+          <div class="card-desc-text">ซิงก์ล่าสุด 09:25 · สร้าง/แก้/ลบนัดตามงาน</div>
+        </div>
+        <a class="card-settings-link" href="#">ตั้งค่า</a>
+      </div>
+
+      <!-- Card 5: Active Directory / HR -->
+      <div class="integration-card">
+        <div>
+          <div class="card-top-row">
+            <div class="card-service-title">Active Directory / HR</div>
+            <span class="badge-status badge-connected">เชื่อมต่อแล้ว</span>
+          </div>
+          <div class="card-desc-text">ซิงก์ทุกคืน 02:00 · สายบังคับบัญชา วันลา</div>
+        </div>
+        <a class="card-settings-link" href="#">ตั้งค่า</a>
+      </div>
+
+      <!-- Card 6: GPS รถ -->
+      <div class="integration-card">
+        <div>
+          <div class="card-top-row">
+            <div class="card-service-title">GPS รถ</div>
+            <span class="badge-status badge-inactive">ยังไม่เปิด</span>
+          </div>
+          <div class="card-desc-text">เฟส 2</div>
+        </div>
+        <a class="card-settings-link" href="#">ตั้งค่า</a>
+      </div>
+
+    </div>
+
+    <!-- Bottom Section: Template Editor & Preview (2 Columns) -->
+    <div class="template-section-grid">
+
+      <!-- Left: แม่แบบข้อความ -->
+      <div class="template-editor-card">
+        <div class="section-card-title">แม่แบบ: จัดรถแล้ว (ถึงผู้จอง)</div>
+        
+        <!-- Channel Chips -->
+        <div class="channel-chips-row">
+          <div class="channel-chip selected">อีเมล</div>
+          <div class="channel-chip selected">LINE</div>
+          <div class="channel-chip">SMS</div>
+        </div>
+
+        <!-- Template Textarea -->
+        <textarea class="template-textarea" rows="4">จัดรถให้คำขอ {เลขที่} แล้ว
+{วันเวลา} · {จุดรับ}
+รถ {ทะเบียน} · คนขับ {คนขับ} {เบอร์คนขับ}
+[ดูสลิป]</textarea>
+
+        <!-- Dynamic Tags -->
+        <div class="tags-container">
+          <span class="tag-chip">เลขที่</span>
+          <span class="tag-chip">วันเวลา</span>
+          <span class="tag-chip">จุดรับ</span>
+          <span class="tag-chip">ทะเบียน</span>
+          <span class="tag-chip">คนขับ</span>
+          <span class="tag-chip">เบอร์คนขับ</span>
+        </div>
+      </div>
+
+      <!-- Right: ตัวอย่างที่ผู้รับเห็น -->
+      <div class="preview-card">
+        <div class="section-card-title">ตัวอย่างที่ผู้รับเห็น</div>
+        
+        <div class="preview-bubble">
+          <div class="preview-main-text">จัดรถให้คำขอ VR-690918-017 แล้ว</div>
+          <div class="preview-sub-text">ศ 25 ก.ย. 69 09:00 · โถงชั้น 1 อาคาร 1</div>
+          <div class="preview-sub-text">รถ กข 1234 · คนขับ สมศักดิ์ ม. 081-234-5678</div>
+          <div class="preview-action-link">[ดูสลิป]</div>
+        </div>
+
+        <button type="button" class="btn-send-test">ส่งทดสอบถึงตัวเอง</button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
