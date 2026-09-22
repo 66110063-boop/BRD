@@ -12,7 +12,7 @@
   <style>
     /* ==========================================================================
        VRMS Carpool — Design Tokens (KTB Theme 21 กันยายน 2569 ตามเอกสาร PDF)
-       Frame ขนาด W: 1860px | H: 860px
+       Frame ขนาดตายตัว W: 1280px | H: 860px
        ========================================================================== */
     :root {
       /* Brand & Actions */
@@ -54,7 +54,7 @@
     }
 
     html, body {
-      width: 1860px;
+      width: 1280px;
       height: 860px;
       overflow: hidden;
       background-color: var(--canvas);
@@ -63,23 +63,24 @@
     }
 
     .app-frame {
-      width: 1860px;
+      width: 1280px;
       height: 860px;
       display: flex;
       background-color: var(--canvas);
+      overflow: hidden;
     }
 
     /* ==========================================================================
-       SIDEBAR: เมนูด้านซ้าย
+       SIDEBAR: เมนูด้านซ้าย (Fixed W: 220px, H: 860px)
        ========================================================================== */
     .sidebar {
-      width: 240px;
+      width: 220px;
       background-color: var(--paper);
       border-right: 1px solid var(--line-200);
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
-      padding: 24px 16px;
+      padding: 24px 14px;
       user-select: none;
       height: 100%;
     }
@@ -109,13 +110,13 @@
       font-size: 11px;
       color: var(--ink-600);
       padding-left: 38px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       font-weight: 400;
     }
 
     /* Nav Section */
     .nav-group {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     .nav-section-title {
       font-size: 11px;
@@ -134,7 +135,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 7px 10px;
+      padding: 6.5px 10px;
       border-radius: var(--r-ghost);
       font-size: 12.5px;
       font-weight: 500;
@@ -162,13 +163,13 @@
     }
 
     /* ==========================================================================
-       MAIN CONTENT: F12 รายงาน (ขนาดกว้างรองรับ 1860px)
+       MAIN CONTENT: F12 รายงาน (กว้าง 1060px)
        ========================================================================== */
     .main-content {
       flex: 1;
       height: 100%;
       background-color: var(--canvas);
-      padding: 24px 44px;
+      padding: 24px 28px;
       display: flex;
       flex-direction: column;
       overflow-y: auto;
@@ -189,7 +190,7 @@
     .page-subtitle {
       font-size: 12px;
       color: var(--ink-600);
-      margin-top: 4px;
+      margin-top: 3px;
       font-weight: 400;
     }
     .avatar-badge {
@@ -210,7 +211,7 @@
       border: none;
       height: 1px;
       background-color: var(--line-200);
-      margin: 16px 0 18px 0;
+      margin: 12px 0 14px 0;
     }
 
     /* Top Action Bar (ขวาบน) */
@@ -218,16 +219,16 @@
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 10px;
+      margin-bottom: 14px;
     }
     .btn-auto-schedule {
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-ghost);
-      padding: 8px 22px;
+      padding: 7px 18px;
       font-family: inherit;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 500;
       color: var(--ink-900);
       cursor: pointer;
@@ -242,9 +243,9 @@
       color: #FFFFFF;
       border: none;
       border-radius: var(--r-ghost);
-      padding: 8px 22px;
+      padding: 7px 18px;
       font-family: inherit;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -263,25 +264,25 @@
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-card);
-      padding: 4px 20px;
-      margin-bottom: 16px;
+      padding: 4px 18px;
+      margin-bottom: 14px;
     }
     .data-table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 12.5px;
+      font-size: 12px;
     }
     .data-table th {
       background-color: transparent;
       color: var(--ink-600);
       font-weight: 500;
-      padding: 14px 16px;
+      padding: 12px 14px;
       border-bottom: 1px solid var(--line-200);
       font-size: 11.5px;
     }
     .data-table td {
-      padding: 15px 16px;
+      padding: 13px 14px;
       border-bottom: 1px solid var(--line-200);
       color: var(--ink-900);
       vertical-align: middle;
@@ -295,32 +296,32 @@
 
     /* Column Styles */
     .report-title {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--ink-900);
     }
     .report-desc {
       font-size: 11px;
       color: var(--ink-600);
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
     .format-btn-group {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .btn-format {
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-ghost);
-      padding: 5px 14px;
+      padding: 4px 12px;
       font-family: inherit;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 500;
       color: var(--ink-900);
       cursor: pointer;
-      min-width: 48px;
+      min-width: 44px;
       text-align: center;
       transition: all 120ms ease;
     }
@@ -332,9 +333,9 @@
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-ghost);
-      padding: 5px 16px;
+      padding: 4.5px 14px;
       font-family: inherit;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 500;
       color: var(--ink-900);
       cursor: pointer;
@@ -347,7 +348,7 @@
     }
     .text-dash {
       color: var(--ink-600);
-      padding-left: 20px;
+      padding-left: 18px;
     }
 
     /* ==========================================================================
@@ -357,7 +358,7 @@
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-card);
-      padding: 13px 24px;
+      padding: 12px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -365,19 +366,19 @@
     .export-status-left {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 12.5px;
+      gap: 8px;
+      font-size: 12px;
       color: var(--ink-900);
       font-weight: 500;
     }
     .export-status-left i,
     .export-status-left svg {
-      width: 15px;
-      height: 15px;
+      width: 14px;
+      height: 14px;
       color: var(--ink-600);
     }
     .progress-bar-wrap {
-      width: 240px;
+      width: 220px;
       height: 6px;
       background-color: var(--line-200);
       border-radius: 3px;
@@ -393,7 +394,7 @@
 </head>
 <body>
 
-  <!-- 1860 x 860 Container Frame -->
+  <!-- 1280 x 860 Container Frame -->
   <div class="app-frame">
 
     <!-- ==========================================================================
@@ -541,11 +542,11 @@
         <table class="data-table">
           <thead>
             <tr>
-              <th style="width: 32%;">รายงาน</th>
-              <th style="width: 28%;">ใครเห็นได้</th>
-              <th style="width: 14%;">รอบ</th>
-              <th style="width: 13%;">ส่งออก</th>
-              <th style="width: 13%;">การตั้งค่า</th>
+              <th style="width: 30%;">รายงาน</th>
+              <th style="width: 30%;">ใครเห็นได้</th>
+              <th style="width: 12%;">รอบ</th>
+              <th style="width: 14%;">ส่งออก</th>
+              <th style="width: 14%;">การตั้งค่า</th>
             </tr>
           </thead>
           <tbody>
