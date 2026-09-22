@@ -6,43 +6,41 @@
   <title>VRMS — สายอนุมัติ (F1)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     /* ==========================================================================
-       VRMS Carpool — Design Tokens (KTB Theme 21 กันยายน 2569)
+       VRMS Carpool — Theme & Design Tokens (อ้างอิงตรงตามรูปภาพ 100%)
        ========================================================================== */
     :root {
-      /* Brand & Actions */
-      --ktb-brand: #00A5E5;         /* โลโก้, ขีด active */
-      --ktb-action: #007AAE;        /* ทุกสิ่งที่กดได้: ปุ่มหลัก, ลิงก์, กรอบที่เลือก (Contrast 4.78:1) */
-      --ktb-action-tint: #E6F6FD;   /* พื้นหลังที่เลือก, แถบ active, ชิปเงื่อนไข */
+      /* Brand & Action Colors */
+      --color-brand-cyan: #00A5E5;      /* โลโก้สี่เหลี่ยม VRMS */
+      --color-action-blue: #007AAE;     /* ปุ่มบันทึก, ตัวเลขลำดับ, ขอบการ์ดที่เลือก */
+      --color-action-hover: #006894;
+      --color-tint-blue: #D9F2FD;       /* พื้นหลังแถบ active, ชิปเงื่อนไข, กล่องทดสอบกฎ, Avatar */
+      
+      /* Neutral & Text Colors */
+      --text-dark: #0F172A;             /* หัวข้อหลัก, ตัวเลข, ข้อความสำคัญ */
+      --text-body: #1E293B;             /* ข้อความทั่วไป */
+      --text-muted: #64748B;            /* คำอธิบายรอง, สายบังคับบัญชา */
+      --text-caption: #94A3B8;          /* วันที่แก้ไข, หมายเหตุ, SLA tag */
+      
+      /* Borders & Backgrounds */
+      --border-light: #E2E8F0;          /* เส้นขอบการ์ด, เส้นแบ่ง header */
+      --border-input: #CBD5E1;          /* เส้นขอบปุ่ม ghost, ชิปประ */
+      --bg-white: #FFFFFF;              /* พื้นหลังการ์ด, ไซด์บาร์ */
+      --bg-canvas: #F8FAFC;             /* พื้นหลังหน้าจอหลัก */
 
-      /* Neutrals */
-      --ink-900: #16181A;           /* หัวข้อ, ข้อความหลัก */
-      --ink-600: #5A6066;           /* ข้อความรอง, คำอธิบาย, ไอคอนเมนู */
-      --line-200: #E3E7EA;          /* เส้นขอบการ์ด, เส้นคั่น */
-      --paper: #FFFFFF;             /* พื้นการ์ด, ไซด์บาร์ */
-      --canvas: #F7F9FA;            /* พื้นหลังหน้าจอ */
-
-      /* Status */
-      --success: #14865A;
-      --warning: #946011;
-      --warning-bg: #FDF3E3;
-      --danger: #B3261E;
-      --danger-bg: #FCEBEA;
-
-      /* Typography */
-      --font: 'Anuphan', system-ui, -apple-system, sans-serif;
-
-      /* Radius */
-      --r-card: 10px;
-      --r-ghost: 8px;
-      --r-pill: 999px;
+      /* Typography & Shapes */
+      --font-family: 'Anuphan', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      --radius-card: 12px;
+      --radius-step: 10px;
+      --radius-sm: 8px;
+      --radius-pill: 999px;
     }
 
-    /* Reset & Rule: ทั้งระบบไม่มีเงา (No box-shadow) */
+    /* Reset & Rule: ไม่มีเงา (Zero Box-Shadow) */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -52,52 +50,64 @@
     }
 
     body {
-      font-family: var(--font);
-      background-color: var(--canvas);
-      color: var(--ink-900);
+      font-family: var(--font-family);
+      background-color: var(--bg-canvas);
+      color: var(--text-dark);
       min-height: 100vh;
       display: flex;
     }
 
     /* ==========================================================================
-       SIDEBAR: Key User · ทั้งองค์กร (ตรงตามตัวอย่าง Figma 100%)
+       SIDEBAR: เมนูด้านซ้าย
        ========================================================================== */
     .sidebar {
       width: 220px;
-      background-color: var(--paper);
-      border-right: 1px solid var(--line-200);
+      background-color: var(--bg-white);
+      border-right: 1px solid var(--border-light);
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
       padding: 24px 14px;
+      user-select: none;
     }
 
-    .sidebar-header {
+    .sidebar-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       padding-left: 6px;
-      margin-bottom: 24px;
+      margin-bottom: 2px;
+    }
+    .brand-logo-icon {
+      width: 22px;
+      height: 22px;
+      background-color: var(--color-brand-cyan);
+      border-radius: 6px;
+      flex-shrink: 0;
     }
     .brand-title {
       font-size: 18px;
-      font-weight: 600;
-      color: var(--ktb-brand);
-      line-height: 1.1;
+      font-weight: 700;
+      color: var(--text-dark);
       letter-spacing: -0.2px;
+      line-height: 1;
     }
     .brand-subtitle {
       font-size: 11px;
-      color: var(--ink-600);
-      margin-top: 3px;
+      color: var(--text-muted);
+      padding-left: 38px;
+      margin-bottom: 24px;
       font-weight: 400;
     }
 
     /* Nav Section */
     .nav-group {
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
     .nav-section-title {
       font-size: 11px;
       font-weight: 600;
-      color: var(--ink-600);
+      color: var(--text-caption);
       padding: 6px 8px;
       letter-spacing: 0.2px;
     }
@@ -111,113 +121,114 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 7px 10px;
-      border-radius: var(--r-ghost);
+      padding: 7.5px 10px;
+      border-radius: var(--radius-sm);
       font-size: 12.5px;
       font-weight: 500;
-      color: var(--ink-600);
+      color: var(--text-muted);
       text-decoration: none;
       cursor: pointer;
-      transition: all 120ms ease;
+      transition: background-color 120ms ease, color 120ms ease;
     }
     .nav-item:hover {
-      background-color: var(--canvas);
-      color: var(--ink-900);
+      background-color: #F1F5F9;
+      color: var(--text-dark);
     }
-    /* Active Item for F1: สายอนุมัติ (พื้นฟ้าอ่อน) */
+    /* Active Item: สายอนุมัติ (พื้นสีฟ้าอ่อน #D9F2FD, ตัวหนังสือ #007AAE) */
     .nav-item.active {
-      background-color: var(--ktb-action-tint);
-      color: var(--ktb-action);
+      background-color: var(--color-tint-blue);
+      color: var(--color-action-blue);
       font-weight: 600;
     }
     .nav-item i,
     .nav-item svg {
-      width: 16px;
-      height: 16px;
-      stroke-width: 1.8;
+      width: 15px;
+      height: 15px;
+      stroke-width: 2;
       flex-shrink: 0;
     }
 
     /* ==========================================================================
-       MAIN CONTENT: F1 สายอนุมัติ
+       MAIN CONTENT
        ========================================================================== */
     .main-content {
       flex: 1;
-      background-color: var(--canvas);
-      padding: 28px 36px;
+      background-color: var(--bg-canvas);
+      padding: 28px 40px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
       overflow-y: auto;
+      max-width: 1240px;
     }
 
-    /* Top Page Header */
+    /* Header */
     .page-header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
+      margin-bottom: 22px;
     }
     .page-title {
       font-size: 22px;
-      font-weight: 600;
-      color: var(--ink-900);
+      font-weight: 700;
+      color: var(--text-dark);
       letter-spacing: -0.3px;
       line-height: 1.2;
     }
     .page-subtitle {
       font-size: 12px;
-      color: var(--ink-600);
+      color: var(--text-muted);
       margin-top: 4px;
     }
-    .user-avatar-badge {
+    .avatar-badge {
       width: 32px;
       height: 32px;
-      border-radius: var(--r-pill);
-      background-color: var(--ktb-action-tint);
-      color: var(--ktb-action);
+      border-radius: var(--radius-pill);
+      background-color: var(--color-tint-blue);
+      color: var(--color-action-blue);
       font-size: 12px;
       font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid #d4edf9;
     }
 
-    /* Approval Grid (Left List + Right Details) */
-    .approval-grid {
+    /* Grid Layout: ซ้าย 330px, ขวา 1fr */
+    .content-grid {
       display: grid;
-      grid-template-columns: 340px 1fr;
+      grid-template-columns: 330px 1fr;
       gap: 20px;
       align-items: start;
     }
 
-    /* Left Rule Column */
-    .rule-list-column {
+    /* ==========================================================================
+       LEFT COLUMN: รายการกฎ (4)
+       ========================================================================== */
+    .rules-column {
       display: flex;
       flex-direction: column;
-      gap: 12px;
     }
-    .rule-list-header {
+    .rules-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 2px;
+      margin-bottom: 12px;
     }
-    .rule-count-heading {
-      font-size: 13px;
+    .rules-count-title {
+      font-size: 13.5px;
       font-weight: 600;
-      color: var(--ink-900);
+      color: var(--text-dark);
     }
     .btn-add-rule {
-      background-color: var(--paper);
-      border: 1px solid var(--line-200);
-      border-radius: var(--r-ghost);
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-input);
+      border-radius: var(--radius-sm);
       height: 28px;
       padding: 0 12px;
-      font-family: var(--font);
+      font-family: inherit;
       font-size: 12px;
       font-weight: 500;
-      color: var(--ink-900);
+      color: var(--text-dark);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -225,168 +236,173 @@
       transition: all 120ms ease;
     }
     .btn-add-rule:hover {
-      border-color: var(--ktb-action);
-      color: var(--ktb-action);
+      border-color: var(--color-action-blue);
+      color: var(--color-action-blue);
     }
 
-    /* Rule Items */
-    .rule-items-container {
+    .rules-list {
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
-    .rule-item-card {
-      background-color: var(--paper);
-      border: 1px solid var(--line-200);
-      border-radius: var(--r-card);
+    .rule-card {
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-card);
       padding: 12px 14px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       cursor: pointer;
-      transition: all 120ms ease;
-    }
-    .rule-item-card:hover {
-      background-color: #fafbfc;
-    }
-    /* Selected Rule: Blue Border exactly like reference image */
-    .rule-item-card.selected {
-      border: 1.5px solid var(--ktb-action);
-      background-color: var(--paper);
-    }
-    .rule-drag-dots {
-      color: #b0b8c0;
-      font-size: 13px;
-      letter-spacing: -1px;
+      transition: border-color 120ms ease;
       user-select: none;
+    }
+    .rule-card:hover {
+      border-color: #CBD5E1;
+    }
+    /* กฎที่ 2 ถูกเลือก: เส้นขอบสีฟ้าตามภาพ */
+    .rule-card.selected {
+      border: 1.5px solid var(--color-action-blue);
+      background-color: var(--bg-white);
+    }
+
+    .drag-handle {
+      color: var(--text-caption);
+      font-size: 14px;
+      line-height: 1;
+      letter-spacing: -2px;
       cursor: grab;
     }
-    .rule-index-bubble {
+    .rule-num-circle {
       width: 22px;
       height: 22px;
-      border-radius: var(--r-pill);
-      border: 1.5px solid var(--ink-900);
+      border-radius: var(--radius-pill);
+      border: 1.5px solid #334155;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 11px;
       font-weight: 600;
-      color: var(--ink-900);
+      color: var(--text-dark);
       flex-shrink: 0;
     }
-    .rule-text-block {
-      flex: 1;
-      line-height: 1.3;
+    .rule-card.selected .rule-num-circle {
+      border-color: var(--text-dark);
     }
-    .rule-name {
+    .rule-info {
+      flex: 1;
+      line-height: 1.35;
+    }
+    .rule-title {
       font-size: 13px;
       font-weight: 600;
-      color: var(--ink-900);
+      color: var(--text-dark);
     }
-    .rule-flow {
+    .rule-subtitle {
       font-size: 11px;
-      color: var(--ink-600);
+      color: var(--text-muted);
       margin-top: 2px;
     }
-    .rule-footer-caption {
+
+    .rules-footer-caption {
       font-size: 11px;
-      color: var(--ink-600);
-      padding: 4px 2px;
+      color: var(--text-caption);
+      margin-top: 10px;
+      padding-left: 2px;
     }
 
-    /* Right Rule Details Card */
-    .rule-details-card {
-      background-color: var(--paper);
-      border: 1px solid var(--line-200);
-      border-radius: var(--r-card);
+    /* ==========================================================================
+       RIGHT COLUMN: รายละเอียดกฎที่เลือก
+       ========================================================================== */
+    .rule-detail-card {
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-card);
       padding: 24px 28px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
-    }
-    .rule-details-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--ink-900);
-      padding-bottom: 2px;
     }
 
-    /* Condition Section */
+    .detail-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    /* ส่วนที่ 1: เงื่อนไข */
     .section-block {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      margin-top: 16px;
     }
     .section-label {
       font-size: 12px;
       font-weight: 600;
-      color: var(--ink-900);
+      color: var(--text-dark);
+      margin-bottom: 8px;
     }
-    .condition-chips-wrap {
+    .condition-chips-row {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
     }
-    /* Condition chip: Light blue fill exactly like user's reference */
-    .condition-chip {
-      background-color: var(--ktb-action-tint);
-      border: 1px solid #d0ecfa;
-      border-radius: var(--r-ghost);
-      padding: 6px 12px;
-      font-size: 12px;
-      color: var(--ink-900);
+    .chip-condition {
+      background-color: var(--color-tint-blue);
+      border-radius: var(--radius-sm);
+      padding: 6px 14px;
+      font-size: 12.5px;
       font-weight: 500;
+      color: var(--text-dark);
     }
-    .condition-or-text {
+    .condition-connector-text {
       font-size: 12px;
-      color: var(--ink-600);
+      color: var(--text-muted);
       font-weight: 500;
     }
     .btn-add-condition {
-      background-color: var(--paper);
-      border: 1px solid var(--line-200);
-      border-radius: var(--r-ghost);
+      background-color: transparent;
+      border: 1px dashed var(--border-input);
+      border-radius: var(--radius-sm);
       padding: 6px 12px;
       font-size: 12px;
-      color: var(--ink-600);
-      font-family: var(--font);
+      font-family: inherit;
+      color: var(--text-muted);
       cursor: pointer;
       transition: all 120ms ease;
     }
     .btn-add-condition:hover {
-      border-color: var(--ktb-action);
-      color: var(--ktb-action);
+      border-color: var(--color-action-blue);
+      color: var(--color-action-blue);
     }
 
-    /* Approval Sequence Cards */
-    .approval-steps-group {
+    /* ส่วนที่ 2: ลำดับอนุมัติ */
+    .steps-container {
       display: flex;
       flex-direction: column;
       gap: 8px;
+      margin-top: 8px;
     }
-    .approval-step-box {
-      border: 1px solid var(--line-200);
-      border-radius: var(--r-card);
-      padding: 12px 16px;
-      background-color: var(--paper);
+    .step-box {
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-step);
+      padding: 13px 18px;
+      background-color: var(--bg-white);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
     }
-    .step-left-info {
+    .step-left {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-    /* Blue Step Number Bubble exactly like reference */
-    .step-number-circle {
-      width: 22px;
-      height: 22px;
-      border-radius: var(--r-pill);
-      background-color: var(--ktb-action);
-      color: #ffffff;
+    .step-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-pill);
+      background-color: var(--color-action-blue);
+      color: #FFFFFF;
       font-size: 11px;
       font-weight: 600;
       display: flex;
@@ -394,114 +410,110 @@
       justify-content: center;
       flex-shrink: 0;
     }
-    .step-titles {
-      line-height: 1.35;
-    }
-    .step-role-name {
+    .step-role-title {
       font-size: 13px;
       font-weight: 600;
-      color: var(--ink-900);
+      color: var(--text-dark);
     }
     .step-role-desc {
       font-size: 11px;
-      color: var(--ink-600);
+      color: var(--text-muted);
       margin-top: 2px;
     }
-    .step-sla-block {
+    .step-right-sla {
       text-align: right;
-      line-height: 1.3;
+      line-height: 1.35;
     }
-    .sla-tag-label {
+    .sla-tag {
       font-size: 10px;
-      color: #9aa1a9;
+      color: var(--text-caption);
       font-weight: 500;
+      display: block;
     }
-    .sla-duration-text {
-      font-size: 11px;
-      color: var(--ink-900);
+    .sla-text {
+      font-size: 11.5px;
+      color: var(--text-dark);
     }
-    .sla-duration-text strong {
+    .sla-text strong {
       font-weight: 600;
     }
 
-    /* Rule Simulator Test Box: Light Blue fill */
-    .rule-test-box {
-      background-color: var(--ktb-action-tint);
-      border: 1px solid #d4edf9;
-      border-radius: var(--r-ghost);
-      padding: 12px 16px;
-      font-size: 12px;
-      color: var(--ink-900);
-      font-weight: 500;
+    /* ส่วนที่ 3: ทดสอบกฎ */
+    .test-box {
+      background-color: var(--color-tint-blue);
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      font-size: 12.5px;
+      color: var(--text-dark);
+      margin-top: 8px;
     }
-    .rule-test-box strong {
+    .test-box strong {
       font-weight: 600;
     }
 
-    /* Bottom Action Bar */
+    /* ==========================================================================
+       BOTTOM ACTION BAR
+       ========================================================================== */
     .bottom-action-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-top: 16px;
-      border-top: 1px solid var(--line-200);
-      margin-top: auto;
+      padding-top: 20px;
+      margin-top: 28px;
     }
     .last-edited-text {
-      font-size: 11px;
-      color: var(--ink-600);
+      font-size: 12px;
+      color: var(--text-caption);
     }
-    .footer-button-group {
+    .action-button-group {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
     .btn-cancel {
-      height: 36px;
-      padding: 0 16px;
-      background-color: var(--paper);
-      border: 1px solid var(--line-200);
-      border-radius: var(--r-ghost);
-      font-family: var(--font);
-      font-size: 12.5px;
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-input);
+      color: var(--text-body);
+      padding: 9px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
       font-weight: 500;
-      color: var(--ink-900);
+      font-family: inherit;
       cursor: pointer;
       transition: all 120ms ease;
     }
     .btn-cancel:hover {
-      border-color: #cbd5e1;
-      background-color: var(--canvas);
+      background-color: #F8FAFC;
+      border-color: #94A3B8;
     }
-    /* Blue Primary Save button */
-    .btn-save-rule {
-      height: 36px;
-      padding: 0 18px;
-      background-color: var(--ktb-action);
-      color: #ffffff;
+    .btn-save {
+      background-color: var(--color-action-blue);
+      color: #FFFFFF;
       border: none;
-      border-radius: var(--r-ghost);
-      font-family: var(--font);
-      font-size: 12.5px;
+      padding: 9px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
       font-weight: 600;
+      font-family: inherit;
       cursor: pointer;
-      transition: all 120ms ease;
+      transition: background-color 120ms ease;
     }
-    .btn-save-rule:hover {
-      background-color: #006692;
+    .btn-save:hover {
+      background-color: var(--color-action-hover);
     }
   </style>
 </head>
 <body>
 
   <!-- ==========================================================================
-       SIDEBAR: Key User · ทั้งองค์กร
+       SIDEBAR
        ========================================================================== -->
   <aside class="sidebar">
-    <div class="sidebar-header">
+    <div class="sidebar-brand-row">
+      <div class="brand-logo-icon"></div>
       <div class="brand-title">VRMS</div>
-      <div class="brand-subtitle">Key User · ทั้งองค์กร</div>
     </div>
+    <div class="brand-subtitle">Key User · ทั้งองค์กร</div>
 
     <nav>
       <!-- Group 1: ตั้งค่าระบบ -->
@@ -509,55 +521,56 @@
         <div class="nav-section-title">ตั้งค่าระบบ</div>
         <ul class="nav-list">
           <li>
-            <a class="nav-item active" href="F1.html">
+            <!-- Active Page: สายอนุมัติ -->
+            <a class="nav-item active" href="#">
               <i data-lucide="sliders-horizontal"></i>
               <span>สายอนุมัติ</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" href="F2.html">
+            <a class="nav-item" href="#">
               <i data-lucide="check"></i>
               <span>อนุมัติอัตโนมัติ</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" href="#allocation-rules">
+            <a class="nav-item" href="#">
               <i data-lucide="git-fork"></i>
               <span>กฎจัดสรรรถ</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" href="#booking-policy">
+            <a class="nav-item" href="#">
               <i data-lucide="clock"></i>
               <span>นโยบายการจอง</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" href="#booking-form">
+            <a class="nav-item" href="#">
               <i data-lucide="file-text"></i>
               <span>ฟอร์มจอง</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" href="#master-data">
+            <a class="nav-item" href="#">
               <i data-lucide="database"></i>
               <span>ข้อมูลหลัก</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" href="#permissions">
+            <a class="nav-item" href="#">
               <i data-lucide="user-check"></i>
               <span>สิทธิ์การใช้งาน</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" href="#notifications">
+            <a class="nav-item" href="#">
               <i data-lucide="bell"></i>
               <span>แจ้งเตือนและเชื่อมต่อ</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" href="#audit-log">
+            <a class="nav-item" href="#">
               <i data-lucide="shield"></i>
               <span>Audit log</span>
             </a>
@@ -570,37 +583,37 @@
         <div class="nav-section-title">วิเคราะห์</div>
         <ul class="nav-list">
           <li>
-            <a class="nav-item" href="F7.html">
-              <i data-lucide="layout-dashboard"></i>
+            <a class="nav-item" href="#">
+              <i data-lucide="layout-grid"></i>
               <span>Dashboard ผู้บริหาร</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" href="#vehicle-utilization">
+            <a class="nav-item" href="#">
               <i data-lucide="gauge"></i>
               <span>การใช้รถ</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" href="#travel-analytics">
+            <a class="nav-item" href="#">
               <i data-lucide="map-pin"></i>
               <span>การเดินทาง</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" href="#booking-trends">
+            <a class="nav-item" href="#">
               <i data-lucide="trending-up"></i>
               <span>แนวโน้มการจอง</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" href="#driver-comparison">
+            <a class="nav-item" href="#">
               <i data-lucide="user"></i>
               <span>เปรียบเทียบคนขับ</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" href="#reports">
+            <a class="nav-item" href="#">
               <i data-lucide="list"></i>
               <span>รายงาน</span>
             </a>
@@ -611,140 +624,131 @@
   </aside>
 
   <!-- ==========================================================================
-       MAIN CONTENT: F1 หน้าสายอนุมัติ
+       MAIN CONTENT: F1 สายอนุมัติ
        ========================================================================== -->
   <main class="main-content">
     
-    <!-- Top Title Header -->
-    <div class="page-header">
+    <!-- Header -->
+    <header class="page-header">
       <div>
         <h1 class="page-title">สายอนุมัติ</h1>
         <p class="page-subtitle">ระบบเลือกกฎแรกที่ตรงเงื่อนไข จากบนลงล่าง</p>
       </div>
-      <div class="user-avatar-badge" title="ผู้ใช้งาน: กร">
-        กร
-      </div>
-    </div>
+      <div class="avatar-badge">กร</div>
+    </header>
 
-    <!-- Grid Layout -->
-    <div class="approval-grid">
-      
-      <!-- Left: Rule List Column -->
-      <div class="rule-list-column">
-        <div class="rule-list-header">
-          <span class="rule-count-heading">กฎ (4)</span>
-          <button type="button" class="btn-add-rule" onclick="addNewRule()">
-            <i data-lucide="plus" style="width: 13px; height: 13px;"></i>
-            <span>เพิ่มกฎ</span>
-          </button>
+    <!-- Content Grid -->
+    <div class="content-grid">
+
+      <!-- Left Column: กฎ (4) -->
+      <div class="rules-column">
+        <div class="rules-header">
+          <div class="rules-count-title">กฎ (4)</div>
+          <button type="button" class="btn-add-rule">+ เพิ่มกฎ</button>
         </div>
 
-        <div class="rule-items-container">
-          <!-- Rule 1 -->
-          <div class="rule-item-card" onclick="selectRuleItem(1, this)">
-            <span class="rule-drag-dots">:::</span>
-            <div class="rule-index-bubble">1</div>
-            <div class="rule-text-block">
-              <div class="rule-name">รถผู้บริหาร</div>
-              <div class="rule-flow">ระดับ 1 ➔ ระดับ 2 (ผู้บริหารสายงาน)</div>
+        <div class="rules-list">
+          <!-- Card 1 -->
+          <div class="rule-card">
+            <span class="drag-handle">⋮⋮</span>
+            <div class="rule-num-circle">1</div>
+            <div class="rule-info">
+              <div class="rule-title">รถผู้บริหาร</div>
+              <div class="rule-subtitle">ระดับ 1 ➔ ระดับ 2 (ผู้บริหารสายงาน)</div>
             </div>
           </div>
 
-          <!-- Rule 2 (Selected Active with Blue Border) -->
-          <div class="rule-item-card selected" onclick="selectRuleItem(2, this)">
-            <span class="rule-drag-dots">:::</span>
-            <div class="rule-index-bubble">2</div>
-            <div class="rule-text-block">
-              <div class="rule-name">ต่างจังหวัด หรือเกิน 2 วัน</div>
-              <div class="rule-flow">หัวหน้าส่วน ➔ ผู้อำนวยการฝ่าย</div>
+          <!-- Card 2: Selected Active Rule -->
+          <div class="rule-card selected">
+            <span class="drag-handle">⋮⋮</span>
+            <div class="rule-num-circle">2</div>
+            <div class="rule-info">
+              <div class="rule-title">ต่างจังหวัด หรือเกิน 2 วัน</div>
+              <div class="rule-subtitle">หัวหน้าส่วน ➔ ผู้อำนวยการฝ่าย</div>
             </div>
           </div>
 
-          <!-- Rule 3 -->
-          <div class="rule-item-card" onclick="selectRuleItem(3, this)">
-            <span class="rule-drag-dots">:::</span>
-            <div class="rule-index-bubble">3</div>
-            <div class="rule-text-block">
-              <div class="rule-name">นอกเวลาทำการ / จองกระชั้น</div>
-              <div class="rule-flow">ผู้อำนวยการฝ่าย</div>
+          <!-- Card 3 -->
+          <div class="rule-card">
+            <span class="drag-handle">⋮⋮</span>
+            <div class="rule-num-circle">3</div>
+            <div class="rule-info">
+              <div class="rule-title">นอกเวลาทำการ / จองกระชั้น</div>
+              <div class="rule-subtitle">ผู้อำนวยการฝ่าย</div>
             </div>
           </div>
 
-          <!-- Rule 4 -->
-          <div class="rule-item-card" onclick="selectRuleItem(4, this)">
-            <span class="rule-drag-dots">:::</span>
-            <div class="rule-index-bubble">4</div>
-            <div class="rule-text-block">
-              <div class="rule-name">ค่าเริ่มต้น</div>
-              <div class="rule-flow">หัวหน้าส่วน</div>
+          <!-- Card 4 -->
+          <div class="rule-card">
+            <span class="drag-handle">⋮⋮</span>
+            <div class="rule-num-circle">4</div>
+            <div class="rule-info">
+              <div class="rule-title">ค่าเริ่มต้น</div>
+              <div class="rule-subtitle">หัวหน้าส่วน</div>
             </div>
           </div>
         </div>
 
-        <div class="rule-footer-caption">
+        <div class="rules-footer-caption">
           ลากเพื่อเปลี่ยนลำดับ · กฎ "ค่าเริ่มต้น" อยู่ล่างสุดเสมอ
         </div>
       </div>
 
-      <!-- Right: Rule Details Card -->
-      <div class="rule-details-card">
-        <div class="rule-details-title" id="rule-title-display">
-          กฎที่ 2 · ต่างจังหวัด หรือเกิน 2 วัน
-        </div>
+      <!-- Right Column: รายละเอียดกฎที่เลือก -->
+      <div class="rule-detail-card">
+        <div class="detail-card-title">กฎที่ 2 · ต่างจังหวัด หรือเกิน 2 วัน</div>
 
-        <!-- Section 1: Conditions -->
+        <!-- Section 1: เงื่อนไข -->
         <div class="section-block">
-          <span class="section-label">เงื่อนไข (ตรงข้อใดข้อหนึ่ง)</span>
-          <div class="condition-chips-wrap">
-            <div class="condition-chip">ปลายทาง ≠ กรุงเทพฯ และปริมณฑล</div>
-            <span class="condition-or-text">หรือ</span>
-            <div class="condition-chip">จำนวนวัน &gt; 2</div>
-            <button type="button" class="btn-add-condition" onclick="addCondition()">+ เงื่อนไข</button>
+          <div class="section-label">เงื่อนไข (ตรงข้อใดข้อหนึ่ง)</div>
+          <div class="condition-chips-row">
+            <div class="chip-condition">ปลายทาง ≠ กรุงเทพฯ และปริมณฑล</div>
+            <span class="condition-connector-text">หรือ</span>
+            <div class="chip-condition">จำนวนวัน > 2</div>
+            <button type="button" class="btn-add-condition">+ เงื่อนไข</button>
           </div>
         </div>
 
-        <!-- Section 2: Approval Flow & SLA -->
+        <!-- Section 2: ลำดับอนุมัติ -->
         <div class="section-block">
-          <span class="section-label">ลำดับอนุมัติ</span>
-          <div class="approval-steps-group">
-            
+          <div class="section-label">ลำดับอนุมัติ</div>
+          <div class="steps-container">
             <!-- Step 1 -->
-            <div class="approval-step-box">
-              <div class="step-left-info">
-                <div class="step-number-circle">1</div>
-                <div class="step-titles">
-                  <div class="step-role-name">หัวหน้าส่วน</div>
+            <div class="step-box">
+              <div class="step-left">
+                <div class="step-badge">1</div>
+                <div>
+                  <div class="step-role-title">หัวหน้าส่วน</div>
                   <div class="step-role-desc">ตามสายบังคับบัญชาของผู้ขอ (จาก HR)</div>
                 </div>
               </div>
-              <div class="step-sla-block">
-                <span class="sla-tag-label">SLA</span>
-                <div class="sla-duration-text"><strong>24 ชม.</strong> ➔ ส่งต่อระดับ 2</div>
+              <div class="step-right-sla">
+                <span class="sla-tag">SLA</span>
+                <div class="sla-text"><strong>24 ชม.</strong> ➔ ส่งต่อระดับ 2</div>
               </div>
             </div>
 
             <!-- Step 2 -->
-            <div class="approval-step-box">
-              <div class="step-left-info">
-                <div class="step-number-circle">2</div>
-                <div class="step-titles">
-                  <div class="step-role-name">ผู้อำนวยการฝ่าย</div>
+            <div class="step-box">
+              <div class="step-left">
+                <div class="step-badge">2</div>
+                <div>
+                  <div class="step-role-title">ผู้อำนวยการฝ่าย</div>
                   <div class="step-role-desc">ตามสายบังคับบัญชาของผู้ขอ (จาก HR)</div>
                 </div>
               </div>
-              <div class="step-sla-block">
-                <span class="sla-tag-label">SLA</span>
-                <div class="sla-duration-text"><strong>24 ชม.</strong> ➔ ผู้บังคับบัญชาถัดไป</div>
+              <div class="step-right-sla">
+                <span class="sla-tag">SLA</span>
+                <div class="sla-text"><strong>24 ชม.</strong> ➔ ผู้บังคับบัญชาถัดไป</div>
               </div>
             </div>
-
           </div>
         </div>
 
-        <!-- Section 3: Test Rule Box -->
+        <!-- Section 3: ทดสอบกฎ -->
         <div class="section-block">
-          <span class="section-label">ทดสอบกฎ</span>
-          <div class="rule-test-box">
+          <div class="section-label">ทดสอบกฎ</div>
+          <div class="test-box">
             VR-690917-030 · Van · ขอนแก่น · 3 วัน ➔ <strong>เข้ากฎที่ 2 · 2 ระดับ</strong>
           </div>
         </div>
@@ -753,14 +757,12 @@
 
     </div>
 
-    <!-- Bottom Actions Bar -->
+    <!-- Bottom Action Bar -->
     <footer class="bottom-action-bar">
-      <div class="last-edited-text">
-        แก้ไขล่าสุด: กรกนก ธ. · 12 ก.ย. 69 16:40
-      </div>
-      <div class="footer-button-group">
-        <button type="button" class="btn-cancel" onclick="cancelEdit()">ยกเลิก</button>
-        <button type="button" class="btn-save-rule" onclick="saveRule()">บันทึก · มีผลกับคำขอใหม่เท่านั้น</button>
+      <div class="last-edited-text">แก้ไขล่าสุด: กรกนก ธ. · 12 ก.ย. 69 16:40</div>
+      <div class="action-button-group">
+        <button type="button" class="btn-cancel">ยกเลิก</button>
+        <button type="button" class="btn-save">บันทึก · มีผลกับคำขอใหม่เท่านั้น</button>
       </div>
     </footer>
 
@@ -769,48 +771,6 @@
   <script>
     // Initialize Lucide Icons
     lucide.createIcons();
-
-    const rulesData = {
-      1: {
-        title: 'กฎที่ 1 · รถผู้บริหาร',
-        test: 'VR-690918-001 · Sedan · กรุงเทพฯ · 1 วัน ➔ เข้ากฎที่ 1 · 2 ระดับ'
-      },
-      2: {
-        title: 'กฎที่ 2 · ต่างจังหวัด หรือเกิน 2 วัน',
-        test: 'VR-690917-030 · Van · ขอนแก่น · 3 วัน ➔ เข้ากฎที่ 2 · 2 ระดับ'
-      },
-      3: {
-        title: 'กฎที่ 3 · นอกเวลาทำการ / จองกระชั้น',
-        test: 'VR-690919-014 · Sedan · ปทุมธานี · วันนี้ 18:00 ➔ เข้ากฎที่ 3 · 1 ระดับ'
-      },
-      4: {
-        title: 'กฎที่ 4 · ค่าเริ่มต้น',
-        test: 'VR-690920-002 · Sedan · กรุงเทพฯ · 1 วัน ➔ เข้ากฎที่ 4 · 1 ระดับ'
-      }
-    };
-
-    function selectRuleItem(id, elem) {
-      document.querySelectorAll('.rule-item-card').forEach(card => card.classList.remove('selected'));
-      elem.classList.add('selected');
-
-      const data = rulesData[id];
-      if (data) {
-        document.getElementById('rule-title-display').innerText = data.title;
-      }
-    }
-
-    function addNewRule() {
-      alert('เปิดหน้าต่างเพิ่มกฎสายอนุมัติใหม่');
-    }
-    function addCondition() {
-      alert('เปิดหน้าต่างกำหนดเงื่อนไขเพิ่มเติม');
-    }
-    function cancelEdit() {
-      location.reload();
-    }
-    function saveRule() {
-      alert('บันทึกการตั้งค่าสายอนุมัติเรียบร้อยแล้ว');
-    }
   </script>
 </body>
 </html>
