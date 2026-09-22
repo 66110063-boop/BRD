@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VRMS — ตั้งส่งรายงานอัตโนมัติ (F16)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ==========================================================================
+       VRMS Carpool — Design Tokens (KTB Theme 21 กันยายน 2569 ตามเอกสาร PDF)
+       Frame ขนาดตายตัว W: 1280px | H: 860px
+       ========================================================================== */
+    :root {
+      /* Brand & Actions */
+      --ktb-brand: #00A5E5;         /* โลโก้, ขีด active เมนูล่าง */
+      --ktb-action: #007AAE;        /* ทุกสิ่งที่กดได้: ปุ่มหลัก, ลิงก์, เมนู active (Contrast 4.78:1) */
+      --ktb-action-tint: #E6F6FD;   /* พื้นหลังชิปเลือก, แถบข้อมูล, เมนู active */
+      --primary-dark: #1E293B;      /* ปุ่มเข้ม, ชิป active, toggle active */
+
+      /* Neutrals */
+      --ink-900: #16181A;           /* หัวข้อ, ข้อความหลัก */
+      --ink-600: #5A6066;           /* ข้อความรอง, คำอธิบาย, ไอคอนเมนู */
+      --line-200: #E3E7EA;          /* เส้นขอบการ์ด, เส้นคั่น */
+      --paper: #FFFFFF;             /* พื้นการ์ด, ไซด์บาร์ */
+      --canvas: #F7F9FA;            /* พื้นหลังหน้าจอ */
+
+      /* Status */
+      --success: #14865A;
+      --warning: #946011;
+      --warning-bg: #FDF3E3;
+      --danger: #B3261E;
+      --danger-bg: #FCEBEA;
+
+      /* Typography: Anuphan 3 น้ำหนักเท่านั้น (400, 500, 600) ห้ามใช้ Bold 700 */
+      --font: 'Anuphan', system-ui, -apple-system, sans-serif;
+
+      /* Radii */
+      --r-card: 10px;               /* การ์ด, กล่องเนื้อหา */
+      --r-ghost: 8px;               /* ปุ่มขอบ, กล่อง input */
+      --r-pill: 999px;              /* ชิป, ป้ายสถานะ, Avatar, Toggle */
+    }
+
+    /* Reset & Rule: ทั้งระบบไม่มีเงาเด็ดขาด (Zero Box-Shadow) */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      box-shadow: none !important;
+    }
+
+    html, body {
+      width: 1280px;
+      height: 860px;
+      overflow: hidden;
+      background-color: var(--canvas);
+      color: var(--ink-900);
+      font-family: var(--font);
+    }
+
+    .app-frame {
+      width: 1280px;
+      height: 860px;
+      display: flex;
+      background-color: var(--canvas);
+      overflow: hidden;
+    }
+
+    /* ==========================================================================
+       SIDEBAR: เมนูด้านซ้าย (Fixed W: 220px, H: 860px)
+       ========================================================================== */
+    .sidebar {
+      width: 220px;
+      background-color: var(--paper);
+      border-right: 1px solid var(--line-200);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      padding: 24px 14px;
+      user-select: none;
+      height: 100%;
+    }
+
+    .sidebar-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 6px;
+      margin-bottom: 2px;
+    }
+    .brand-logo-icon {
+      width: 22px;
+      height: 22px;
+      background-color: var(--ktb-brand);
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .brand-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink-900);
+      letter-spacing: -0.2px;
+      line-height: 1;
+    }
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--ink-600);
+      padding-left: 38px;
+      margin-bottom: 22px;
+      font-weight: 400;
+    }
+
+    /* Nav Section */
+    .nav-group {
+      margin-bottom: 18px;
+    }
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-600);
+      padding: 5px 8px;
+      letter-spacing: 0.2px;
+    }
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6.5px 10px;
+      border-radius: var(--r-ghost);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-600);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 120ms ease, color 120ms ease;
+    }
+    .nav-item:hover {
+      background-color: var(--canvas);
+      color: var(--ink-900);
+    }
+    /* Active Item: รายงาน (เมนูหลักของ F16 ตั้งส่งรายงานอัตโนมัติ) */
+    .nav-item.active {
+      background-color: var(--ktb-action-tint);
+      color: var(--ktb-action);
+      font-weight: 600;
+    }
+    .nav-item i,
+    .nav-item svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       MAIN CONTENT: F16 ตั้งส่งรายงานอัตโนมัติ (กว้าง 1060px)
+       ========================================================================== */
+    .main-content {
+      flex: 1;
+      height: 100%;
+      background-color: var(--canvas);
+      padding: 22px 28px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    /* Header */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ink-900);
+      line-height: 1.3;
+    }
+    .page-subtitle {
+      font-size: 12px;
+      color: var(--ink-600);
+      margin-top: 3px;
+      font-weight: 400;
+    }
+    .avatar-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--r-pill);
+      background-color: var(--ktb-action-tint);
+      color: var(--ktb-action);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Header Divider */
+    .header-divider {
+      border: none;
+      height: 1px;
+      background-color: var(--line-200);
+      margin: 12px 0 16px 0;
+    }
+
+    /* ==========================================================================
+       TWO-COLUMN LAYOUT
+       ========================================================================== */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 370px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* ==========================================================================
+       LEFT FORM: รายการใหม่
+       ========================================================================== */
+    .form-card {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-card);
+      padding: 16px 20px 18px;
+      display: flex;
+      flex-direction: column;
+    }
+    .form-card-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink-900);
+      margin-bottom: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-900);
+      margin-bottom: 6px;
+    }
+
+    /* Input Icon Box */
+    .input-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-ghost);
+      padding: 0 12px;
+      height: 36px;
+      transition: border-color 120ms ease;
+    }
+    .input-box:focus-within {
+      border-color: var(--ktb-action);
+    }
+    .input-box i,
+    .input-box svg {
+      width: 14px;
+      height: 14px;
+      color: var(--ink-600);
+      flex-shrink: 0;
+    }
+    .input-box input,
+    .input-box select {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 12px;
+      color: var(--ink-900);
+      width: 100%;
+    }
+
+    /* Pill Selection Options */
+    .pill-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .pill-option {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-pill);
+      padding: 5px 14px;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--ink-900);
+      cursor: pointer;
+      user-select: none;
+      transition: all 120ms ease;
+    }
+    .pill-option:hover {
+      border-color: var(--ink-900);
+    }
+    .pill-option.active {
+      background-color: var(--primary-dark);
+      border-color: var(--primary-dark);
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+
+    /* 2-Columns Row in Form */
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* Recipients Container */
+    .recipients-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 5px;
+    }
+    .recipient-tag {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-pill);
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--ink-900);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-remove-tag {
+      color: var(--ink-600);
+      cursor: pointer;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-remove-tag:hover {
+      color: var(--danger);
+    }
+    .btn-add-recipient {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-pill);
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--ink-900);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: border-color 120ms ease;
+    }
+    .btn-add-recipient:hover {
+      border-color: var(--ktb-action);
+      color: var(--ktb-action);
+    }
+
+    .form-helper-note {
+      font-size: 10.5px;
+      color: var(--ink-600);
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+
+    /* Form Action Buttons */
+    .form-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+      gap: 10px;
+    }
+    .btn-send-test {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-ghost);
+      padding: 7px 14px;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--ink-900);
+      cursor: pointer;
+      transition: all 120ms ease;
+    }
+    .btn-send-test:hover {
+      border-color: var(--ktb-action);
+      color: var(--ktb-action);
+    }
+    .btn-send-test i,
+    .btn-send-test svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .btn-save-schedule {
+      background-color: var(--primary-dark);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--r-ghost);
+      padding: 7px 22px;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 120ms ease;
+    }
+    .btn-save-schedule:hover {
+      background-color: #0F172A;
+    }
+
+    /* ==========================================================================
+       RIGHT COLUMN: ที่ตั้งไว้แล้ว (4)
+       ========================================================================== */
+    .right-col-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+    .right-col-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink-900);
+      margin-bottom: 10px;
+    }
+
+    .schedule-table-card {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-card);
+      padding: 4px 18px;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 12px;
+    }
+    .data-table th {
+      background-color: transparent;
+      color: var(--ink-600);
+      font-weight: 500;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line-200);
+      font-size: 11.5px;
+      white-space: nowrap;
+    }
+    .data-table td {
+      padding: 14px 10px;
+      border-bottom: 1px solid var(--line-200);
+      color: var(--ink-900);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+    .data-table tr:hover td {
+      background-color: #FAFCFD;
+    }
+
+    /* Table Item Titles */
+    .report-main-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-900);
+    }
+    .report-sub-title {
+      font-size: 11px;
+      color: var(--ink-600);
+      margin-top: 3px;
+    }
+
+    /* Status Pills */
+    .status-badge {
+      font-size: 10.5px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: var(--r-pill);
+      display: inline-block;
+      text-align: center;
+    }
+    .status-badge.sent {
+      background-color: #ECEFF2;
+      color: var(--ink-600);
+    }
+    .status-badge.paused {
+      background-color: #ECEFF2;
+      color: var(--ink-600);
+    }
+    .status-error-text {
+      color: var(--danger);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.25;
+    }
+
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+      vertical-align: middle;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--line-200);
+      transition: background-color 150ms ease;
+      border-radius: var(--r-pill);
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #FFFFFF;
+      transition: transform 150ms ease;
+      border-radius: 50%;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: var(--primary-dark);
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(16px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1280 x 860 Container Frame -->
+  <div class="app-frame">
+
+    <!-- ==========================================================================
+         SIDEBAR: เมนูด้านซ้าย
+         ========================================================================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand-row">
+        <div class="brand-logo-icon"></div>
+        <div class="brand-title">VRMS</div>
+      </div>
+      <div class="brand-subtitle">Key User · ทั้งองค์กร</div>
+
+      <nav>
+        <!-- Group 1: ตั้งค่าระบบ -->
+        <div class="nav-group">
+          <div class="nav-section-title">ตั้งค่าระบบ</div>
+          <ul class="nav-list">
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="list"></i>
+                <span>สายอนุมัติ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="check"></i>
+                <span>อนุมัติอัตโนมัติ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="key"></i>
+                <span>กฎจัดสรรรถ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="clock"></i>
+                <span>นโยบายการจอง</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="file-text"></i>
+                <span>ฟอร์มจอง</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="database"></i>
+                <span>ข้อมูลหลัก</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="user"></i>
+                <span>สิทธิ์การใช้งาน</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="bell"></i>
+                <span>แจ้งเตือนและเชื่อมต่อ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="shield"></i>
+                <span>Audit log</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Group 2: วิเคราะห์ -->
+        <div class="nav-group">
+          <div class="nav-section-title">วิเคราะห์</div>
+          <ul class="nav-list">
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="home"></i>
+                <span>Dashboard ผู้บริหาร</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="edit-3"></i>
+                <span>การใช้รถ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="map-pin"></i>
+                <span>การเดินทาง</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="repeat"></i>
+                <span>แนวโน้มการจอง</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="user"></i>
+                <span>เปรียบเทียบคนขับ</span>
+              </a>
+            </li>
+            <li>
+              <!-- Active Page: รายงาน (F16 ตั้งส่งรายงานอัตโนมัติ) -->
+              <a class="nav-item active" href="#">
+                <i data-lucide="list"></i>
+                <span>รายงาน</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ==========================================================================
+         MAIN CONTENT: F16 ตั้งส่งรายงานอัตโนมัติ
+         ========================================================================== -->
+    <main class="main-content">
+      
+      <!-- Page Header -->
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">ตั้งส่งรายงานอัตโนมัติ</h1>
+          <p class="page-subtitle">ผู้รับเห็นเฉพาะข้อมูลในสิทธิ์ของตัวเอง</p>
+        </div>
+        <div class="avatar-badge">กร</div>
+      </header>
+
+      <hr class="header-divider">
+
+      <!-- Content Grid: Form (Left) & Existing Schedules (Right) -->
+      <div class="content-grid">
+        
+        <!-- ====================================================================
+             LEFT COLUMN: ฟอร์มสร้างรายการใหม่
+             ==================================================================== -->
+        <div class="form-card">
+          <div class="form-card-title">รายการใหม่</div>
+
+          <!-- Field 1: รายงาน -->
+          <div class="form-group">
+            <label class="form-label">รายงาน</label>
+            <div class="input-box">
+              <i data-lucide="list"></i>
+              <input type="text" value="การใช้รถประจำเดือน" readonly />
+            </div>
+          </div>
+
+          <!-- Field 2: รูปแบบไฟล์ -->
+          <div class="form-group">
+            <label class="form-label">รูปแบบไฟล์</label>
+            <div class="pill-group">
+              <div class="pill-option active">Excel</div>
+              <div class="pill-option">PDF</div>
+              <div class="pill-option">ทั้งสองแบบ</div>
+            </div>
+          </div>
+
+          <!-- Field 3: ความถี่ -->
+          <div class="form-group">
+            <label class="form-label">ความถี่</label>
+            <div class="pill-group">
+              <div class="pill-option">รายวัน</div>
+              <div class="pill-option">รายสัปดาห์</div>
+              <div class="pill-option active">รายเดือน</div>
+            </div>
+          </div>
+
+          <!-- Field 4: ส่งวันที่ & เวลา -->
+          <div class="form-group">
+            <div class="form-row-2">
+              <div>
+                <label class="form-label">ส่งวันที่</label>
+                <div class="input-box">
+                  <i data-lucide="calendar"></i>
+                  <input type="text" value="1 ของเดือน" />
+                </div>
+              </div>
+              <div>
+                <label class="form-label">เวลา</label>
+                <div class="input-box">
+                  <i data-lucide="clock"></i>
+                  <input type="text" value="08:00" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Field 5: ขอบเขตข้อมูล -->
+          <div class="form-group">
+            <label class="form-label">ขอบเขตข้อมูล</label>
+            <div class="input-box">
+              <input type="text" value="ฝ่ายสินเชื่อธุรกิจ" />
+            </div>
+          </div>
+
+          <!-- Field 6: ผู้รับ (อีเมล) -->
+          <div class="form-group">
+            <label class="form-label">ผู้รับ (อีเมล)</label>
+            <div class="recipients-wrap">
+              <div class="recipient-tag">
+                <span>คุณสุดา ร.</span>
+                <span class="btn-remove-tag">&times;</span>
+              </div>
+              <div class="recipient-tag">
+                <span>นิภา ก.</span>
+                <span class="btn-remove-tag">&times;</span>
+              </div>
+              <button type="button" class="btn-add-recipient">
+                <span>+ เพิ่มผู้รับ</span>
+              </button>
+            </div>
+            <p class="form-helper-note">ผู้รับที่ไม่มีสิทธิ์ดูบางหน่วยงาน จะได้ไฟล์ที่ตัดเฉพาะส่วนของตน</p>
+          </div>
+
+          <!-- Action Buttons Row -->
+          <div class="form-actions-row">
+            <button type="button" class="btn-send-test">
+              <i data-lucide="send"></i>
+              <span>ส่งทดสอบถึงตัวเอง</span>
+            </button>
+            <button type="button" class="btn-save-schedule">
+              <span>บันทึก</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             RIGHT COLUMN: ตารางรายการที่ตั้งไว้แล้ว (4)
+             ==================================================================== -->
+        <div class="right-col-wrap">
+          <div class="right-col-title">ที่ตั้งไว้แล้ว (4)</div>
+
+          <div class="schedule-table-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 28%;">รายงาน</th>
+                  <th style="width: 18%;">ความถี่</th>
+                  <th style="width: 20%;">ผู้รับ</th>
+                  <th style="width: 14%;">ครั้งถัดไป</th>
+                  <th style="width: 12%;">ครั้งล่าสุด</th>
+                  <th style="width: 8%; text-align: center;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Row 1: การใช้รถประจำเดือน -->
+                <tr>
+                  <td>
+                    <div class="report-main-title">การใช้รถประจำเดือน</div>
+                    <div class="report-sub-title">ทุกหน่วยงาน · Excel</div>
+                  </td>
+                  <td>วันที่ 1 · 08:00</td>
+                  <td>ผู้บริหาร 3 คน</td>
+                  <td>1 ต.ค. 69</td>
+                  <td><span class="status-badge sent">ส่งแล้ว</span></td>
+                  <td style="text-align: center;">
+                    <label class="toggle-switch">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </td>
+                </tr>
+
+                <!-- Row 2: การอนุมัติและ SLA -->
+                <tr>
+                  <td>
+                    <div class="report-main-title">การอนุมัติและ SLA</div>
+                    <div class="report-sub-title">PDF</div>
+                  </td>
+                  <td>จันทร์ · 08:00</td>
+                  <td>หัวหน้าส่วน 12 คน</td>
+                  <td>21 ก.ย. 69</td>
+                  <td><span class="status-badge sent">ส่งแล้ว</span></td>
+                  <td style="text-align: center;">
+                    <label class="toggle-switch">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </td>
+                </tr>
+
+                <!-- Row 3: เอกสารรถใกล้หมดอายุ -->
+                <tr>
+                  <td>
+                    <div class="report-main-title">เอกสารรถใกล้หมดอายุ</div>
+                    <div class="report-sub-title">Excel</div>
+                  </td>
+                  <td>ทุกวัน · 07:00</td>
+                  <td>Fleet Admin 3 คน</td>
+                  <td>พรุ่งนี้</td>
+                  <td>
+                    <div class="status-error-text">
+                      <div>ส่งไม่สำเร็จ 1</div>
+                      <div>คน</div>
+                    </div>
+                  </td>
+                  <td style="text-align: center;">
+                    <label class="toggle-switch">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </td>
+                </tr>
+
+                <!-- Row 4: KPI คนขับ -->
+                <tr>
+                  <td>
+                    <div class="report-main-title">KPI คนขับ</div>
+                    <div class="report-sub-title">PDF</div>
+                  </td>
+                  <td>วันที่ 1 · 09:00</td>
+                  <td>Fleet Admin 3 คน</td>
+                  <td><span style="color: var(--ink-600);">&mdash;</span></td>
+                  <td><span class="status-badge paused">หยุดไว้</span></td>
+                  <td style="text-align: center;">
+                    <label class="toggle-switch">
+                      <input type="checkbox" />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
