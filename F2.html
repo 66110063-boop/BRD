@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VRMS — อนุมัติอัตโนมัติ (F2)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ==========================================================================
+       VRMS Carpool — Theme & Design Tokens (อ้างอิง Figma F2 ตรงตามตัวอย่าง 100%)
+       ========================================================================== */
+    :root {
+      /* Brand & Primary Charcoal Slate */
+      --primary-dark: #1E293B;      /* สีหลักของปุ่ม, ชิปที่เลือก, สวิตช์, แบดจ์ (#1E293B) */
+      --primary-hover: #0F172A;
+      --active-nav-bg: #EDEDED;     /* พื้นหลังเมนู active ใน sidebar */
+      
+      /* Neutrals & Borders */
+      --text-dark: #0F172A;         /* หัวข้อหลัก, ข้อความเด่น */
+      --text-body: #1E293B;         /* ข้อความทั่วไป */
+      --text-muted: #64748B;        /* ข้อความรอง, รายละเอียด */
+      --text-caption: #94A3B8;      /* วันเวลา, หมายเหตุท้ายการ์ด */
+      
+      --border-light: #E2E8F0;      /* เส้นขอบการ์ด, เส้นแบ่ง header */
+      --border-input: #CBD5E1;      /* เส้นขอบ input, ชิป unselected, ปุ่มยกเลิก */
+      
+      --bg-white: #FFFFFF;          /* พื้นหลังการ์ด, ไซด์บาร์ */
+      --bg-canvas: #FAFAFA;         /* พื้นหลังหน้าจอ */
+      --bg-avatar: #E2E8F0;         /* พื้นหลัง Avatar */
+
+      /* Typography & Radius */
+      --font-family: 'Anuphan', system-ui, -apple-system, sans-serif;
+      --radius-card: 12px;
+      --radius-sm: 8px;
+      --radius-pill: 999px;
+    }
+
+    /* Reset & Rule: ไม่มีเงา (Zero Box-Shadow) */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      box-shadow: none !important;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-canvas);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ==========================================================================
+       SIDEBAR: เมนูด้านซ้าย (ตรงตาม Figma เป๊ะ)
+       ========================================================================== */
+    .sidebar {
+      width: 220px;
+      background-color: var(--bg-white);
+      border-right: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      padding: 24px 14px;
+      user-select: none;
+    }
+
+    .sidebar-header {
+      padding-left: 6px;
+      margin-bottom: 24px;
+    }
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.1;
+      letter-spacing: -0.2px;
+    }
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    /* Nav Groups */
+    .nav-group {
+      margin-bottom: 22px;
+    }
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-caption);
+      padding: 6px 8px;
+      letter-spacing: 0.2px;
+    }
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 120ms ease, color 120ms ease;
+    }
+    .nav-item:hover {
+      background-color: #F1F5F9;
+      color: var(--text-dark);
+    }
+    /* Active Item: อนุมัติอัตโนมัติ (พื้นสีเทาอ่อน #EDEDED ตามตัวอย่าง) */
+    .nav-item.active {
+      background-color: var(--active-nav-bg);
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+    .nav-item i,
+    .nav-item svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       MAIN CONTENT: F2 อนุมัติอัตโนมัติ
+       ========================================================================== */
+    .main-content {
+      flex: 1;
+      background-color: var(--bg-canvas);
+      padding: 28px 40px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      max-width: 1180px;
+    }
+
+    /* Page Header */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-dark);
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+    .page-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .avatar-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-pill);
+      background-color: var(--bg-avatar);
+      color: #475569;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Header Divider */
+    .header-divider {
+      border: none;
+      height: 1px;
+      background-color: var(--border-light);
+      margin: 18px 0 20px 0;
+    }
+
+    /* Master Switch Toggle */
+    .master-switch-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      user-select: none;
+    }
+    .toggle-switch {
+      width: 44px;
+      height: 24px;
+      border-radius: var(--radius-pill);
+      background-color: var(--primary-dark);
+      position: relative;
+      cursor: pointer;
+      transition: background-color 150ms ease;
+    }
+    .toggle-switch.off {
+      background-color: var(--border-input);
+    }
+    .toggle-knob {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: var(--bg-white);
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      transition: transform 150ms ease;
+    }
+    .toggle-switch.off .toggle-knob {
+      transform: translateX(-20px);
+    }
+    .toggle-label {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-dark);
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       2x2 CONDITIONS GRID
+       ========================================================================== */
+    .conditions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .condition-card {
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-card);
+      padding: 18px 22px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    /* Chips Wrap */
+    .chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    /* Chip Item */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 18px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+      transition: all 120ms ease;
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-input);
+      color: var(--text-body);
+    }
+    .chip:hover {
+      border-color: #94A3B8;
+    }
+    /* Selected Chip: สีเข้ม #1E293B ตามตัวอย่าง */
+    .chip.selected {
+      background-color: var(--primary-dark);
+      color: #FFFFFF;
+      border: 1px solid var(--primary-dark);
+    }
+
+    /* Card 2: Schedule Specifics */
+    .time-range-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .time-input {
+      width: 96px;
+      height: 38px;
+      border: 1px solid var(--border-input);
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-dark);
+      background-color: var(--bg-white);
+      outline: none;
+      transition: border-color 120ms ease;
+    }
+    .time-input:focus {
+      border-color: var(--primary-dark);
+    }
+    .time-separator {
+      color: var(--text-caption);
+      font-size: 14px;
+      user-select: none;
+    }
+
+    /* Card 3: Destination Specifics */
+    .card-caption {
+      margin-top: 16px;
+      font-size: 11.5px;
+      color: var(--text-caption);
+      line-height: 1.4;
+    }
+
+    /* Card 4: Requester Role Dropdown */
+    .dropdown-container {
+      position: relative;
+      margin-top: 14px;
+    }
+    .dropdown-box {
+      width: 100%;
+      height: 40px;
+      border: 1px solid var(--border-input);
+      border-radius: var(--radius-sm);
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      background-color: var(--bg-white);
+      user-select: none;
+      transition: border-color 120ms ease;
+    }
+    .dropdown-box:hover {
+      border-color: #94A3B8;
+    }
+    .dropdown-value {
+      font-size: 13.5px;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+    .dropdown-arrow {
+      color: var(--text-muted);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 44px;
+      left: 0;
+      right: 0;
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      z-index: 50;
+      list-style: none;
+      overflow: hidden;
+    }
+    .dropdown-menu.open {
+      display: block;
+    }
+    .dropdown-item {
+      padding: 9px 14px;
+      font-size: 13px;
+      color: var(--text-body);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dropdown-item:hover {
+      background-color: #F8FAFC;
+    }
+    .dropdown-item.active {
+      font-weight: 600;
+      color: var(--text-dark);
+      background-color: #F1F5F9;
+    }
+
+    /* ==========================================================================
+       TEST WITH SAMPLE REQUESTS CARD
+       ========================================================================== */
+    .test-card {
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-card);
+      padding: 18px 22px;
+      margin-bottom: 24px;
+    }
+    .test-card-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    .test-rows-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .test-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .test-info-text {
+      font-size: 13px;
+      color: var(--text-body);
+      font-weight: 400;
+    }
+    /* Auto Approved Badge (เข้ม #1E293B ตามตัวอย่าง) */
+    .badge-auto-approved {
+      background-color: var(--primary-dark);
+      color: #FFFFFF;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: var(--radius-pill);
+      letter-spacing: 0.1px;
+    }
+    /* Manual Approval Status Text */
+    .status-needs-approval {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       BOTTOM ACTION BAR
+       ========================================================================== */
+    .bottom-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      margin-top: auto;
+    }
+    .last-edited-text {
+      font-size: 12px;
+      color: var(--text-caption);
+    }
+    .action-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-cancel {
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-input);
+      color: var(--text-body);
+      padding: 9px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 120ms ease;
+    }
+    .btn-cancel:hover {
+      background-color: #F8FAFC;
+      border-color: #94A3B8;
+    }
+    /* Primary Save Button: สีเข้ม #1E293B ตาม Figma เป๊ะ */
+    .btn-save {
+      background-color: var(--primary-dark);
+      color: #FFFFFF;
+      border: none;
+      padding: 9px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 120ms ease;
+    }
+    .btn-save:hover {
+      background-color: var(--primary-hover);
+    }
+
+    /* Toast Notification */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background-color: var(--primary-dark);
+      color: #FFFFFF;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: all 200ms ease;
+      z-index: 100;
+    }
+    .toast-msg.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SIDEBAR
+       ========================================================================== -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-title">VRMS</div>
+      <div class="brand-subtitle">Key User · ทั้งองค์กร</div>
+    </div>
+
+    <nav>
+      <!-- Group 1: ตั้งค่าระบบ -->
+      <div class="nav-group">
+        <div class="nav-section-title">ตั้งค่าระบบ</div>
+        <ul class="nav-list">
+          <li>
+            <a class="nav-item" href="F1.html">
+              <i data-lucide="list"></i>
+              <span>สายอนุมัติ</span>
+            </a>
+          </li>
+          <li>
+            <!-- Active Page: F2 อนุมัติอัตโนมัติ -->
+            <a class="nav-item active" href="F2.html">
+              <i data-lucide="check"></i>
+              <span>อนุมัติอัตโนมัติ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#allocation-rules">
+              <i data-lucide="key"></i>
+              <span>กฎจัดสรรรถ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#booking-policy">
+              <i data-lucide="clock"></i>
+              <span>นโยบายการจอง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#booking-form">
+              <i data-lucide="file-text"></i>
+              <span>ฟอร์มจอง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#master-data">
+              <i data-lucide="database"></i>
+              <span>ข้อมูลหลัก</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#permissions">
+              <i data-lucide="user"></i>
+              <span>สิทธิ์การใช้งาน</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#notifications">
+              <i data-lucide="bell"></i>
+              <span>แจ้งเตือนและเชื่อมต่อ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#audit-log">
+              <i data-lucide="shield"></i>
+              <span>Audit log</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Group 2: วิเคราะห์ -->
+      <div class="nav-group">
+        <div class="nav-section-title">วิเคราะห์</div>
+        <ul class="nav-list">
+          <li>
+            <a class="nav-item" href="#dashboard">
+              <i data-lucide="home"></i>
+              <span>Dashboard ผู้บริหาร</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#usage">
+              <i data-lucide="edit-3"></i>
+              <span>การใช้รถ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#trips">
+              <i data-lucide="map-pin"></i>
+              <span>การเดินทาง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#booking-trends">
+              <i data-lucide="repeat"></i>
+              <span>แนวโน้มการจอง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#driver-comparison">
+              <i data-lucide="user"></i>
+              <span>เปรียบเทียบคนขับ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#reports">
+              <i data-lucide="list"></i>
+              <span>รายงาน</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ==========================================================================
+       MAIN CONTENT: F2 กฎอนุมัติอัตโนมัติ
+       ========================================================================== -->
+  <main class="main-content">
+    
+    <!-- Header -->
+    <header class="page-header">
+      <div>
+        <h1 class="page-title">อนุมัติอัตโนมัติ</h1>
+        <p class="page-subtitle">คำขอที่ตรงทุกเงื่อนไขข้างล่าง อนุมัติทันทีโดยไม่ส่งผู้อนุมัติ</p>
+      </div>
+      <div class="avatar-badge">กร</div>
+    </header>
+
+    <hr class="header-divider">
+
+    <!-- Master Switch -->
+    <div class="master-switch-row">
+      <div class="toggle-switch" id="masterToggle" onclick="toggleMasterSwitch()">
+        <div class="toggle-knob"></div>
+      </div>
+      <span class="toggle-label" onclick="toggleMasterSwitch()">เปิดใช้งาน</span>
+    </div>
+
+    <!-- 2x2 Grid of Conditions -->
+    <div class="conditions-grid">
+
+      <!-- Card 1: ประเภทรถ -->
+      <div class="condition-card">
+        <div class="card-title">1 · ประเภทรถ</div>
+        <div class="chips-wrap" id="carTypeChips">
+          <button type="button" class="chip selected" onclick="toggleChip(this)">รถเก๋ง</button>
+          <button type="button" class="chip selected" onclick="toggleChip(this)">Van</button>
+          <button type="button" class="chip selected" onclick="toggleChip(this)">กระบะ</button>
+          <button type="button" class="chip" onclick="toggleChip(this)">SUV</button>
+          <button type="button" class="chip" onclick="toggleChip(this)">EV</button>
+          <button type="button" class="chip" onclick="toggleChip(this)">ผู้บริหาร</button>
+        </div>
+      </div>
+
+      <!-- Card 2: ช่วงเวลาเดินทาง -->
+      <div class="condition-card">
+        <div class="card-title">2 · ช่วงเวลาเดินทาง</div>
+        <div class="time-range-row">
+          <button type="button" class="chip selected" onclick="toggleChip(this)">วันทำการ</button>
+          <input type="text" class="time-input" id="startTime" value="08:00" />
+          <span class="time-separator">—</span>
+          <input type="text" class="time-input" id="endTime" value="17:00" />
+        </div>
+      </div>
+
+      <!-- Card 3: พื้นที่ปลายทาง -->
+      <div class="condition-card">
+        <div class="card-title">3 · พื้นที่ปลายทาง</div>
+        <div class="chips-wrap" id="areaChips">
+          <button type="button" class="chip selected" onclick="toggleChip(this)">กรุงเทพฯ</button>
+          <button type="button" class="chip selected" onclick="toggleChip(this)">นนทบุรี</button>
+          <button type="button" class="chip selected" onclick="toggleChip(this)">ปทุมธานี</button>
+          <button type="button" class="chip selected" onclick="toggleChip(this)">สมุทรปราการ</button>
+          <button type="button" class="chip selected" onclick="toggleChip(this)">สมุทรสาคร</button>
+          <button type="button" class="chip selected" onclick="toggleChip(this)">นครปฐม</button>
+        </div>
+        <div class="card-caption">ในชีตหัวข้อเขียนว่า "วัตถุประสงค์" — รอยืนยันกับลูกค้า</div>
+      </div>
+
+      <!-- Card 4: ระดับผู้ขอ -->
+      <div class="condition-card">
+        <div class="card-title">4 · ระดับผู้ขอ</div>
+        <div class="dropdown-container">
+          <div class="dropdown-box" onclick="toggleDropdown()">
+            <span class="dropdown-value" id="currentRoleText">หัวหน้าส่วนขึ้นไป</span>
+            <span class="dropdown-arrow"><i data-lucide="chevron-right"></i></span>
+          </div>
+          <ul class="dropdown-menu" id="roleDropdownMenu">
+            <li class="dropdown-item" onclick="selectRole('เจ้าหน้าที่')">เจ้าหน้าที่</li>
+            <li class="dropdown-item active" onclick="selectRole('หัวหน้าส่วนขึ้นไป')">หัวหน้าส่วนขึ้นไป</li>
+            <li class="dropdown-item" onclick="selectRole('ผู้อำนวยการฝ่ายขึ้นไป')">ผู้อำนวยการฝ่ายขึ้นไป</li>
+            <li class="dropdown-item" onclick="selectRole('ผู้บริหารสายงาน')">ผู้บริหารสายงาน</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Test Simulator Card -->
+    <div class="test-card">
+      <div class="test-card-title">ทดสอบกับคำขอตัวอย่าง</div>
+      <div class="test-rows-list">
+        <!-- Row 1 -->
+        <div class="test-row">
+          <div class="test-info-text">VR-690915-002 · เก๋ง · อ 09:00 · สีลม · หัวหน้าส่วน</div>
+          <div id="testStatus1"><span class="badge-auto-approved">อนุมัติอัตโนมัติ</span></div>
+        </div>
+        <!-- Row 2 -->
+        <div class="test-row">
+          <div class="test-info-text">VR-690918-017 · เก๋ง · ศ 09:00 · บางนา · เจ้าหน้าที่</div>
+          <div id="testStatus2"><span class="status-needs-approval">ส่งผู้อนุมัติ · ไม่ผ่านข้อ 4</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Action Bar -->
+    <footer class="bottom-action-bar">
+      <div class="last-edited-text">แก้ไขล่าสุด: กรกนก ธ. · 12 ก.ย. 69 16:40</div>
+      <div class="action-btn-group">
+        <button type="button" class="btn-cancel" onclick="resetForm()">ยกเลิก</button>
+        <button type="button" class="btn-save" onclick="saveRules()">บันทึก · มีผลกับคำขอใหม่เท่านั้น</button>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast-msg" id="toastMsg">บันทึกกฎอนุมัติอัตโนมัติเรียบร้อยแล้ว</div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Master Switch Toggle
+    let isMasterOn = true;
+    function toggleMasterSwitch() {
+      isMasterOn = !isMasterOn;
+      const toggle = document.getElementById('masterToggle');
+      if (isMasterOn) {
+        toggle.classList.remove('off');
+        showToast('เปิดใช้งานระบบอนุมัติอัตโนมัติแล้ว');
+      } else {
+        toggle.classList.add('off');
+        showToast('ปิดการใช้งานระบบอนุมัติอัตโนมัติชั่วคราว');
+      }
+      recalculateTestCases();
+    }
+
+    // Chip Toggle
+    function toggleChip(chipElement) {
+      chipElement.classList.toggle('selected');
+      recalculateTestCases();
+    }
+
+    // Role Dropdown Toggle
+    function toggleDropdown() {
+      const menu = document.getElementById('roleDropdownMenu');
+      menu.classList.toggle('open');
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener('click', function(event) {
+      const container = document.querySelector('.dropdown-container');
+      if (container && !container.contains(event.target)) {
+        document.getElementById('roleDropdownMenu').classList.remove('open');
+      }
+    });
+
+    let currentRoleRequirement = 'หัวหน้าส่วนขึ้นไป';
+    function selectRole(roleName) {
+      currentRoleRequirement = roleName;
+      document.getElementById('currentRoleText').textContent = roleName;
+      
+      const items = document.querySelectorAll('.dropdown-item');
+      items.forEach(item => {
+        if (item.textContent.trim() === roleName) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+      document.getElementById('roleDropdownMenu').classList.remove('open');
+      recalculateTestCases();
+    }
+
+    // Recalculate Simulator Rows dynamically
+    function recalculateTestCases() {
+      const status1 = document.getElementById('testStatus1');
+      const status2 = document.getElementById('testStatus2');
+
+      if (!isMasterOn) {
+        status1.innerHTML = '<span class="status-needs-approval">ส่งผู้อนุมัติ · ปิดระบบชั่วคราว</span>';
+        status2.innerHTML = '<span class="status-needs-approval">ส่งผู้อนุมัติ · ปิดระบบชั่วคราว</span>';
+        return;
+      }
+
+      // Check car types
+      const sedanSelected = Array.from(document.querySelectorAll('#carTypeChips .chip.selected')).some(c => c.textContent.trim() === 'รถเก๋ง');
+      
+      // Case 1: เก๋ง · หัวหน้าส่วน
+      if (sedanSelected && (currentRoleRequirement === 'หัวหน้าส่วนขึ้นไป' || currentRoleRequirement === 'เจ้าหน้าที่')) {
+        status1.innerHTML = '<span class="badge-auto-approved">อนุมัติอัตโนมัติ</span>';
+      } else {
+        status1.innerHTML = '<span class="status-needs-approval">ส่งผู้อนุมัติ · ไม่ผ่านเงื่อนไข</span>';
+      }
+
+      // Case 2: เก๋ง · เจ้าหน้าที่
+      if (sedanSelected && currentRoleRequirement === 'เจ้าหน้าที่') {
+        status2.innerHTML = '<span class="badge-auto-approved">อนุมัติอัตโนมัติ</span>';
+      } else {
+        status2.innerHTML = '<span class="status-needs-approval">ส่งผู้อนุมัติ · ไม่ผ่านข้อ 4</span>';
+      }
+    }
+
+    // Reset Form to initial reference state
+    function resetForm() {
+      // Reset Switch
+      isMasterOn = true;
+      document.getElementById('masterToggle').classList.remove('off');
+
+      // Reset Car Types
+      const carChips = document.querySelectorAll('#carTypeChips .chip');
+      const defaultCars = ['รถเก๋ง', 'Van', 'กระบะ'];
+      carChips.forEach(chip => {
+        if (defaultCars.includes(chip.textContent.trim())) {
+          chip.classList.add('selected');
+        } else {
+          chip.classList.remove('selected');
+        }
+      });
+
+      // Reset Area Chips
+      const areaChips = document.querySelectorAll('#areaChips .chip');
+      areaChips.forEach(chip => chip.classList.add('selected'));
+
+      // Reset Times
+      document.getElementById('startTime').value = '08:00';
+      document.getElementById('endTime').value = '17:00';
+
+      // Reset Role
+      selectRole('หัวหน้าส่วนขึ้นไป');
+
+      showToast('คืนค่าข้อมูลเริ่มต้นเรียบร้อยแล้ว');
+    }
+
+    // Save Rules
+    function saveRules() {
+      showToast('บันทึกกฎอนุมัติอัตโนมัติเรียบร้อยแล้ว · มีผลกับคำขอใหม่');
+    }
+
+    // Toast Notification helper
+    let toastTimeout;
+    function showToast(text) {
+      const toast = document.getElementById('toastMsg');
+      toast.textContent = text;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
