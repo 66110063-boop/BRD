@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F3 กฎจัดสรรรถ + ลำดับความสำคัญ — VRMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --brand:#00A5E5;       /* โลโก้ / ขีด active เท่านั้น ห้ามเป็นตัวอักษร */
+    --action:#007AAE;      /* ปุ่ม / ลิงก์ / คำอธิบายเน้น (4.78:1) */
+    --action-tint:#E6F6FD;
+    --ink-900:#16181A;
+    --ink-600:#5A6066;
+    --line-200:#E3E7EA;
+    --paper:#FFFFFF;
+    --canvas:#F7F9FA;
+    --success:#14865A;
+    --success-bg:#E3F4EC;
+    --warning:#B7791F;
+    --warning-bg:#FDF3E3;
+    --danger:#B3261E;
+    --danger-bg:#FCEBEA;
+    --neutral-bg:#EFF1F3;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--canvas); color:var(--ink-900); font-family:'Anuphan', system-ui, sans-serif; font-size:13px; }
+  .app{ display:flex; min-height:100vh; }
+
+  /* ---------- sidebar (เหมือน F2) ---------- */
+  .sidebar{ width:264px; flex:0 0 264px; background:var(--paper); border-right:1px solid var(--line-200); padding:24px 0 24px; }
+  .brand{ display:flex; align-items:center; gap:10px; padding:0 24px; margin-bottom:4px; }
+  .brand .logo{ width:24px; height:24px; border-radius:6px; background:var(--brand); }
+  .brand .name{ font-weight:600; font-size:16px; }
+  .scope{ padding:0 24px; color:var(--ink-600); font-size:11px; margin-bottom:24px; }
+  .nav-group-label{ padding:0 24px; margin:18px 0 8px; font-size:10.5px; font-weight:600; letter-spacing:.03em; color:var(--ink-600); text-transform:uppercase; }
+  .nav-item{ display:flex; align-items:center; gap:12px; margin:2px 12px; padding:9px 12px; border-radius:8px; color:var(--ink-900); font-size:13px; font-weight:400; cursor:pointer; }
+  .nav-item svg{ flex:0 0 16px; stroke:var(--ink-600); }
+  .nav-item.active{ background:var(--action-tint); font-weight:600; color:var(--action); }
+  .nav-item.active svg{ stroke:var(--action); }
+  .nav-item:not(.active):hover{ background:var(--neutral-bg); }
+
+  /* ---------- main ---------- */
+  .main{ flex:1; padding:32px 40px 120px; max-width:1220px; }
+  .page-head{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
+  .page-head h1{ margin:0 0 6px; font-size:20px; font-weight:600; }
+  .page-head p{ margin:0 0 24px; font-size:12px; color:var(--ink-600); }
+  .page-head p b{ color:var(--action); font-weight:600; }
+  .avatar{ width:34px; height:34px; border-radius:50%; background:var(--action-tint); color:var(--action); font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; flex:0 0 34px; }
+
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; margin-bottom:16px; }
+  .panel{ background:var(--paper); border:1px solid var(--line-200); border-radius:10px; padding:18px 20px; }
+  .panel-title{ font-size:14px; font-weight:600; margin-bottom:14px; }
+
+  .rank-row{ display:flex; gap:12px; padding:12px 0; border-top:1px solid var(--line-200); }
+  .rank-row:first-of-type{ border-top:none; padding-top:0; }
+  .rank-num{
+    flex:0 0 26px; height:26px; border-radius:50%; background:var(--action-tint); color:var(--action);
+    font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; margin-top:1px;
+  }
+  .rank-body .title{ font-size:13px; font-weight:600; color:var(--ink-900); margin-bottom:3px; }
+  .rank-body .sub{ font-size:11px; color:var(--ink-600); line-height:1.5; }
+
+  .sub-block{ margin-top:6px; }
+  .sub-block .label{ font-size:11px; font-weight:600; color:var(--ink-600); margin-bottom:8px; }
+  .chip-list{ display:flex; flex-direction:column; gap:6px; }
+  .chip-list .item{ font-size:12px; color:var(--ink-900); }
+  .chip-list .item b{ color:var(--action); font-weight:600; }
+
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+  .chip{ border:1px solid var(--line-200); background:var(--paper); color:var(--ink-900); font-size:12px; font-weight:500; padding:7px 14px; border-radius:16px; }
+  .chip.add{ width:32px; height:32px; padding:0; display:flex; align-items:center; justify-content:center; border-radius:50%; color:var(--action); border-color:var(--action); font-weight:600; cursor:pointer; }
+
+  .fallback-row{ display:flex; align-items:center; gap:8px; border:1px solid var(--line-200); border-radius:8px; padding:9px 14px; font-size:12px; color:var(--ink-900); }
+  .fallback-row .arrow{ color:var(--ink-600); }
+  .fallback-row b{ color:var(--action); font-weight:600; }
+
+  .example-box{ background:var(--action-tint); border-radius:8px; padding:14px 16px; margin-top:16px; }
+  .example-box .heading{ font-size:11px; font-weight:600; color:var(--action); margin-bottom:8px; }
+  .example-row{ display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-900); padding:4px 0; }
+  .example-row .arrow{ color:var(--ink-600); }
+  .pill{ font-size:11px; font-weight:600; padding:4px 12px; border-radius:12px; }
+  .pill.win{ background:var(--success-bg); color:var(--success); }
+  .pill.wait{ background:var(--neutral-bg); color:var(--ink-600); }
+
+  .toggle-row{ display:flex; align-items:center; gap:12px; margin-top:16px; }
+  .switch{ width:40px; height:24px; border-radius:12px; background:var(--action); position:relative; cursor:pointer; flex:0 0 40px; }
+  .switch::after{ content:""; position:absolute; width:18px; height:18px; border-radius:50%; background:var(--paper); top:3px; right:3px; }
+  .switch.off{ background:var(--line-200); }
+  .switch.off::after{ right:auto; left:3px; }
+  .toggle-row span{ font-size:12.5px; font-weight:500; }
+  .toggle-row .hint{ font-weight:400; color:var(--ink-600); }
+
+  .footer-bar{
+    position:fixed; left:264px; right:0; bottom:0; background:var(--paper);
+    border-top:1px solid var(--line-200); padding:14px 40px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .footer-bar .meta{ font-size:11px; color:var(--ink-600); }
+  .footer-actions{ display:flex; gap:10px; }
+  .btn{ border-radius:8px; padding:11px 20px; font-size:13px; font-weight:600; cursor:pointer; border:1px solid var(--line-200); background:var(--paper); color:var(--ink-900); }
+  .btn.primary{ background:var(--action); border-color:var(--action); color:var(--paper); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo" title="โลโก้ KTB — แทนที่ด้วยไฟล์จริง"></div>
+      <div class="name">VRMS</div>
+    </div>
+    <div class="scope">Key User · ทั้งองค์กร</div>
+
+    <div class="nav-group-label">ตั้งค่าระบบ</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><path d="M2 4h12M2 8h12M2 12h8"/></svg>สายอนุมัติ</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.6"><path d="M2 8.5 6 12.5 14 3"/></svg>อนุมัติอัตโนมัติ</div>
+    <div class="nav-item active"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><rect x="1.5" y="4" width="13" height="9" rx="1.5"/><path d="M4.5 4V2.5h7V4"/></svg>กฎจัดสรรรถ</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><path d="M8 1v14M1 8h14"/></svg>นโยบายการจอง</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><rect x="2" y="1.5" width="12" height="13" rx="1.5"/><path d="M5 5.5h6M5 8.5h6M5 11.5h3"/></svg>ฟอร์มจอง</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3l2 2"/></svg>ข้อมูลหลัก</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><path d="M8 1 14 3.5v4c0 4-2.6 6.4-6 7.5-3.4-1.1-6-3.5-6-7.5v-4Z"/></svg>สิทธิ์การใช้งาน</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><path d="M2 11c0-4.5 3-6.5 6-6.5s6 2 6 6.5l1.4 2.3H0.6L2 11Z"/><path d="M6 14.5a2 2 0 0 0 4 0"/></svg>แจ้งเตือนและเชื่อมต่อ</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><path d="M4 1.5h6l3 3v10h-9Z"/><path d="M6 8h4M6 10.5h4"/></svg>Audit log</div>
+
+    <div class="nav-group-label">วิเคราะห์</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><path d="M2 9 10 1.8 14 5.6V15H2Z"/></svg>Dashboard ผู้บริหาร</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><path d="M1 15V1M1 11l3-2 6 3.5V15H1Z"/></svg>การใช้รถ</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><circle cx="8" cy="7.5" r="5.5"/><path d="M4 14 8 12l4 2"/></svg>การเดินทาง</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><path d="M1 12 5 6l3 3 6-7"/></svg>แนวโน้มการจอง</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><circle cx="5" cy="5" r="3"/><circle cx="11" cy="11" r="3"/><path d="M7.3 6.8 8.7 9.2"/></svg>เปรียบเทียบคนขับ</div>
+    <div class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="1.4"><rect x="2" y="2" width="12" height="12" rx="1.5"/><path d="M5 9h6M5 6h6M5 12h3"/></svg>รายงาน</div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main">
+
+    <div class="page-head">
+      <div>
+        <h1>กฎจัดสรรรถ</h1>
+        <p>ใช้กับ <b>Auto Assignment</b> และลำดับคิวในกระดานจัดรถของ Fleet Admin</p>
+      </div>
+      <div class="avatar">กร</div>
+    </div>
+
+    <div class="grid2">
+
+      <!-- ซ้าย: เกณฑ์เลือกรถ -->
+      <div class="panel">
+        <div class="panel-title">เกณฑ์เลือกรถ (เรียงตามน้ำหนัก)</div>
+
+        <div class="rank-row">
+          <div class="rank-num">1</div>
+          <div class="rank-body">
+            <div class="title">รถหน่วยงานผู้จองก่อน</div>
+            <div class="sub">ไม่ว่าง → หน่วยงานใกล้เคียงตามลำดับที่ตั้ง (RSS 2.18)</div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-num">2</div>
+          <div class="rank-body">
+            <div class="title">สถานะพร้อมใช้งาน</div>
+            <div class="sub">ตัดรถซ่อม/ไม่พร้อม/ปลดระวางออกเสมอ</div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-num">3</div>
+          <div class="rank-body">
+            <div class="title">ใกล้จุดรับที่สุด</div>
+            <div class="sub">จากตำแหน่ง GPS หรือจุดจอดประจำ</div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-num">4</div>
+          <div class="rank-body">
+            <div class="title">กระจายงานเท่ากัน</div>
+            <div class="sub">คิวถัดไปตามจำนวนเที่ยวสะสม</div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-num">5</div>
+          <div class="rank-body">
+            <div class="title">น้ำมัน/แบตเตอรี่พอ</div>
+            <div class="sub">EV ต้องมีแบตคงเหลือ ≥ ระยะทาง × 1.3</div>
+          </div>
+        </div>
+
+        <div class="sub-block">
+          <div class="label">หน่วยงานใกล้เคียงของ ฝ่ายสินเชื่อธุรกิจ</div>
+          <div class="chip-list">
+            <div class="item"><b>1</b> · ฝ่ายบริหารทั่วไป</div>
+            <div class="item"><b>2</b> · ฝ่ายบริหารความเสี่ยง</div>
+          </div>
+        </div>
+
+        <div class="sub-block">
+          <div class="label">รถทดแทนเมื่อประเภทที่เลือกไม่ว่าง</div>
+          <div class="chip-row">
+            <div class="fallback-row">EV <span class="arrow">→</span> Hybrid <span class="arrow">→</span> <b>รถเก๋ง</b></div>
+          </div>
+          <div class="chip-row">
+            <div class="fallback-row">Van <span class="arrow">→</span> SUV <span class="arrow">→</span> <b>รถเก๋ง × 2</b></div>
+          </div>
+          <div class="chip-row" style="margin-top:8px;">
+            <div class="chip add">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ขวา: ลำดับความสำคัญเมื่อรถไม่พอ -->
+      <div class="panel">
+        <div class="panel-title">ลำดับความสำคัญเมื่อรถไม่พอ</div>
+
+        <div class="rank-row">
+          <div class="rank-num">1</div>
+          <div class="rank-body">
+            <div class="title">ระดับผู้ใช้งาน</div>
+            <div class="sub">ผู้บริหาร → ผู้จัดการ/หัวหน้างาน → พนักงาน</div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-num">2</div>
+          <div class="rank-body">
+            <div class="title">วัตถุประสงค์</div>
+            <div class="sub">พบลูกค้า/คู่ค้า → ภารกิจธุรกิจ → ประชุมภายนอก → ทั่วไป</div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-num">3</div>
+          <div class="rank-body">
+            <div class="title">เวลาที่ต้องถึง</div>
+            <div class="sub">ใกล้กว่าได้ก่อน</div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-num">4</div>
+          <div class="rank-body">
+            <div class="title">เวลาที่ส่งคำขอ</div>
+            <div class="sub">มาก่อนได้ก่อน</div>
+          </div>
+        </div>
+
+        <div class="example-box">
+          <div class="heading">ตัวอย่าง: 13:00–15:00 มีรถ 1 คัน 2 คำขอ</div>
+          <div class="example-row">
+            <span>VR-033 ผู้บริหาร · ประชุม</span>
+            <span class="arrow">→</span>
+            <span class="pill win">ได้รถ</span>
+          </div>
+          <div class="example-row">
+            <span>VR-021 พนักงาน · พบลูกค้า</span>
+            <span class="arrow">→</span>
+            <span class="pill wait">เสนอรถหน่วยงานใกล้เคียง / เวลาอื่น</span>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <div class="switch" onclick="this.classList.toggle('off')"></div>
+          <span>จัดรถอัตโนมัติเมื่ออนุมัติแล้ว <span class="hint">(Fleet Admin แก้ได้ภายหลัง)</span></span>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<div class="footer-bar">
+  <span class="meta">แก้ไขล่าสุด: กรกนก ร. · 12 ก.ย. 69 16:40</span>
+  <div class="footer-actions">
+    <button class="btn">ยกเลิก</button>
+    <button class="btn primary">บันทึก · มีผลกับคำขอใหม่เท่านั้น</button>
+  </div>
+</div>
+</body>
+</html>
