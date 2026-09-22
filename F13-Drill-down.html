@@ -12,12 +12,14 @@
   <style>
     /* ==========================================================================
        VRMS Carpool — Design Tokens (KTB Theme 21 กันยายน 2569 ตามเอกสาร PDF)
+       Frame ขนาดตายตัว W: 1280px | H: 860px
        ========================================================================== */
     :root {
       /* Brand & Actions */
       --ktb-brand: #00A5E5;         /* โลโก้, ขีด active เมนูล่าง */
       --ktb-action: #007AAE;        /* ทุกสิ่งที่กดได้: ปุ่มหลัก, ลิงก์, เมนู active (Contrast 4.78:1) */
       --ktb-action-tint: #E6F6FD;   /* พื้นหลังชิปเลือก, แถบข้อมูล, เมนู active */
+      --primary-dark: #1E293B;      /* สีข้อความสำคัญ, ปุ่มเข้ม */
 
       /* Neutrals */
       --ink-900: #16181A;           /* หัวข้อ, ข้อความหลัก */
@@ -52,16 +54,25 @@
       box-shadow: none !important;
     }
 
-    body {
-      font-family: var(--font);
+    html, body {
+      width: 1280px;
+      height: 860px;
+      overflow: hidden;
       background-color: var(--canvas);
       color: var(--ink-900);
-      min-height: 100vh;
+      font-family: var(--font);
+    }
+
+    .app-frame {
+      width: 1280px;
+      height: 860px;
       display: flex;
+      background-color: var(--canvas);
+      overflow: hidden;
     }
 
     /* ==========================================================================
-       SIDEBAR: เมนูด้านซ้าย
+       SIDEBAR: เมนูด้านซ้าย (Fixed W: 220px, H: 860px)
        ========================================================================== */
     .sidebar {
       width: 220px;
@@ -72,6 +83,7 @@
       flex-shrink: 0;
       padding: 24px 14px;
       user-select: none;
+      height: 100%;
     }
 
     .sidebar-brand-row {
@@ -99,32 +111,32 @@
       font-size: 11px;
       color: var(--ink-600);
       padding-left: 38px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       font-weight: 400;
     }
 
     /* Nav Section */
     .nav-group {
-      margin-bottom: 22px;
+      margin-bottom: 18px;
     }
     .nav-section-title {
       font-size: 11px;
       font-weight: 600;
       color: var(--ink-600);
-      padding: 6px 8px;
+      padding: 5px 8px;
       letter-spacing: 0.2px;
     }
     .nav-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 2px;
     }
     .nav-item {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 7.5px 10px;
+      padding: 6.5px 10px;
       border-radius: var(--r-ghost);
       font-size: 12.5px;
       font-weight: 500;
@@ -152,16 +164,16 @@
     }
 
     /* ==========================================================================
-       MAIN CONTENT: F13 Drill-down
+       MAIN CONTENT: F13 Drill-down (กว้าง 1060px)
        ========================================================================== */
     .main-content {
       flex: 1;
+      height: 100%;
       background-color: var(--canvas);
-      padding: 28px 40px 60px;
+      padding: 22px 28px;
       display: flex;
       flex-direction: column;
       overflow-y: auto;
-      max-width: 1300px;
     }
 
     /* Header */
@@ -179,7 +191,7 @@
     .page-subtitle {
       font-size: 12px;
       color: var(--ink-600);
-      margin-top: 4px;
+      margin-top: 3px;
       font-weight: 400;
     }
     .avatar-badge {
@@ -200,7 +212,7 @@
       border: none;
       height: 1px;
       background-color: var(--line-200);
-      margin: 18px 0 16px 0;
+      margin: 12px 0 14px 0;
     }
 
     /* ==========================================================================
@@ -210,7 +222,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       font-size: 12px;
     }
     .breadcrumb-left {
@@ -255,21 +267,21 @@
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-card);
-      padding: 16px 24px;
+      padding: 14px 22px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .reconcile-metrics-group {
       display: flex;
       align-items: center;
-      gap: 40px;
+      gap: 36px;
     }
     .metric-col {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
     .metric-label {
       font-size: 11.5px;
@@ -277,7 +289,7 @@
       font-weight: 400;
     }
     .metric-val {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 600;
       color: var(--ink-900);
       line-height: 1.2;
@@ -286,8 +298,8 @@
     .match-badge-wrap {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding-left: 12px;
+      gap: 7px;
+      padding-left: 8px;
     }
     .match-icon {
       width: 16px;
@@ -296,7 +308,7 @@
       stroke-width: 2.5;
     }
     .match-text {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--ink-900);
     }
@@ -304,13 +316,13 @@
     .btn-export {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-ghost);
-      padding: 8px 18px;
+      padding: 7px 16px;
       font-family: inherit;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 500;
       color: var(--ink-900);
       cursor: pointer;
@@ -333,7 +345,7 @@
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-card);
-      padding: 6px 20px;
+      padding: 4px 18px;
       display: flex;
       flex-direction: column;
     }
@@ -345,19 +357,19 @@
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 12.5px;
+      font-size: 12px;
     }
     .data-table th {
       background-color: transparent;
       color: var(--ink-600);
       font-weight: 400;
-      padding: 12px 14px;
+      padding: 11px 12px;
       border-bottom: 1px solid var(--line-200);
       white-space: nowrap;
       font-size: 11.5px;
     }
     .data-table td {
-      padding: 13px 14px;
+      padding: 12px 12px;
       border-bottom: 1px solid var(--line-200);
       color: var(--ink-900);
       white-space: nowrap;
@@ -383,9 +395,9 @@
 
     /* Status Pills */
     .status-pill {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 500;
-      padding: 3px 12px;
+      padding: 2.5px 10px;
       border-radius: var(--r-pill);
       display: inline-block;
       white-space: nowrap;
@@ -413,261 +425,267 @@
 
     /* Table Footer Caption */
     .table-caption-note {
-      font-size: 11.5px;
+      font-size: 11px;
       color: var(--ink-600);
-      margin-top: 14px;
+      margin-top: 12px;
       padding-left: 2px;
     }
   </style>
 </head>
 <body>
 
-  <!-- ==========================================================================
-       SIDEBAR
-       ========================================================================== -->
-  <aside class="sidebar">
-    <div class="sidebar-brand-row">
-      <div class="brand-logo-icon"></div>
-      <div class="brand-title">VRMS</div>
-    </div>
-    <div class="brand-subtitle">Key User · ทั้งองค์กร</div>
+  <!-- 1280 x 860 Container Frame -->
+  <div class="app-frame">
 
-    <nav>
-      <!-- Group 1: ตั้งค่าระบบ -->
-      <div class="nav-group">
-        <div class="nav-section-title">ตั้งค่าระบบ</div>
-        <ul class="nav-list">
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="list"></i>
-              <span>สายอนุมัติ</span>
-            </a>
-          </li>
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="check"></i>
-              <span>อนุมัติอัตโนมัติ</span>
-            </a>
-          </li>
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="key"></i>
-              <span>กฎจัดสรรรถ</span>
-            </a>
-          </li>
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="clock"></i>
-              <span>นโยบายการจอง</span>
-            </a>
-          </li>
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="file-text"></i>
-              <span>ฟอร์มจอง</span>
-            </a>
-          </li>
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="database"></i>
-              <span>ข้อมูลหลัก</span>
-            </a>
-          </li>
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="user"></i>
-              <span>สิทธิ์การใช้งาน</span>
-            </a>
-          </li>
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="bell"></i>
-              <span>แจ้งเตือนและเชื่อมต่อ</span>
-            </a>
-          </li>
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="shield"></i>
-              <span>Audit log</span>
-            </a>
-          </li>
-        </ul>
+    <!-- ==========================================================================
+         SIDEBAR: เมนูด้านซ้าย
+         ========================================================================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand-row">
+        <div class="brand-logo-icon"></div>
+        <div class="brand-title">VRMS</div>
       </div>
+      <div class="brand-subtitle">Key User · ทั้งองค์กร</div>
 
-      <!-- Group 2: วิเคราะห์ -->
-      <div class="nav-group">
-        <div class="nav-section-title">วิเคราะห์</div>
-        <ul class="nav-list">
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="home"></i>
-              <span>Dashboard ผู้บริหาร</span>
-            </a>
-          </li>
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="edit-3"></i>
-              <span>การใช้รถ</span>
-            </a>
-          </li>
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="map-pin"></i>
-              <span>การเดินทาง</span>
-            </a>
-          </li>
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="repeat"></i>
-              <span>แนวโน้มการจอง</span>
-            </a>
-          </li>
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="user"></i>
-              <span>เปรียบเทียบคนขับ</span>
-            </a>
-          </li>
-          <li>
-            <a class="nav-item" href="#">
-              <i data-lucide="list"></i>
-              <span>รายงาน</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </aside>
-
-  <!-- ==========================================================================
-       MAIN CONTENT: F13 Drill-down ไปรายการต้นทาง
-       ========================================================================== -->
-  <main class="main-content">
-    
-    <!-- Page Header -->
-    <header class="page-header">
-      <div>
-        <h1 class="page-title">จำนวนการจอง · ก.ย. 2569</h1>
-        <p class="page-subtitle">มาจาก Dashboard ผู้บริหาร ➔ ตัวเลข "จำนวนการจอง"</p>
-      </div>
-      <div class="avatar-badge">กร</div>
-    </header>
-
-    <hr class="header-divider">
-
-    <!-- Breadcrumb & Refresh Status -->
-    <div class="breadcrumb-row">
-      <div class="breadcrumb-left">
-        <span class="breadcrumb-chevron">‹</span>
-        <a class="breadcrumb-link" href="#">Dashboard ผู้บริหาร</a>
-        <span>/</span>
-        <span class="breadcrumb-current">จำนวนการจอง / ฝ่ายสินเชื่อธุรกิจ</span>
-      </div>
-      <div class="status-refresh-text">
-        <i data-lucide="clock"></i>
-        <span>อัปเดตล่าสุด 09:31 · รีเฟรชทุก 1 นาที</span>
-      </div>
-    </div>
-
-    <!-- Reconciliation Card (กระทบยอด) -->
-    <div class="reconcile-card">
-      <div class="reconcile-metrics-group">
-        <!-- Col 1 -->
-        <div class="metric-col">
-          <span class="metric-label">ตัวเลขบน Dashboard</span>
-          <span class="metric-val">[ค่า]</span>
+      <nav>
+        <!-- Group 1: ตั้งค่าระบบ -->
+        <div class="nav-group">
+          <div class="nav-section-title">ตั้งค่าระบบ</div>
+          <ul class="nav-list">
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="list"></i>
+                <span>สายอนุมัติ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="check"></i>
+                <span>อนุมัติอัตโนมัติ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="key"></i>
+                <span>กฎจัดสรรรถ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="clock"></i>
+                <span>นโยบายการจอง</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="file-text"></i>
+                <span>ฟอร์มจอง</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="database"></i>
+                <span>ข้อมูลหลัก</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="user"></i>
+                <span>สิทธิ์การใช้งาน</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="bell"></i>
+                <span>แจ้งเตือนและเชื่อมต่อ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="shield"></i>
+                <span>Audit log</span>
+              </a>
+            </li>
+          </ul>
         </div>
 
-        <!-- Col 2 -->
-        <div class="metric-col">
-          <span class="metric-label">รายการจริงด้านล่าง</span>
-          <span class="metric-val">[ค่า]</span>
+        <!-- Group 2: วิเคราะห์ -->
+        <div class="nav-group">
+          <div class="nav-section-title">วิเคราะห์</div>
+          <ul class="nav-list">
+            <li>
+              <!-- Active Page: Dashboard ผู้บริหาร (หน้ารวมต้นทางของ Drill-down) -->
+              <a class="nav-item active" href="#">
+                <i data-lucide="home"></i>
+                <span>Dashboard ผู้บริหาร</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="edit-3"></i>
+                <span>การใช้รถ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="map-pin"></i>
+                <span>การเดินทาง</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="repeat"></i>
+                <span>แนวโน้มการจอง</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="user"></i>
+                <span>เปรียบเทียบคนขับ</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" href="#">
+                <i data-lucide="list"></i>
+                <span>รายงาน</span>
+              </a>
+            </li>
+          </ul>
         </div>
+      </nav>
+    </aside>
 
-        <!-- Match Indicator -->
-        <div class="match-badge-wrap">
-          <i data-lucide="check" class="match-icon"></i>
-          <span class="match-text">ตรงกัน</span>
+    <!-- ==========================================================================
+         MAIN CONTENT: F13 Drill-down ไปรายการต้นทาง
+         ========================================================================== -->
+    <main class="main-content">
+      
+      <!-- Page Header -->
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">จำนวนการจอง · ก.ย. 2569</h1>
+          <p class="page-subtitle">มาจาก Dashboard ผู้บริหาร ➔ ตัวเลข "จำนวนการจอง"</p>
+        </div>
+        <div class="avatar-badge">กร</div>
+      </header>
+
+      <hr class="header-divider">
+
+      <!-- Breadcrumb & Refresh Status -->
+      <div class="breadcrumb-row">
+        <div class="breadcrumb-left">
+          <span class="breadcrumb-chevron">‹</span>
+          <a class="breadcrumb-link" href="#">Dashboard ผู้บริหาร</a>
+          <span>/</span>
+          <span class="breadcrumb-current">จำนวนการจอง / ฝ่ายสินเชื่อธุรกิจ</span>
+        </div>
+        <div class="status-refresh-text">
+          <i data-lucide="clock"></i>
+          <span>อัปเดตล่าสุด 09:31 · รีเฟรชทุก 1 นาที</span>
         </div>
       </div>
 
-      <!-- Export Button -->
-      <button type="button" class="btn-export">
-        <i data-lucide="download"></i>
-        <span>Export รายการ</span>
-      </button>
-    </div>
+      <!-- Reconciliation Card (กระทบยอด) -->
+      <div class="reconcile-card">
+        <div class="reconcile-metrics-group">
+          <!-- Col 1 -->
+          <div class="metric-col">
+            <span class="metric-label">ตัวเลขบน Dashboard</span>
+            <span class="metric-val">[ค่า]</span>
+          </div>
 
-    <!-- Data Table Card -->
-    <div class="table-card">
-      <div class="table-responsive">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>เลขที่</th>
-              <th>ผู้ขอ</th>
-              <th>วันเดินทาง</th>
-              <th>เส้นทาง</th>
-              <th>รถ</th>
-              <th>สถานะ</th>
-              <th>สร้างเมื่อ</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Row 1 -->
-            <tr>
-              <td class="col-id">VR-690918-017</td>
-              <td>สมชาย ใ.</td>
-              <td>25 ก.ย. 69</td>
-              <td>สนญ. ➔ บางนา</td>
-              <td>กข 1234</td>
-              <td><span class="status-pill dispatched">จัดรถแล้ว</span></td>
-              <td>18 ก.ย. 10:47</td>
-            </tr>
+          <!-- Col 2 -->
+          <div class="metric-col">
+            <span class="metric-label">รายการจริงด้านล่าง</span>
+            <span class="metric-val">[ค่า]</span>
+          </div>
 
-            <!-- Row 2 -->
-            <tr>
-              <td class="col-id">VR-690917-030</td>
-              <td>วรวุฒิ ท.</td>
-              <td>25–27 ก.ย. 69</td>
-              <td>สนญ. ➔ ขอนแก่น</td>
-              <td>—</td>
-              <td><span class="status-pill waiting">รออนุมัติ ระดับ 2</span></td>
-              <td>17 ก.ย. 15:20</td>
-            </tr>
+          <!-- Match Indicator -->
+          <div class="match-badge-wrap">
+            <i data-lucide="check" class="match-icon"></i>
+            <span class="match-text">ตรงกัน</span>
+          </div>
+        </div>
 
-            <!-- Row 3 -->
-            <tr>
-              <td class="col-id">VR-690915-002</td>
-              <td>ศุภชัย ว.</td>
-              <td>15 ก.ย. 69</td>
-              <td>สนญ. ➔ สีลม</td>
-              <td>กข 1234</td>
-              <td><span class="status-pill completed">เสร็จ</span></td>
-              <td>15 ก.ย. 09:02</td>
-            </tr>
-
-            <!-- Row 4 -->
-            <tr>
-              <td class="col-id">VR-690917-009</td>
-              <td>กมล ต.</td>
-              <td>19 ก.ย. 69</td>
-              <td>สนญ. ➔ สีลม</td>
-              <td>—</td>
-              <td><span class="status-pill rejected">ไม่อนุมัติ</span></td>
-              <td>17 ก.ย. 11:15</td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- Export Button -->
+        <button type="button" class="btn-export">
+          <i data-lucide="download"></i>
+          <span>Export รายการ</span>
+        </button>
       </div>
-    </div>
 
-    <!-- Caption Note -->
-    <div class="table-caption-note">
-      นับตามวันที่สร้างคำขอ · รวมทุกสถานะ ยกเว้นร่าง · คลิกเลขที่เพื่อเปิดประวัติเต็ม
-    </div>
+      <!-- Data Table Card -->
+      <div class="table-card">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>เลขที่</th>
+                <th>ผู้ขอ</th>
+                <th>วันเดินทาง</th>
+                <th>เส้นทาง</th>
+                <th>รถ</th>
+                <th>สถานะ</th>
+                <th>สร้างเมื่อ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Row 1 -->
+              <tr>
+                <td class="col-id">VR-690918-017</td>
+                <td>สมชาย ใ.</td>
+                <td>25 ก.ย. 69</td>
+                <td>สนญ. ➔ บางนา</td>
+                <td>กข 1234</td>
+                <td><span class="status-pill dispatched">จัดรถแล้ว</span></td>
+                <td>18 ก.ย. 10:47</td>
+              </tr>
 
-  </main>
+              <!-- Row 2 -->
+              <tr>
+                <td class="col-id">VR-690917-030</td>
+                <td>วรวุฒิ ท.</td>
+                <td>25–27 ก.ย. 69</td>
+                <td>สนญ. ➔ ขอนแก่น</td>
+                <td>—</td>
+                <td><span class="status-pill waiting">รออนุมัติ ระดับ 2</span></td>
+                <td>17 ก.ย. 15:20</td>
+              </tr>
+
+              <!-- Row 3 -->
+              <tr>
+                <td class="col-id">VR-690915-002</td>
+                <td>ศุภชัย ว.</td>
+                <td>15 ก.ย. 69</td>
+                <td>สนญ. ➔ สีลม</td>
+                <td>กข 1234</td>
+                <td><span class="status-pill completed">เสร็จ</span></td>
+                <td>15 ก.ย. 09:02</td>
+              </tr>
+
+              <!-- Row 4 -->
+              <tr>
+                <td class="col-id">VR-690917-009</td>
+                <td>กมล ต.</td>
+                <td>19 ก.ย. 69</td>
+                <td>สนญ. ➔ สีลม</td>
+                <td>—</td>
+                <td><span class="status-pill rejected">ไม่อนุมัติ</span></td>
+                <td>17 ก.ย. 11:15</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Caption Note -->
+      <div class="table-caption-note">
+        นับตามวันที่สร้างคำขอ · รวมทุกสถานะ ยกเว้นร่าง · คลิกเลขที่เพื่อเปิดประวัติเต็ม
+      </div>
+
+    </main>
+
+  </div>
 
   <script>
     // Initialize Lucide Icons
