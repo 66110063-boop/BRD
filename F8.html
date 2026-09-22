@@ -12,7 +12,7 @@
   <style>
     /* ==========================================================================
        VRMS Carpool — Design Tokens (KTB Theme 21 กันยายน 2569 ตามเอกสาร PDF)
-       Frame ขนาดตายตัว W: 1860px | H: 860px
+       Frame ขนาดตายตัว W: 1280px | H: 860px
        ========================================================================== */
     :root {
       /* Brand & Actions */
@@ -54,7 +54,7 @@
     }
 
     html, body {
-      width: 1860px;
+      width: 1280px;
       height: 860px;
       overflow: hidden;
       background-color: var(--canvas);
@@ -63,7 +63,7 @@
     }
 
     .app-frame {
-      width: 1860px;
+      width: 1280px;
       height: 860px;
       display: flex;
       background-color: var(--canvas);
@@ -71,16 +71,16 @@
     }
 
     /* ==========================================================================
-       SIDEBAR: เมนูด้านซ้าย (Fixed W: 240px, H: 860px)
+       SIDEBAR: เมนูด้านซ้าย (Fixed W: 220px, H: 860px)
        ========================================================================== */
     .sidebar {
-      width: 240px;
+      width: 220px;
       background-color: var(--paper);
       border-right: 1px solid var(--line-200);
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
-      padding: 24px 16px;
+      padding: 24px 14px;
       user-select: none;
       height: 100%;
     }
@@ -163,13 +163,13 @@
     }
 
     /* ==========================================================================
-       MAIN CONTENT: F8 วิเคราะห์การใช้รถ (กว้าง 1620px)
+       MAIN CONTENT: F8 วิเคราะห์การใช้รถ (กว้าง 1060px)
        ========================================================================== */
     .main-content {
       flex: 1;
       height: 100%;
       background-color: var(--canvas);
-      padding: 24px 40px;
+      padding: 24px 28px;
       display: flex;
       flex-direction: column;
       overflow-y: auto;
@@ -211,7 +211,7 @@
       border: none;
       height: 1px;
       background-color: var(--line-200);
-      margin: 14px 0 16px 0;
+      margin: 12px 0 14px 0;
     }
 
     /* ==========================================================================
@@ -221,25 +221,24 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
-      gap: 12px;
-      flex-wrap: wrap;
+      margin-bottom: 14px;
+      gap: 10px;
     }
     .filter-left-group {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
     }
     .date-filter-box {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-ghost);
-      padding: 7px 14px;
-      font-size: 12.5px;
+      padding: 6px 12px;
+      font-size: 12px;
       font-weight: 500;
       color: var(--ink-900);
       cursor: pointer;
@@ -254,7 +253,7 @@
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-pill);
-      padding: 7px 16px;
+      padding: 6px 14px;
       font-size: 12px;
       font-weight: 500;
       color: var(--ink-900);
@@ -270,12 +269,12 @@
     .search-input-box {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-ghost);
-      padding: 0 12px;
-      height: 36px;
+      padding: 0 10px;
+      height: 34px;
     }
     .search-input-box input {
       border: none;
@@ -284,7 +283,7 @@
       font-size: 12px;
       color: var(--ink-900);
       background: transparent;
-      width: 220px;
+      width: 160px;
     }
     .search-input-box i,
     .search-input-box svg {
@@ -300,13 +299,14 @@
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-ghost);
-      padding: 7px 16px;
+      padding: 6px 14px;
       font-family: inherit;
       font-size: 12px;
       font-weight: 500;
       color: var(--ktb-action);
       cursor: pointer;
       transition: all 120ms ease;
+      white-space: nowrap;
     }
     .btn-export:hover {
       border-color: var(--ktb-action);
@@ -325,19 +325,19 @@
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-card);
-      padding: 16px 20px;
+      padding: 14px 18px;
       display: flex;
       flex-direction: column;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .chart-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .chart-title {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--ink-900);
     }
@@ -349,7 +349,7 @@
     /* Wireframe Hatch Box */
     .chart-wireframe-box {
       width: 100%;
-      height: 175px;
+      height: 165px;
       border-radius: var(--r-ghost);
       background-color: #FAFCFD;
       background-image: repeating-linear-gradient(
@@ -364,14 +364,14 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 16px;
+      padding: 12px;
       position: relative;
     }
     .chart-wireframe-label {
       background-color: rgba(255, 255, 255, 0.95);
       border: 1px solid var(--line-200);
       border-radius: var(--r-pill);
-      padding: 6px 18px;
+      padding: 5px 16px;
       font-size: 12px;
       font-weight: 500;
       color: var(--ink-600);
@@ -393,7 +393,7 @@
       background-color: var(--paper);
       border: 1px solid var(--line-200);
       border-radius: var(--r-card);
-      padding: 16px 20px;
+      padding: 14px 18px;
       display: flex;
       flex-direction: column;
     }
@@ -401,10 +401,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .table-title {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--ink-900);
     }
@@ -422,18 +422,18 @@
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 12.5px;
+      font-size: 12px;
     }
     .data-table th {
       background-color: var(--canvas);
       color: var(--ink-600);
       font-weight: 500;
-      padding: 10px 16px;
+      padding: 9px 12px;
       border-bottom: 1px solid var(--line-200);
       white-space: nowrap;
     }
     .data-table td {
-      padding: 11px 16px;
+      padding: 10px 12px;
       border-bottom: 1px solid var(--line-200);
       color: var(--ink-900);
       white-space: nowrap;
@@ -451,9 +451,9 @@
       color: var(--ink-900);
     }
     .status-pill {
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 500;
-      padding: 3px 10px;
+      padding: 2.5px 8px;
       border-radius: var(--r-pill);
       display: inline-block;
     }
@@ -474,10 +474,10 @@
     .util-bar-wrap {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     .util-progress {
-      width: 100px;
+      width: 70px;
       height: 6px;
       background-color: var(--line-200);
       border-radius: 3px;
@@ -489,10 +489,10 @@
       border-radius: 3px;
     }
     .util-text {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       color: var(--ink-900);
-      width: 34px;
+      width: 30px;
     }
 
     .action-link {
@@ -678,13 +678,13 @@
         </div>
         <div class="chart-wireframe-box">
           <!-- Vector Guide Curve -->
-          <svg class="chart-svg-overlay" viewBox="0 0 1500 160" preserveAspectRatio="none">
+          <svg class="chart-svg-overlay" viewBox="0 0 1000 160" preserveAspectRatio="none">
             <!-- Target band area -->
-            <rect x="0" y="35" width="1500" height="45" fill="rgba(0, 165, 229, 0.05)" />
+            <rect x="0" y="35" width="1000" height="45" fill="rgba(0, 165, 229, 0.05)" />
             <!-- Dashed previous line -->
-            <path d="M 30 115 C 250 80, 500 120, 750 90 C 1000 60, 1250 110, 1470 65" fill="none" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="6,6" opacity="0.85" />
+            <path d="M 20 115 C 200 80, 350 120, 500 90 C 650 60, 800 110, 980 65" fill="none" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="5,5" opacity="0.85" />
             <!-- Solid current line -->
-            <path d="M 30 125 C 250 60, 500 95, 750 65 C 1000 40, 1250 85, 1470 45" fill="none" stroke="var(--ktb-action)" stroke-width="2.5" opacity="0.9" />
+            <path d="M 20 125 C 200 60, 350 95, 500 65 C 650 40, 800 85, 980 45" fill="none" stroke="var(--ktb-action)" stroke-width="2.5" opacity="0.9" />
           </svg>
           <div class="chart-wireframe-label">Line chart · อัตราการใช้รถรายวัน (%)</div>
         </div>
