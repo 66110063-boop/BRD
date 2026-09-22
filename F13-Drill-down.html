@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VRMS — จำนวนการจอง · ก.ย. 2569 (F13 Drill-down)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ==========================================================================
+       VRMS Carpool — Design Tokens (KTB Theme 21 กันยายน 2569 ตามเอกสาร PDF)
+       ========================================================================== */
+    :root {
+      /* Brand & Actions */
+      --ktb-brand: #00A5E5;         /* โลโก้, ขีด active เมนูล่าง */
+      --ktb-action: #007AAE;        /* ทุกสิ่งที่กดได้: ปุ่มหลัก, ลิงก์, เมนู active (Contrast 4.78:1) */
+      --ktb-action-tint: #E6F6FD;   /* พื้นหลังชิปเลือก, แถบข้อมูล, เมนู active */
+
+      /* Neutrals */
+      --ink-900: #16181A;           /* หัวข้อ, ข้อความหลัก */
+      --ink-600: #5A6066;           /* ข้อความรอง, คำอธิบาย, ไอคอนเมนู */
+      --line-200: #E3E7EA;          /* เส้นขอบการ์ด, เส้นคั่น */
+      --paper: #FFFFFF;             /* พื้นการ์ด, ไซด์บาร์ */
+      --canvas: #F7F9FA;            /* พื้นหลังหน้าจอ */
+
+      /* Status */
+      --success: #14865A;           /* จัดรถแล้ว, อนุมัติแล้ว */
+      --warning: #946011;           /* รออนุมัติ (ตัวอักษรบน warning-bg = 4.85:1) */
+      --warning-bg: #FDF3E3;        /* พื้นป้ายรออนุมัติ */
+      --danger: #B3261E;            /* ส่งกลับแก้ไข, ยกเลิก */
+      --danger-bg: #FCEBEA;
+      --neutral-bg: #EFF1F3;        /* พื้นป้ายสถานะทั่วไป */
+
+      /* Typography: Anuphan 3 น้ำหนักเท่านั้น (400, 500, 600) ห้ามใช้ Bold 700 */
+      --font: 'Anuphan', system-ui, -apple-system, sans-serif;
+
+      /* Radii */
+      --r-card: 10px;               /* การ์ด, ปุ่มหลัก, กล่องเนื้อหา */
+      --r-ghost: 8px;               /* ปุ่มขอบ, ชิปตัวเลือก */
+      --r-pill: 999px;              /* ป้ายสถานะ, Avatar */
+    }
+
+    /* Reset & Rule: ทั้งระบบไม่มีเงาเด็ดขาด (Zero Box-Shadow) */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      box-shadow: none !important;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--canvas);
+      color: var(--ink-900);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ==========================================================================
+       SIDEBAR: เมนูด้านซ้าย
+       ========================================================================== */
+    .sidebar {
+      width: 220px;
+      background-color: var(--paper);
+      border-right: 1px solid var(--line-200);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      padding: 24px 14px;
+      user-select: none;
+    }
+
+    .sidebar-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 6px;
+      margin-bottom: 2px;
+    }
+    .brand-logo-icon {
+      width: 22px;
+      height: 22px;
+      background-color: var(--ktb-brand);
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .brand-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink-900);
+      letter-spacing: -0.2px;
+      line-height: 1;
+    }
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--ink-600);
+      padding-left: 38px;
+      margin-bottom: 24px;
+      font-weight: 400;
+    }
+
+    /* Nav Section */
+    .nav-group {
+      margin-bottom: 22px;
+    }
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-600);
+      padding: 6px 8px;
+      letter-spacing: 0.2px;
+    }
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7.5px 10px;
+      border-radius: var(--r-ghost);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-600);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 120ms ease, color 120ms ease;
+    }
+    .nav-item:hover {
+      background-color: var(--canvas);
+      color: var(--ink-900);
+    }
+    /* Active Item: Dashboard ผู้บริหาร */
+    .nav-item.active {
+      background-color: var(--ktb-action-tint);
+      color: var(--ktb-action);
+      font-weight: 600;
+    }
+    .nav-item i,
+    .nav-item svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       MAIN CONTENT: F13 Drill-down
+       ========================================================================== */
+    .main-content {
+      flex: 1;
+      background-color: var(--canvas);
+      padding: 28px 40px 60px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      max-width: 1300px;
+    }
+
+    /* Header */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ink-900);
+      line-height: 1.3;
+    }
+    .page-subtitle {
+      font-size: 12px;
+      color: var(--ink-600);
+      margin-top: 4px;
+      font-weight: 400;
+    }
+    .avatar-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--r-pill);
+      background-color: var(--ktb-action-tint);
+      color: var(--ktb-action);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Header Divider */
+    .header-divider {
+      border: none;
+      height: 1px;
+      background-color: var(--line-200);
+      margin: 18px 0 16px 0;
+    }
+
+    /* ==========================================================================
+       BREADCRUMB & STATUS ROW
+       ========================================================================== */
+    .breadcrumb-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      font-size: 12px;
+    }
+    .breadcrumb-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ink-600);
+    }
+    .breadcrumb-link {
+      color: var(--ink-900);
+      text-decoration: underline;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .breadcrumb-link:hover {
+      color: var(--ktb-action);
+    }
+    .breadcrumb-chevron {
+      font-size: 13px;
+      color: var(--ink-600);
+    }
+    .breadcrumb-current {
+      color: var(--ink-600);
+    }
+    .status-refresh-text {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--ink-600);
+    }
+    .status-refresh-text i,
+    .status-refresh-text svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    /* ==========================================================================
+       RECONCILIATION SUMMARY CARD (กระทบยอด)
+       ========================================================================== */
+    .reconcile-card {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-card);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .reconcile-metrics-group {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+    .metric-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .metric-label {
+      font-size: 11.5px;
+      color: var(--ink-600);
+      font-weight: 400;
+    }
+    .metric-val {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ink-900);
+      line-height: 1.2;
+    }
+
+    .match-badge-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 12px;
+    }
+    .match-icon {
+      width: 16px;
+      height: 16px;
+      color: var(--ink-900);
+      stroke-width: 2.5;
+    }
+    .match-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-900);
+    }
+
+    .btn-export {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-ghost);
+      padding: 8px 18px;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-900);
+      cursor: pointer;
+      transition: all 120ms ease;
+    }
+    .btn-export:hover {
+      border-color: var(--ktb-action);
+      color: var(--ktb-action);
+    }
+    .btn-export i,
+    .btn-export svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ==========================================================================
+       DATA TABLE SECTION
+       ========================================================================== */
+    .table-card {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-card);
+      padding: 6px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 12.5px;
+    }
+    .data-table th {
+      background-color: transparent;
+      color: var(--ink-600);
+      font-weight: 400;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line-200);
+      white-space: nowrap;
+      font-size: 11.5px;
+    }
+    .data-table td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line-200);
+      color: var(--ink-900);
+      white-space: nowrap;
+      font-weight: 400;
+    }
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+    .data-table tr:hover td {
+      background-color: #FAFCFD;
+    }
+
+    /* Table Columns Specifics */
+    .col-id {
+      font-weight: 600;
+      color: var(--ink-900);
+      cursor: pointer;
+    }
+    .col-id:hover {
+      color: var(--ktb-action);
+      text-decoration: underline;
+    }
+
+    /* Status Pills */
+    .status-pill {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 12px;
+      border-radius: var(--r-pill);
+      display: inline-block;
+      white-space: nowrap;
+    }
+    /* จัดรถแล้ว */
+    .status-pill.dispatched {
+      background-color: #E2E8F0;
+      color: #334155;
+    }
+    /* รออนุมัติ ระดับ 2 */
+    .status-pill.waiting {
+      background-color: var(--neutral-bg);
+      color: var(--ink-600);
+    }
+    /* เสร็จ */
+    .status-pill.completed {
+      background-color: var(--neutral-bg);
+      color: var(--ink-600);
+    }
+    /* ไม่อนุมัติ */
+    .status-pill.rejected {
+      background-color: var(--neutral-bg);
+      color: var(--ink-600);
+    }
+
+    /* Table Footer Caption */
+    .table-caption-note {
+      font-size: 11.5px;
+      color: var(--ink-600);
+      margin-top: 14px;
+      padding-left: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SIDEBAR
+       ========================================================================== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand-row">
+      <div class="brand-logo-icon"></div>
+      <div class="brand-title">VRMS</div>
+    </div>
+    <div class="brand-subtitle">Key User · ทั้งองค์กร</div>
+
+    <nav>
+      <!-- Group 1: ตั้งค่าระบบ -->
+      <div class="nav-group">
+        <div class="nav-section-title">ตั้งค่าระบบ</div>
+        <ul class="nav-list">
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="list"></i>
+              <span>สายอนุมัติ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="check"></i>
+              <span>อนุมัติอัตโนมัติ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="key"></i>
+              <span>กฎจัดสรรรถ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="clock"></i>
+              <span>นโยบายการจอง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="file-text"></i>
+              <span>ฟอร์มจอง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="database"></i>
+              <span>ข้อมูลหลัก</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="user"></i>
+              <span>สิทธิ์การใช้งาน</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="bell"></i>
+              <span>แจ้งเตือนและเชื่อมต่อ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="shield"></i>
+              <span>Audit log</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Group 2: วิเคราะห์ -->
+      <div class="nav-group">
+        <div class="nav-section-title">วิเคราะห์</div>
+        <ul class="nav-list">
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="home"></i>
+              <span>Dashboard ผู้บริหาร</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="edit-3"></i>
+              <span>การใช้รถ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="map-pin"></i>
+              <span>การเดินทาง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="repeat"></i>
+              <span>แนวโน้มการจอง</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="user"></i>
+              <span>เปรียบเทียบคนขับ</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" href="#">
+              <i data-lucide="list"></i>
+              <span>รายงาน</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ==========================================================================
+       MAIN CONTENT: F13 Drill-down ไปรายการต้นทาง
+       ========================================================================== -->
+  <main class="main-content">
+    
+    <!-- Page Header -->
+    <header class="page-header">
+      <div>
+        <h1 class="page-title">จำนวนการจอง · ก.ย. 2569</h1>
+        <p class="page-subtitle">มาจาก Dashboard ผู้บริหาร ➔ ตัวเลข "จำนวนการจอง"</p>
+      </div>
+      <div class="avatar-badge">กร</div>
+    </header>
+
+    <hr class="header-divider">
+
+    <!-- Breadcrumb & Refresh Status -->
+    <div class="breadcrumb-row">
+      <div class="breadcrumb-left">
+        <span class="breadcrumb-chevron">‹</span>
+        <a class="breadcrumb-link" href="#">Dashboard ผู้บริหาร</a>
+        <span>/</span>
+        <span class="breadcrumb-current">จำนวนการจอง / ฝ่ายสินเชื่อธุรกิจ</span>
+      </div>
+      <div class="status-refresh-text">
+        <i data-lucide="clock"></i>
+        <span>อัปเดตล่าสุด 09:31 · รีเฟรชทุก 1 นาที</span>
+      </div>
+    </div>
+
+    <!-- Reconciliation Card (กระทบยอด) -->
+    <div class="reconcile-card">
+      <div class="reconcile-metrics-group">
+        <!-- Col 1 -->
+        <div class="metric-col">
+          <span class="metric-label">ตัวเลขบน Dashboard</span>
+          <span class="metric-val">[ค่า]</span>
+        </div>
+
+        <!-- Col 2 -->
+        <div class="metric-col">
+          <span class="metric-label">รายการจริงด้านล่าง</span>
+          <span class="metric-val">[ค่า]</span>
+        </div>
+
+        <!-- Match Indicator -->
+        <div class="match-badge-wrap">
+          <i data-lucide="check" class="match-icon"></i>
+          <span class="match-text">ตรงกัน</span>
+        </div>
+      </div>
+
+      <!-- Export Button -->
+      <button type="button" class="btn-export">
+        <i data-lucide="download"></i>
+        <span>Export รายการ</span>
+      </button>
+    </div>
+
+    <!-- Data Table Card -->
+    <div class="table-card">
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>เลขที่</th>
+              <th>ผู้ขอ</th>
+              <th>วันเดินทาง</th>
+              <th>เส้นทาง</th>
+              <th>รถ</th>
+              <th>สถานะ</th>
+              <th>สร้างเมื่อ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1 -->
+            <tr>
+              <td class="col-id">VR-690918-017</td>
+              <td>สมชาย ใ.</td>
+              <td>25 ก.ย. 69</td>
+              <td>สนญ. ➔ บางนา</td>
+              <td>กข 1234</td>
+              <td><span class="status-pill dispatched">จัดรถแล้ว</span></td>
+              <td>18 ก.ย. 10:47</td>
+            </tr>
+
+            <!-- Row 2 -->
+            <tr>
+              <td class="col-id">VR-690917-030</td>
+              <td>วรวุฒิ ท.</td>
+              <td>25–27 ก.ย. 69</td>
+              <td>สนญ. ➔ ขอนแก่น</td>
+              <td>—</td>
+              <td><span class="status-pill waiting">รออนุมัติ ระดับ 2</span></td>
+              <td>17 ก.ย. 15:20</td>
+            </tr>
+
+            <!-- Row 3 -->
+            <tr>
+              <td class="col-id">VR-690915-002</td>
+              <td>ศุภชัย ว.</td>
+              <td>15 ก.ย. 69</td>
+              <td>สนญ. ➔ สีลม</td>
+              <td>กข 1234</td>
+              <td><span class="status-pill completed">เสร็จ</span></td>
+              <td>15 ก.ย. 09:02</td>
+            </tr>
+
+            <!-- Row 4 -->
+            <tr>
+              <td class="col-id">VR-690917-009</td>
+              <td>กมล ต.</td>
+              <td>19 ก.ย. 69</td>
+              <td>สนญ. ➔ สีลม</td>
+              <td>—</td>
+              <td><span class="status-pill rejected">ไม่อนุมัติ</span></td>
+              <td>17 ก.ย. 11:15</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Caption Note -->
+    <div class="table-caption-note">
+      นับตามวันที่สร้างคำขอ · รวมทุกสถานะ ยกเว้นร่าง · คลิกเลขที่เพื่อเปิดประวัติเต็ม
+    </div>
+
+  </main>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
