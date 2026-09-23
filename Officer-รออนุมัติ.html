@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VRMS — รออนุมัติ (Officer — ผู้อนุมัติ)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ==========================================================================
+       VRMS Carpool — Design Tokens (KTB Theme 21 กันยายน 2569 ตามเอกสาร PDF)
+       Frame ขนาดตายตัว W: 1280px | H: 860px (Zero Scrollbar at 100% Zoom)
+       ========================================================================== */
+    :root {
+      /* Brand & Actions */
+      --ktb-brand: #00A5E5;         /* โลโก้, ขีด active เมนูล่าง */
+      --ktb-action: #007AAE;        /* ทุกสิ่งที่กดได้: ปุ่มหลัก, ลิงก์, เมนู active (Contrast 4.78:1) */
+      --ktb-action-tint: #E6F6FD;   /* พื้นหลังชิปเลือก, แถบข้อมูล, เมนู active */
+      --primary-dark: #1E293B;      /* ปุ่มเข้ม, toggle active, หัวข้อเน้น */
+
+      /* Neutrals */
+      --ink-900: #16181A;           /* หัวข้อ, ข้อความหลัก */
+      --ink-600: #5A6066;           /* ข้อความรอง, คำอธิบาย, ไอคอนเมนู */
+      --line-200: #E3E7EA;          /* เส้นขอบการ์ด, เส้นคั่น */
+      --paper: #FFFFFF;             /* พื้นการ์ด, ไซด์บาร์ */
+      --canvas: #F7F9FA;            /* พื้นหลังหน้าจอ */
+
+      /* Status */
+      --success: #14865A;           /* จัดรถแล้ว, อนุมัติแล้ว */
+      --success-bg: #EAF6F0;
+      --warning: #946011;           /* ส่งกลับแก้ไข, รออนุมัติ */
+      --warning-bg: #FDF3E3;
+      --danger: #B3261E;            /* ไม่อนุมัติ, ยกเลิก, ใกล้ครบ SLA */
+      --danger-bg: #FCEBEA;
+
+      /* Typography: Anuphan 3 น้ำหนักเท่านั้น (400, 500, 600) ห้ามใช้ Bold 700 */
+      --font: 'Anuphan', system-ui, -apple-system, sans-serif;
+
+      /* Radii */
+      --r-card: 10px;               /* การ์ด, กล่องเนื้อหา */
+      --r-ghost: 8px;               /* ปุ่มขอบ, ชิป, ปุ่มทั่วไป */
+      --r-pill: 999px;              /* ป้ายสถานะ, Avatar, Toggle */
+    }
+
+    /* Reset & Rule: ทั้งระบบไม่มีเงาเด็ดขาด (Zero Box-Shadow) */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      box-shadow: none !important;
+    }
+
+    html, body {
+      width: 1280px;
+      height: 860px;
+      overflow: hidden;
+      background-color: var(--canvas);
+      color: var(--ink-900);
+      font-family: var(--font);
+    }
+
+    .app-frame {
+      width: 1280px;
+      height: 860px;
+      display: flex;
+      background-color: var(--canvas);
+      overflow: hidden;
+    }
+
+    /* ==========================================================================
+       SIDEBAR: เมนูด้านซ้ายสำหรับบทบาท Officer (ผู้อนุมัติ)
+       (Fixed W: 220px, H: 860px)
+       ========================================================================== */
+    .sidebar {
+      width: 220px;
+      background-color: var(--paper);
+      border-right: 1px solid var(--line-200);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      padding: 24px 14px;
+      user-select: none;
+      height: 100%;
+    }
+
+    .sidebar-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 6px;
+      margin-bottom: 2px;
+    }
+    .brand-logo-icon {
+      width: 24px;
+      height: 24px;
+      background-color: var(--ktb-brand);
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .brand-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink-900);
+      letter-spacing: -0.2px;
+      line-height: 1;
+    }
+    .brand-subtitle {
+      font-size: 11.5px;
+      color: var(--ink-600);
+      padding-left: 40px;
+      margin-bottom: 26px;
+      font-weight: 400;
+    }
+
+    /* Nav List */
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: var(--r-ghost);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-600);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 120ms ease, color 120ms ease;
+    }
+    .nav-item:hover {
+      background-color: var(--canvas);
+      color: var(--ink-900);
+    }
+    /* Active Item: รออนุมัติ */
+    .nav-item.active {
+      background-color: var(--ktb-action-tint);
+      color: var(--ktb-action);
+      font-weight: 600;
+    }
+    .nav-item i,
+    .nav-item svg {
+      width: 17px;
+      height: 17px;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* Bottom Role Switch Indicator */
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 12px 6px 0;
+      border-top: 1px solid var(--line-200);
+    }
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--ink-600);
+    }
+    .role-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--warning);
+    }
+
+    /* ==========================================================================
+       MAIN COLUMN: Header Bar + 2-Panel Content (W: 1060px, H: 860px)
+       ========================================================================== */
+    .main-column {
+      width: 1060px;
+      height: 860px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: var(--canvas);
+    }
+
+    /* Top Bar: Proxy Banner & Approver Profile */
+    .top-header-bar {
+      height: 52px;
+      background-color: var(--paper);
+      border-bottom: 1px solid var(--line-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+
+    .proxy-notice-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--ktb-action-tint);
+      border: 1px solid #BAE6FD;
+      color: var(--ktb-action);
+      padding: 5px 14px;
+      border-radius: var(--r-pill);
+      font-size: 12.5px;
+      font-weight: 500;
+    }
+    .proxy-notice-pill svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2;
+    }
+    .proxy-dates {
+      color: #0284C7;
+      font-size: 11.5px;
+      font-weight: 400;
+      margin-left: 4px;
+    }
+
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .user-avatar-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--r-pill);
+      background-color: var(--ktb-action-tint);
+      border: 1px solid #BAE6FD;
+      color: var(--ktb-action);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+    }
+
+    /* ==========================================================================
+       BODY AREA: Split 2-Panel View (Left List + Right Detail)
+       ========================================================================== */
+    .content-body {
+      flex: 1;
+      height: calc(860px - 52px);
+      display: flex;
+      gap: 18px;
+      padding: 16px 22px;
+      overflow: hidden;
+    }
+
+    /* --------------------------------------------------------------------------
+       LEFT PANEL: Master List (W: 580px)
+       -------------------------------------------------------------------------- */
+    .left-panel {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 100%;
+    }
+
+    /* Title & Search Bar */
+    .panel-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .panel-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink-900);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .panel-title-count {
+      color: var(--ink-600);
+      font-weight: 500;
+      font-size: 16px;
+    }
+
+    .search-box-wrap {
+      position: relative;
+      width: 220px;
+    }
+    .search-box-wrap svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: var(--ink-600);
+      stroke-width: 2;
+    }
+    .search-input {
+      width: 100%;
+      height: 32px;
+      padding: 0 10px 0 30px;
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-ghost);
+      font-family: var(--font);
+      font-size: 12px;
+      color: var(--ink-900);
+      outline: none;
+      transition: border-color 120ms ease;
+    }
+    .search-input:focus {
+      border-color: var(--ktb-action);
+    }
+    .search-input::placeholder {
+      color: #94A3B8;
+    }
+
+    /* Filter Pills */
+    .filter-pills-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filter-pill {
+      height: 28px;
+      padding: 0 12px;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--line-200);
+      background-color: var(--paper);
+      color: var(--ink-900);
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 120ms ease;
+    }
+    .filter-pill:hover {
+      background-color: #F1F5F9;
+    }
+    .filter-pill.active {
+      background-color: #007AAE;
+      border-color: #007AAE;
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+
+    /* Table Container */
+    .table-container {
+      flex: 1;
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-card);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+    }
+    .data-table th {
+      position: sticky;
+      top: 0;
+      background-color: #F8FAFC;
+      border-bottom: 1px solid var(--line-200);
+      padding: 8px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-600);
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .data-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid #F1F5F9;
+      color: var(--ink-900);
+      vertical-align: middle;
+      line-height: 1.35;
+    }
+    .data-table tr {
+      cursor: pointer;
+      transition: background-color 100ms ease;
+    }
+    .data-table tr:hover {
+      background-color: #F8FAFC;
+    }
+    /* Active Selected Row (VR-690917-030) */
+    .data-table tr.selected {
+      background-color: var(--ktb-action-tint);
+      border-left: 3px solid var(--ktb-action);
+    }
+    .data-table tr.selected td:first-child {
+      padding-left: 7px;
+    }
+
+    .req-code {
+      font-weight: 600;
+      color: var(--ink-900);
+      white-space: nowrap;
+    }
+    .car-badge {
+      display: inline-block;
+      padding: 1.5px 6px;
+      border-radius: 4px;
+      background-color: #F1F5F9;
+      font-size: 10.5px;
+      font-weight: 500;
+      color: var(--ink-900);
+    }
+
+    /* SLA Badges */
+    .sla-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5px 8px;
+      border-radius: var(--r-pill);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+      min-width: 50px;
+    }
+    .sla-badge.urgent {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #F8C8C5;
+    }
+    .sla-badge.warning {
+      background-color: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid #F9E0B7;
+    }
+    .sla-badge.normal {
+      background-color: #F1F5F9;
+      color: var(--ink-600);
+      border: 1px solid #E2E8F0;
+    }
+
+    /* --------------------------------------------------------------------------
+       RIGHT PANEL: Detail View & Pending Approval Form (W: 430px)
+       -------------------------------------------------------------------------- */
+    .right-panel {
+      width: 430px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 100%;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .detail-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 2px;
+    }
+    .detail-req-id {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink-900);
+      letter-spacing: -0.2px;
+    }
+    .detail-level-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: var(--r-pill);
+      background-color: var(--ktb-action-tint);
+      border: 1px solid #BAE6FD;
+      color: var(--ktb-action);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .request-card {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-card);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .info-row:not(:last-child) {
+      padding-bottom: 8px;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .info-label {
+      width: 74px;
+      flex-shrink: 0;
+      color: var(--ink-600);
+      font-size: 11px;
+      font-weight: 500;
+      padding-top: 1px;
+    }
+    .info-val {
+      flex: 1;
+      color: var(--ink-900);
+    }
+    .info-val-title {
+      font-weight: 600;
+      color: var(--ink-900);
+      font-size: 12.5px;
+    }
+    .info-val-sub {
+      font-size: 11px;
+      color: var(--ink-600);
+      margin-top: 1px;
+    }
+
+    .notice-banner {
+      background-color: var(--ktb-action-tint);
+      border: 1px solid #BAE6FD;
+      border-radius: var(--r-ghost);
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      color: var(--ktb-action);
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    .notice-banner svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* Approval Action Box */
+    .approval-action-box {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-card);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .comment-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-900);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .comment-label span {
+      color: var(--ink-600);
+      font-weight: 400;
+    }
+    .comment-textarea {
+      width: 100%;
+      height: 80px;
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-ghost);
+      padding: 8px 10px;
+      font-family: var(--font);
+      font-size: 12px;
+      color: var(--ink-900);
+      resize: none;
+      outline: none;
+      transition: border-color 120ms ease;
+    }
+    .comment-textarea:focus {
+      border-color: var(--ktb-action);
+    }
+    .comment-textarea::placeholder {
+      color: #94A3B8;
+    }
+
+    .action-buttons-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-approve {
+      flex: 1;
+      height: 38px;
+      background-color: var(--ktb-action);
+      border: 1px solid var(--ktb-action);
+      border-radius: var(--r-ghost);
+      color: #FFFFFF;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: opacity 120ms ease;
+    }
+    .btn-approve:hover {
+      opacity: 0.92;
+    }
+    .btn-return {
+      height: 38px;
+      padding: 0 12px;
+      background-color: var(--paper);
+      border: 1px solid var(--warning);
+      border-radius: var(--r-ghost);
+      color: var(--warning);
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .btn-return:hover {
+      background-color: var(--warning-bg);
+    }
+    .btn-reject {
+      height: 38px;
+      padding: 0 12px;
+      background-color: var(--paper);
+      border: 1px solid var(--danger);
+      border-radius: var(--r-ghost);
+      color: var(--danger);
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .btn-reject:hover {
+      background-color: var(--danger-bg);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-frame">
+
+    <!-- ======================================================================
+         SIDEBAR: เมนูสำหรับบทบาท Officer (ผู้อนุมัติ)
+         ====================================================================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand-row">
+        <div class="brand-logo-icon">
+          <i data-lucide="car"></i>
+        </div>
+        <div class="brand-title">VRMS</div>
+      </div>
+      <div class="brand-subtitle">ผู้อนุมัติ</div>
+
+      <ul class="nav-list">
+        <li>
+          <!-- ACTIVE ITEM: รออนุมัติ -->
+          <a href="Officer-รออนุมัติ.html" class="nav-item active">
+            <i data-lucide="inbox"></i>
+            <span>รออนุมัติ</span>
+          </a>
+        </li>
+        <li>
+          <a href="Officer-ตัดสินใจแล้ว.html" class="nav-item">
+            <i data-lucide="check"></i>
+            <span>ตัดสินแล้ว</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item">
+            <i data-lucide="clock"></i>
+            <span>ติดตาม SLA</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item">
+            <i data-lucide="user-check"></i>
+            <span>มอบสิทธิ์</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="role-badge">
+          <span class="role-badge-dot"></span>
+          <span>สิทธิ์: ผู้จัดการฝ่าย (รักษาการ)</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ======================================================================
+         MAIN CONTENT: Top Bar + Split Panel
+         ====================================================================== -->
+    <div class="main-column">
+
+      <!-- Top Header Bar: Proxy Banner & Avatar -->
+      <header class="top-header-bar">
+        <div class="proxy-notice-pill">
+          <i data-lucide="user"></i>
+          <span>คุณกำลังอนุมัติแทน <strong>คุณวิชัย ส.</strong></span>
+          <span class="proxy-dates">ถึง 26 ก.ย. 69</span>
+        </div>
+
+        <div class="user-profile-badge">
+          <div class="user-avatar-circle" title="คุณอนันต์ น. (ผู้ปฏิบัติหน้าที่แทน)">
+            อน
+          </div>
+        </div>
+      </header>
+
+      <!-- Content 2-Panel Split -->
+      <main class="content-body">
+
+        <!-- ------------------------------------------------------------------
+             LEFT PANEL: ตารางรายการที่รออนุมัติ
+             ------------------------------------------------------------------ -->
+        <section class="left-panel">
+
+          <div class="panel-top-row">
+            <div class="panel-title">
+              <span>รออนุมัติ</span>
+              <span class="panel-title-count">(5)</span>
+            </div>
+
+            <div class="search-box-wrap">
+              <i data-lucide="search"></i>
+              <input type="text" class="search-input" placeholder="ค้นหาผู้ขอ เลขที่" value="" />
+            </div>
+          </div>
+
+          <div class="filter-pills-row">
+            <a href="#" class="filter-pill active">
+              <span>ทั้งหมด</span>
+            </a>
+            <a href="#" class="filter-pill">
+              <span>ใกล้ครบ SLA (2)</span>
+            </a>
+            <a href="#" class="filter-pill">
+              <span>ระดับ 2 (0)</span>
+            </a>
+            <a href="#" class="filter-pill">
+              <span>ต่างจังหวัด (1)</span>
+            </a>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 105px;">เลขที่</th>
+                  <th style="width: 85px;">ผู้ขอ</th>
+                  <th style="width: 90px;">เดินทาง</th>
+                  <th>เส้นทาง</th>
+                  <th style="width: 50px;">รถ</th>
+                  <th style="width: 50px;">ระดับ</th>
+                  <th style="width: 75px; text-align: right;">SLA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Row 1 -->
+                <tr>
+                  <td class="req-code">VR-690918-021</td>
+                  <td>ธนพร ก.</td>
+                  <td>วันนี้ 13:30</td>
+                  <td>สนญ. ➔ สีลม</td>
+                  <td><span class="car-badge">เก๋ง</span></td>
+                  <td>1/1</td>
+                  <td style="text-align: right;">
+                    <span class="sla-badge urgent">25 นาที</span>
+                  </td>
+                </tr>
+
+                <!-- Row 2 -->
+                <tr>
+                  <td class="req-code">VR-690918-017</td>
+                  <td>สมชาย โ.</td>
+                  <td>25 ก.ย. 09:00</td>
+                  <td>สนญ. ➔ บางนา</td>
+                  <td><span class="car-badge">เก๋ง</span></td>
+                  <td>1/1</td>
+                  <td style="text-align: right;">
+                    <span class="sla-badge warning">3 ชม.</span>
+                  </td>
+                </tr>
+
+                <!-- Row 3: Selected matching wireframe -->
+                <tr class="selected">
+                  <td class="req-code">VR-690917-030</td>
+                  <td>วรวุฒิ ท.</td>
+                  <td>25–27 ก.ย.</td>
+                  <td>สนญ. ➔ ขอนแก่น</td>
+                  <td><span class="car-badge">Van</span></td>
+                  <td>1/2</td>
+                  <td style="text-align: right;">
+                    <span class="sla-badge warning">6 ชม.</span>
+                  </td>
+                </tr>
+
+                <!-- Row 4 -->
+                <tr>
+                  <td class="req-code">VR-690917-026</td>
+                  <td>ปิยะ ฮ.</td>
+                  <td>28 ก.ย. 10:00</td>
+                  <td>สนญ. ➔ แจ้งวัฒนะ</td>
+                  <td><span class="car-badge">Van</span></td>
+                  <td>1/1</td>
+                  <td style="text-align: right;">
+                    <span class="sla-badge normal">1 วัน</span>
+                  </td>
+                </tr>
+
+                <!-- Row 5 -->
+                <tr>
+                  <td class="req-code">VR-690916-040</td>
+                  <td>มาลี ส.</td>
+                  <td>29 ก.ย. 09:00</td>
+                  <td>สนญ. ➔ ลาดกระบัง</td>
+                  <td><span class="car-badge">เก๋ง</span></td>
+                  <td>1/1</td>
+                  <td style="text-align: right;">
+                    <span class="sla-badge normal">2 วัน</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             RIGHT PANEL: รายละเอียดคำขอ & ฟอร์มพิจารณาอนุมัติ
+             ------------------------------------------------------------------ -->
+        <section class="right-panel">
+
+          <div class="detail-header-row">
+            <div class="detail-req-id">VR-690917-030</div>
+            <div class="detail-level-pill">
+              <span>ระดับ 1 จาก 2</span>
+            </div>
+          </div>
+
+          <!-- Request Overview Card -->
+          <div class="request-card">
+            <div class="info-row">
+              <div class="info-label">ผู้ขอ</div>
+              <div class="info-val">
+                <div class="info-val-title">คุณวรวุฒิ ท.</div>
+                <div class="info-val-sub">เจ้าหน้าที่สินเชื่อ &middot; 081-555-0192</div>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <div class="info-label">การเดินทาง</div>
+              <div class="info-val">
+                <div class="info-val-title">ข้ามวัน - 3 วัน</div>
+                <div class="info-val-sub">ศ 25 ก.ย. 07:00 &ndash; อา 27 ก.ย. 69 17:00</div>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <div class="info-label">เส้นทาง</div>
+              <div class="info-val">
+                <div class="info-val-title">สำนักงานใหญ่ ➔ สาขาขอนแก่น</div>
+                <div class="info-val-sub">~445 กม. ต่อเที่ยว</div>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <div class="info-label">ผู้เดินทาง</div>
+              <div class="info-val">
+                <div class="info-val-title">2 คน &middot; สัมภาระมาก</div>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <div class="info-label">ภารกิจ</div>
+              <div class="info-val">
+                <div class="info-val-title">พบลูกค้า/คู่ค้า</div>
+                <div class="info-val-sub">&ldquo;ตรวจหลักประกันลูกค้าสินเชื่อ 3 ราย&rdquo;</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Condition Notice Banner -->
+          <div class="notice-banner">
+            <i data-lucide="info"></i>
+            <span>ร่วมด้วย คุณประภา จ. &ndash; เหตุ: ต่างจังหวัด + เกิน 2 วัน</span>
+          </div>
+
+          <!-- Approval Action Form -->
+          <div class="approval-action-box">
+            <label class="comment-label">
+              ความเห็น <span>(ไม่บังคับ)</span>
+            </label>
+            <textarea class="comment-textarea" placeholder="ระบุเหตุผลหรือเงื่อนไขเพิ่มเติม..."></textarea>
+            
+            <div class="action-buttons-row">
+              <button type="button" class="btn-approve" onclick="location.href='Officer-ตัดสินใจแล้ว.html';">
+                <i data-lucide="check"></i>
+                <span>อนุมัติ</span>
+              </button>
+              <button type="button" class="btn-return" onclick="alert('ส่งกลับแก้ไข');">
+                <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i>
+                <span>ส่งกลับแก้ไข</span>
+              </button>
+              <button type="button" class="btn-reject" onclick="alert('ไม่อนุมัติคำขอ');">
+                <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+                <span>ไม่อนุมัติ</span>
+              </button>
+            </div>
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VRMS — ตัดสินใจแล้ว (Officer — ผู้อนุมัติ)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ==========================================================================
+       VRMS Carpool — Design Tokens (KTB Theme 21 กันยายน 2569 ตามเอกสาร PDF)
+       Frame ขนาดตายตัว W: 1280px | H: 860px (Zero Scrollbar at 100% Zoom)
+       ========================================================================== */
+    :root {
+      /* Brand & Actions */
+      --ktb-brand: #00A5E5;         /* โลโก้, ขีด active เมนูล่าง */
+      --ktb-action: #007AAE;        /* ทุกสิ่งที่กดได้: ปุ่มหลัก, ลิงก์, เมนู active (Contrast 4.78:1) */
+      --ktb-action-tint: #E6F6FD;   /* พื้นหลังชิปเลือก, แถบข้อมูล, เมนู active */
+      --primary-dark: #1E293B;      /* ปุ่มเข้ม, toggle active, หัวข้อเน้น */
+
+      /* Neutrals */
+      --ink-900: #16181A;           /* หัวข้อ, ข้อความหลัก */
+      --ink-600: #5A6066;           /* ข้อความรอง, คำอธิบาย, ไอคอนเมนู */
+      --line-200: #E3E7EA;          /* เส้นขอบการ์ด, เส้นคั่น */
+      --paper: #FFFFFF;             /* พื้นการ์ด, ไซด์บาร์ */
+      --canvas: #F7F9FA;            /* พื้นหลังหน้าจอ */
+
+      /* Status */
+      --success: #14865A;           /* จัดรถแล้ว, อนุมัติแล้ว */
+      --success-bg: #EAF6F0;
+      --warning: #946011;           /* ส่งกลับแก้ไข, รออนุมัติ */
+      --warning-bg: #FDF3E3;
+      --danger: #B3261E;            /* ไม่อนุมัติ, ยกเลิก */
+      --danger-bg: #FCEBEA;
+
+      /* Typography: Anuphan 3 น้ำหนักเท่านั้น (400, 500, 600) ห้ามใช้ Bold 700 */
+      --font: 'Anuphan', system-ui, -apple-system, sans-serif;
+
+      /* Radii */
+      --r-card: 10px;               /* การ์ด, กล่องเนื้อหา */
+      --r-ghost: 8px;               /* ปุ่มขอบ, ชิป, ปุ่มทั่วไป */
+      --r-pill: 999px;              /* ป้ายสถานะ, Avatar, Toggle */
+    }
+
+    /* Reset & Rule: ทั้งระบบไม่มีเงาเด็ดขาด (Zero Box-Shadow) */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      box-shadow: none !important;
+    }
+
+    html, body {
+      width: 1280px;
+      height: 860px;
+      overflow: hidden;
+      background-color: var(--canvas);
+      color: var(--ink-900);
+      font-family: var(--font);
+    }
+
+    .app-frame {
+      width: 1280px;
+      height: 860px;
+      display: flex;
+      background-color: var(--canvas);
+      overflow: hidden;
+    }
+
+    /* ==========================================================================
+       SIDEBAR: เมนูด้านซ้ายสำหรับบทบาท Officer (ผู้อนุมัติ)
+       (Fixed W: 220px, H: 860px)
+       ========================================================================== */
+    .sidebar {
+      width: 220px;
+      background-color: var(--paper);
+      border-right: 1px solid var(--line-200);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      padding: 24px 14px;
+      user-select: none;
+      height: 100%;
+    }
+
+    .sidebar-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 6px;
+      margin-bottom: 2px;
+    }
+    .brand-logo-icon {
+      width: 24px;
+      height: 24px;
+      background-color: var(--ktb-brand);
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .brand-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink-900);
+      letter-spacing: -0.2px;
+      line-height: 1;
+    }
+    .brand-subtitle {
+      font-size: 11.5px;
+      color: var(--ink-600);
+      padding-left: 40px;
+      margin-bottom: 26px;
+      font-weight: 400;
+    }
+
+    /* Nav List */
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: var(--r-ghost);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-600);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 120ms ease, color 120ms ease;
+    }
+    .nav-item:hover {
+      background-color: var(--canvas);
+      color: var(--ink-900);
+    }
+    /* Active Item: ตัดสินแล้ว */
+    .nav-item.active {
+      background-color: var(--ktb-action-tint);
+      color: var(--ktb-action);
+      font-weight: 600;
+    }
+    .nav-item i,
+    .nav-item svg {
+      width: 17px;
+      height: 17px;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* Bottom Role Switch Indicator */
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 12px 6px 0;
+      border-top: 1px solid var(--line-200);
+    }
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--ink-600);
+    }
+    .role-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--success);
+    }
+
+    /* ==========================================================================
+       MAIN COLUMN: Header Bar + 2-Panel Content (W: 1060px, H: 860px)
+       ========================================================================== */
+    .main-column {
+      width: 1060px;
+      height: 860px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: var(--canvas);
+    }
+
+    /* Top Bar: Proxy Banner & Approver Profile */
+    .top-header-bar {
+      height: 52px;
+      background-color: var(--paper);
+      border-bottom: 1px solid var(--line-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+
+    .proxy-notice-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--ktb-action-tint);
+      border: 1px solid #BAE6FD;
+      color: var(--ktb-action);
+      padding: 5px 14px;
+      border-radius: var(--r-pill);
+      font-size: 12.5px;
+      font-weight: 500;
+    }
+    .proxy-notice-pill svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2;
+    }
+    .proxy-dates {
+      color: #0284C7;
+      font-size: 11.5px;
+      font-weight: 400;
+      margin-left: 4px;
+    }
+
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .user-avatar-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--r-pill);
+      background-color: var(--ktb-action-tint);
+      border: 1px solid #BAE6FD;
+      color: var(--ktb-action);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+    }
+
+    /* ==========================================================================
+       BODY AREA: Split 2-Panel View (Left List + Right Detail)
+       ========================================================================== */
+    .content-body {
+      flex: 1;
+      height: calc(860px - 52px);
+      display: flex;
+      gap: 18px;
+      padding: 16px 22px;
+      overflow: hidden;
+    }
+
+    /* --------------------------------------------------------------------------
+       LEFT PANEL: Master List (W: 580px)
+       -------------------------------------------------------------------------- */
+    .left-panel {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 100%;
+    }
+
+    /* Title & Search Bar */
+    .panel-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .panel-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink-900);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .panel-title-count {
+      color: var(--ink-600);
+      font-weight: 500;
+      font-size: 16px;
+    }
+
+    .search-box-wrap {
+      position: relative;
+      width: 220px;
+    }
+    .search-box-wrap svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: var(--ink-600);
+      stroke-width: 2;
+    }
+    .search-input {
+      width: 100%;
+      height: 32px;
+      padding: 0 10px 0 30px;
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-ghost);
+      font-family: var(--font);
+      font-size: 12px;
+      color: var(--ink-900);
+      outline: none;
+      transition: border-color 120ms ease;
+    }
+    .search-input:focus {
+      border-color: var(--ktb-action);
+    }
+    .search-input::placeholder {
+      color: #94A3B8;
+    }
+
+    /* Filter Pills */
+    .filter-pills-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filter-pill {
+      height: 28px;
+      padding: 0 12px;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--line-200);
+      background-color: var(--paper);
+      color: var(--ink-900);
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 120ms ease;
+    }
+    .filter-pill:hover {
+      background-color: #F1F5F9;
+    }
+    .filter-pill.active {
+      background-color: var(--primary-dark);
+      border-color: var(--primary-dark);
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .pill-dot.success { background-color: var(--success); }
+    .pill-dot.warning { background-color: var(--warning); }
+    .pill-dot.danger { background-color: var(--danger); }
+
+    /* Table Container */
+    .table-container {
+      flex: 1;
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-card);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+    }
+    .data-table th {
+      position: sticky;
+      top: 0;
+      background-color: #F8FAFC;
+      border-bottom: 1px solid var(--line-200);
+      padding: 8px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-600);
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .data-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid #F1F5F9;
+      color: var(--ink-900);
+      vertical-align: middle;
+      line-height: 1.35;
+    }
+    .data-table tr {
+      cursor: pointer;
+      transition: background-color 100ms ease;
+    }
+    .data-table tr:hover {
+      background-color: #F8FAFC;
+    }
+    /* Active Selected Row (e.g. VR-690917-030) */
+    .data-table tr.selected {
+      background-color: var(--ktb-action-tint);
+      border-left: 3px solid var(--ktb-action);
+    }
+    .data-table tr.selected td:first-child {
+      padding-left: 7px; /* adjust for 3px border */
+    }
+
+    .req-code {
+      font-weight: 600;
+      color: var(--ink-900);
+      white-space: nowrap;
+    }
+    .table-subtext {
+      font-size: 10.5px;
+      color: var(--ink-600);
+    }
+    .car-badge {
+      display: inline-block;
+      padding: 1.5px 6px;
+      border-radius: 4px;
+      background-color: #F1F5F9;
+      font-size: 10.5px;
+      font-weight: 500;
+      color: var(--ink-900);
+    }
+
+    /* Decision Status Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2.5px 8px;
+      border-radius: var(--r-pill);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .status-badge.approved {
+      background-color: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #C6EAD9;
+    }
+    .status-badge.returned {
+      background-color: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid #F9E0B7;
+    }
+    .status-badge.rejected {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #F8C8C5;
+    }
+    .status-badge svg {
+      width: 12px;
+      height: 12px;
+      stroke-width: 2.5;
+    }
+
+    /* Table Footer / Summary Bar */
+    .table-footer {
+      padding: 7px 12px;
+      border-top: 1px solid var(--line-200);
+      background-color: #F8FAFC;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--ink-600);
+    }
+
+    /* --------------------------------------------------------------------------
+       RIGHT PANEL: Detail View & Decision Audit Log (W: 430px)
+       -------------------------------------------------------------------------- */
+    .right-panel {
+      width: 430px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      height: 100%;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    /* Top Detail Header */
+    .detail-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 2px;
+    }
+    .detail-req-id {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink-900);
+      letter-spacing: -0.2px;
+    }
+    .detail-level-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: var(--r-pill);
+      background-color: var(--success-bg);
+      border: 1px solid #C6EAD9;
+      color: var(--success);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .detail-level-pill svg {
+      width: 12px;
+      height: 12px;
+      stroke-width: 2.2;
+    }
+
+    /* Main Request Summary Card */
+    .request-card {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-card);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .info-row:not(:last-child) {
+      padding-bottom: 8px;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .info-label {
+      width: 74px;
+      flex-shrink: 0;
+      color: var(--ink-600);
+      font-size: 11px;
+      font-weight: 500;
+      padding-top: 1px;
+    }
+    .info-val {
+      flex: 1;
+      color: var(--ink-900);
+    }
+    .info-val-title {
+      font-weight: 600;
+      color: var(--ink-900);
+      font-size: 12.5px;
+    }
+    .info-val-sub {
+      font-size: 11px;
+      color: var(--ink-600);
+      margin-top: 1px;
+    }
+
+    /* Notice Banner */
+    .notice-banner {
+      background-color: var(--ktb-action-tint);
+      border: 1px solid #BAE6FD;
+      border-radius: var(--r-ghost);
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      color: var(--ktb-action);
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    .notice-banner svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* Decision Record Card (Audit Trail) */
+    .decision-record-card {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-card);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .record-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .record-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-900);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .record-timestamp {
+      font-size: 10.5px;
+      color: var(--ink-600);
+      font-weight: 400;
+    }
+
+    .record-status-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      background-color: #F8FAFC;
+      border: 1px solid #EDF2F7;
+    }
+    .record-status-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: var(--success-bg);
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .record-status-icon svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2.5;
+    }
+    .record-status-text {
+      flex: 1;
+      font-size: 12px;
+      line-height: 1.3;
+    }
+    .record-status-text strong {
+      color: var(--success);
+      font-weight: 600;
+      display: block;
+    }
+    .record-status-text span {
+      color: var(--ink-600);
+      font-size: 10.5px;
+    }
+
+    /* Comment Box */
+    .comment-box {
+      background-color: #F8FAFC;
+      border: 1px solid var(--line-200);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 11.5px;
+      color: var(--ink-900);
+      line-height: 1.4;
+    }
+    .comment-box-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--ink-600);
+      margin-bottom: 2px;
+      display: block;
+    }
+
+    /* SLA performance line */
+    .sla-audit-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10.5px;
+      color: var(--ink-600);
+    }
+    .sla-audit-line svg {
+      width: 13px;
+      height: 13px;
+      stroke-width: 2;
+      color: var(--ktb-action);
+    }
+
+    /* Workflow Progress Tracker */
+    .workflow-tracker-card {
+      background-color: var(--paper);
+      border: 1px solid var(--line-200);
+      border-radius: var(--r-card);
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .tracker-title {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink-900);
+    }
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+    .stepper::before {
+      content: '';
+      position: absolute;
+      top: 11px;
+      left: 14px;
+      right: 14px;
+      height: 2px;
+      background-color: #E2E8F0;
+      z-index: 1;
+    }
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+      z-index: 2;
+      font-size: 10px;
+      color: var(--ink-600);
+      width: 60px;
+      text-align: center;
+    }
+    .step-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #FFFFFF;
+      border: 2px solid #CBD5E1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--ink-600);
+    }
+    .step-item.done .step-dot {
+      background-color: var(--success);
+      border-color: var(--success);
+      color: #FFFFFF;
+    }
+    .step-item.active .step-dot {
+      background-color: var(--ktb-action);
+      border-color: var(--ktb-action);
+      color: #FFFFFF;
+    }
+    .step-item.pending .step-dot {
+      background-color: #F8FAFC;
+      border-color: #CBD5E1;
+      color: #94A3B8;
+    }
+    .step-item.done {
+      color: var(--success);
+      font-weight: 500;
+    }
+    .step-item.active {
+      color: var(--ktb-action);
+      font-weight: 600;
+    }
+
+    /* Actions Bottom Bar */
+    .detail-action-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2px;
+    }
+    .btn-secondary {
+      height: 32px;
+      padding: 0 12px;
+      border-radius: var(--r-ghost);
+      border: 1px solid var(--line-200);
+      background-color: var(--paper);
+      color: var(--ink-900);
+      font-family: var(--font);
+      font-size: 11.5px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 100ms ease;
+    }
+    .btn-secondary:hover {
+      background-color: #F1F5F9;
+    }
+    .btn-secondary svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2;
+    }
+
+    .btn-link {
+      font-size: 11.5px;
+      color: var(--ktb-action);
+      font-weight: 500;
+      text-decoration: none;
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .btn-link:hover {
+      text-decoration: underline;
+    }
+    .btn-link svg {
+      width: 13px;
+      height: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-frame">
+
+    <!-- ======================================================================
+         SIDEBAR: เมนูสำหรับบทบาท Officer (ผู้อนุมัติ)
+         ====================================================================== -->
+    <aside class="sidebar">
+      <!-- Brand Logo -->
+      <div class="sidebar-brand-row">
+        <div class="brand-logo-icon">
+          <i data-lucide="car"></i>
+        </div>
+        <div class="brand-title">VRMS</div>
+      </div>
+      <div class="brand-subtitle">ผู้อนุมัติ</div>
+
+      <!-- Navigation List -->
+      <ul class="nav-list">
+        <li>
+          <a href="F-รออนุมัติ.html" class="nav-item">
+            <i data-lucide="inbox"></i>
+            <span>รออนุมัติ</span>
+          </a>
+        </li>
+        <li>
+          <!-- ACTIVE ITEM: ตัดสินแล้ว -->
+          <a href="#" class="nav-item active">
+            <i data-lucide="check"></i>
+            <span>ตัดสินแล้ว</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item">
+            <i data-lucide="clock"></i>
+            <span>ติดตาม SLA</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item">
+            <i data-lucide="user-check"></i>
+            <span>มอบสิทธิ์</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Role / Identity Footer -->
+      <div class="sidebar-footer">
+        <div class="role-badge">
+          <span class="role-badge-dot"></span>
+          <span>สิทธิ์: ผู้จัดการฝ่าย (รักษาการ)</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ======================================================================
+         MAIN CONTENT: Top Bar + Split Panel (ตารางซ้าย + รายละเอียดขวา)
+         ====================================================================== -->
+    <div class="main-column">
+
+      <!-- Top Header Bar: Proxy Banner & Avatar -->
+      <header class="top-header-bar">
+        <!-- Proxy Alert Badge -->
+        <div class="proxy-notice-pill">
+          <i data-lucide="user"></i>
+          <span>คุณกำลังอนุมัติแทน <strong>คุณวิชัย ส.</strong></span>
+          <span class="proxy-dates">ถึง 26 ก.ย. 69</span>
+        </div>
+
+        <!-- Approver Avatar -->
+        <div class="user-profile-badge">
+          <div class="user-avatar-circle" title="คุณอนันต์ น. (ผู้ปฏิบัติหน้าที่แทน)">
+            อน
+          </div>
+        </div>
+      </header>
+
+      <!-- Content 2-Panel Split -->
+      <main class="content-body">
+
+        <!-- ------------------------------------------------------------------
+             LEFT PANEL: ตารางรายการที่ตัดสินใจแล้ว
+             ------------------------------------------------------------------ -->
+        <section class="left-panel">
+
+          <!-- Top Row: Title & Search -->
+          <div class="panel-top-row">
+            <div class="panel-title">
+              <span>ตัดสินแล้ว</span>
+              <span class="panel-title-count">(18)</span>
+            </div>
+
+            <!-- Search Box -->
+            <div class="search-box-wrap">
+              <i data-lucide="search"></i>
+              <input type="text" class="search-input" placeholder="ค้นหาผู้ขอ เลขที่" value="" />
+            </div>
+          </div>
+
+          <!-- Filter Pills -->
+          <div class="filter-pills-row">
+            <a href="#" class="filter-pill active">
+              <span>ทั้งหมด</span>
+              <span>(18)</span>
+            </a>
+            <a href="#" class="filter-pill">
+              <span class="pill-dot success"></span>
+              <span>อนุมัติแล้ว</span>
+              <span>(14)</span>
+            </a>
+            <a href="#" class="filter-pill">
+              <span class="pill-dot warning"></span>
+              <span>ส่งกลับแก้ไข</span>
+              <span>(2)</span>
+            </a>
+            <a href="#" class="filter-pill">
+              <span class="pill-dot danger"></span>
+              <span>ไม่อนุมัติ</span>
+              <span>(2)</span>
+            </a>
+          </div>
+
+          <!-- Table Container -->
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 105px;">เลขที่</th>
+                  <th style="width: 85px;">ผู้ขอ</th>
+                  <th style="width: 85px;">เดินทาง</th>
+                  <th>เส้นทาง</th>
+                  <th style="width: 50px;">รถ</th>
+                  <th style="width: 50px;">ระดับ</th>
+                  <th style="width: 100px;">ผลการตัดสิน</th>
+                  <th style="width: 80px; text-align: right;">วันที่</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Row 1: Selected active item matching Wireframe VR-690917-030 -->
+                <tr class="selected" onclick="selectRow(this, 'VR-690917-030')">
+                  <td class="req-code">VR-690917-030</td>
+                  <td>วรวุฒิ ท.</td>
+                  <td>25–27 ก.ย.</td>
+                  <td>สนญ. ➔ ขอนแก่น</td>
+                  <td><span class="car-badge">Van</span></td>
+                  <td>1/2</td>
+                  <td>
+                    <span class="status-badge approved">
+                      <i data-lucide="check"></i>
+                      <span>อนุมัติแล้ว</span>
+                    </span>
+                  </td>
+                  <td style="text-align: right; color: var(--ink-600);">23 ก.ย. 10:15</td>
+                </tr>
+
+                <!-- Row 2 -->
+                <tr onclick="selectRow(this, 'VR-690918-021')">
+                  <td class="req-code">VR-690918-021</td>
+                  <td>ธนพร ก.</td>
+                  <td>23 ก.ย. 13:30</td>
+                  <td>สนญ. ➔ สีลม</td>
+                  <td><span class="car-badge">เก๋ง</span></td>
+                  <td>1/1</td>
+                  <td>
+                    <span class="status-badge approved">
+                      <i data-lucide="check"></i>
+                      <span>อนุมัติแล้ว</span>
+                    </span>
+                  </td>
+                  <td style="text-align: right; color: var(--ink-600);">23 ก.ย. 09:40</td>
+                </tr>
+
+                <!-- Row 3 -->
+                <tr onclick="selectRow(this, 'VR-690918-017')">
+                  <td class="req-code">VR-690918-017</td>
+                  <td>สมชาย โ.</td>
+                  <td>25 ก.ย. 09:00</td>
+                  <td>สนญ. ➔ บางนา</td>
+                  <td><span class="car-badge">เก๋ง</span></td>
+                  <td>1/1</td>
+                  <td>
+                    <span class="status-badge approved">
+                      <i data-lucide="check"></i>
+                      <span>อนุมัติแล้ว</span>
+                    </span>
+                  </td>
+                  <td style="text-align: right; color: var(--ink-600);">22 ก.ย. 16:50</td>
+                </tr>
+
+                <!-- Row 4: ส่งกลับแก้ไข -->
+                <tr onclick="selectRow(this, 'VR-690917-026')">
+                  <td class="req-code">VR-690917-026</td>
+                  <td>ปิยะ ฮ.</td>
+                  <td>28 ก.ย. 10:00</td>
+                  <td>สนญ. ➔ แจ้งวัฒนะ</td>
+                  <td><span class="car-badge">Van</span></td>
+                  <td>1/1</td>
+                  <td>
+                    <span class="status-badge returned">
+                      <i data-lucide="rotate-ccw"></i>
+                      <span>ส่งกลับแก้ไข</span>
+                    </span>
+                  </td>
+                  <td style="text-align: right; color: var(--ink-600);">22 ก.ย. 14:15</td>
+                </tr>
+
+                <!-- Row 5: ไม่อนุมัติ -->
+                <tr onclick="selectRow(this, 'VR-690916-040')">
+                  <td class="req-code">VR-690916-040</td>
+                  <td>มาลี ส.</td>
+                  <td>29 ก.ย. 09:00</td>
+                  <td>สนญ. ➔ ลาดกระบัง</td>
+                  <td><span class="car-badge">เก๋ง</span></td>
+                  <td>1/1</td>
+                  <td>
+                    <span class="status-badge rejected">
+                      <i data-lucide="x"></i>
+                      <span>ไม่อนุมัติ</span>
+                    </span>
+                  </td>
+                  <td style="text-align: right; color: var(--ink-600);">21 ก.ย. 15:30</td>
+                </tr>
+
+                <!-- Row 6 -->
+                <tr onclick="selectRow(this, 'VR-690915-012')">
+                  <td class="req-code">VR-690915-012</td>
+                  <td>กิตติศักดิ์ ภ.</td>
+                  <td>24 ก.ย. 08:00</td>
+                  <td>สนญ. ➔ ชลบุรี</td>
+                  <td><span class="car-badge">Van</span></td>
+                  <td>1/1</td>
+                  <td>
+                    <span class="status-badge approved">
+                      <i data-lucide="check"></i>
+                      <span>อนุมัติแล้ว</span>
+                    </span>
+                  </td>
+                  <td style="text-align: right; color: var(--ink-600);">21 ก.ย. 11:20</td>
+                </tr>
+
+                <!-- Row 7 -->
+                <tr onclick="selectRow(this, 'VR-690914-008')">
+                  <td class="req-code">VR-690914-008</td>
+                  <td>ศิริพร พ.</td>
+                  <td>22 ก.ย. 13:00</td>
+                  <td>สนญ. ➔ อารีย์</td>
+                  <td><span class="car-badge">เก๋ง</span></td>
+                  <td>1/1</td>
+                  <td>
+                    <span class="status-badge approved">
+                      <i data-lucide="check"></i>
+                      <span>อนุมัติแล้ว</span>
+                    </span>
+                  </td>
+                  <td style="text-align: right; color: var(--ink-600);">20 ก.ย. 16:05</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Summary Footer -->
+            <div class="table-footer">
+              <span>แสดง 1–7 จาก 18 รายการล่าสุด</span>
+              <span>อัปเดตข้อมูลอัตโนมัติ</span>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             RIGHT PANEL: รายละเอียดคำขอ & บันทึกผลการตัดสินใจ (Decision Log)
+             ------------------------------------------------------------------ -->
+        <section class="right-panel">
+
+          <!-- Detail Top Row -->
+          <div class="detail-header-row">
+            <div class="detail-req-id" id="detail-code">VR-690917-030</div>
+            <div class="detail-level-pill" id="detail-status-pill">
+              <i data-lucide="check"></i>
+              <span>อนุมัติแล้ว &middot; ระดับ 1 จาก 2</span>
+            </div>
+          </div>
+
+          <!-- Request Overview Card -->
+          <div class="request-card">
+            <!-- Row: ผู้ขอ -->
+            <div class="info-row">
+              <div class="info-label">ผู้ขอ</div>
+              <div class="info-val">
+                <div class="info-val-title">คุณวรวุฒิ ท.</div>
+                <div class="info-val-sub">เจ้าหน้าที่สินเชื่อ &middot; 081-555-0192</div>
+              </div>
+            </div>
+
+            <!-- Row: การเดินทาง -->
+            <div class="info-row">
+              <div class="info-label">การเดินทาง</div>
+              <div class="info-val">
+                <div class="info-val-title">ข้ามวัน - 3 วัน</div>
+                <div class="info-val-sub">ศ 25 ก.ย. 07:00 &ndash; อา 27 ก.ย. 69 17:00</div>
+              </div>
+            </div>
+
+            <!-- Row: เส้นทาง -->
+            <div class="info-row">
+              <div class="info-label">เส้นทาง</div>
+              <div class="info-val">
+                <div class="info-val-title">สำนักงานใหญ่ ➔ สาขาขอนแก่น</div>
+                <div class="info-val-sub">~445 กม. ต่อเที่ยว</div>
+              </div>
+            </div>
+
+            <!-- Row: ผู้เดินทาง -->
+            <div class="info-row">
+              <div class="info-label">ผู้เดินทาง</div>
+              <div class="info-val">
+                <div class="info-val-title">2 คน &middot; สัมภาระมาก</div>
+              </div>
+            </div>
+
+            <!-- Row: ภารกิจ -->
+            <div class="info-row">
+              <div class="info-label">ภารกิจ</div>
+              <div class="info-val">
+                <div class="info-val-title">พบลูกค้า/คู่ค้า</div>
+                <div class="info-val-sub">&ldquo;ตรวจหลักประกันลูกค้าสินเชื่อ 3 ราย&rdquo;</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Condition Notice Banner -->
+          <div class="notice-banner">
+            <i data-lucide="info"></i>
+            <span>ร่วมด้วย คุณประภา จ. &ndash; เหตุ: ต่างจังหวัด + เกิน 2 วัน</span>
+          </div>
+
+          <!-- Decision Audit Record Box (หัวใจของหน้าตัดสินใจแล้ว) -->
+          <div class="decision-record-card">
+            <div class="record-card-header">
+              <div class="record-title">
+                <i data-lucide="file-check" style="width: 14px; height: 14px; color: var(--ktb-action);"></i>
+                <span>บันทึกการตัดสินใจ</span>
+              </div>
+              <div class="record-timestamp">23 ก.ย. 2569 เวลา 10:15 น.</div>
+            </div>
+
+            <!-- Result Status -->
+            <div class="record-status-row">
+              <div class="record-status-icon">
+                <i data-lucide="check"></i>
+              </div>
+              <div class="record-status-text">
+                <strong>อนุมัติคำขอเรียบร้อยแล้ว</strong>
+                <span>พิจารณาโดย คุณวิชัย ส. (อนุมัติแทนโดย คุณอนันต์ น.)</span>
+              </div>
+            </div>
+
+            <!-- Comment Box -->
+            <div class="comment-box">
+              <span class="comment-box-label">ความเห็นที่บันทึกไว้ในระบบ:</span>
+              &ldquo;อนุมัติการเดินทางตามภารกิจตรวจหลักประกันสินเชื่อ ขอให้คนขับตรวจเช็กสภาพความพร้อมรถตู้ก่อนออกเดินทางระยะไกล&rdquo;
+            </div>
+
+            <!-- SLA Performance Audit -->
+            <div class="sla-audit-line">
+              <i data-lucide="clock"></i>
+              <span>ใช้เวลาพิจารณา 1 ชม. 15 นาที (เสร็จสิ้นก่อนกำหนด SLA 4 ชม. 45 นาที)</span>
+            </div>
+          </div>
+
+          <!-- Workflow Progress Tracker -->
+          <div class="workflow-tracker-card">
+            <div class="tracker-title">สถานะขั้นตอนในระบบ</div>
+            <div class="stepper">
+              <div class="step-item done">
+                <div class="step-dot"><i data-lucide="check" style="width: 11px; height: 11px;"></i></div>
+                <span>ยื่นคำขอ</span>
+              </div>
+              <div class="step-item done">
+                <div class="step-dot"><i data-lucide="check" style="width: 11px; height: 11px;"></i></div>
+                <span>ระดับ 1</span>
+              </div>
+              <div class="step-item active">
+                <div class="step-dot">2</div>
+                <span>ระดับ 2</span>
+              </div>
+              <div class="step-item pending">
+                <div class="step-dot">3</div>
+                <span>จัดสรรรถ</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions Footer Toolbar -->
+          <div class="detail-action-bar">
+            <button type="button" class="btn-secondary" onclick="alert('กำลังพิมพ์ใบคำขอ VR-690917-030 เป็นเอกสาร PDF...');">
+              <i data-lucide="printer"></i>
+              <span>พิมพ์ใบคำขอ</span>
+            </button>
+            <button type="button" class="btn-secondary" onclick="alert('ส่งออกข้อมูลรายการที่ตัดสินใจแล้วเป็น Excel / CSV');">
+              <i data-lucide="download"></i>
+              <span>ส่งออก</span>
+            </button>
+            <a href="#" class="btn-link" onclick="alert('แสดง Timeline ประวัติการอนุมัติและ Audit Log ฉบับเต็ม'); return false;">
+              <span>ดูประวัติเต็ม</span>
+              <i data-lucide="chevron-right"></i>
+            </a>
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Interactive Row Selection
+    function selectRow(element, reqCode) {
+      // Remove selected class from all rows
+      document.querySelectorAll('.data-table tr').forEach(tr => {
+        tr.classList.remove('selected');
+      });
+      // Add selected class to clicked row
+      element.classList.add('selected');
+      
+      // Update detail code header
+      const codeHeader = document.getElementById('detail-code');
+      if (codeHeader) {
+        codeHeader.textContent = reqCode;
+      }
+    }
+  </script>
+</body>
+</html>
